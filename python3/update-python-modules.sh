@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/zsh
+
 echo Updating pip and related modules...
 pip install --upgrade pip wheel build setuptools twine
 
