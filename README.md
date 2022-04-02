@@ -1,6 +1,6 @@
 # Lost Little Scripts
 
-A bunch of scripts I use (and made) that is too small to be on a separate repository.
+A bunch of scripts I use (and some I made) that are too small to be on a separate repository.
 
 -----
 
