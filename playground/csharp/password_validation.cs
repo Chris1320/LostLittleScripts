@@ -36,25 +36,28 @@ namespace Sololearn
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
+            // Declare variables
             string password;
-            int i, nums = 0, symbols = 0, req_nums = 2, req_symbols = 2;
+            int i, nums = 0, symbols = 0, req_nums = 2, req_symbols = 2;  // Assign values to 4 variables
             
-            Console.Write("Enter your password: ");
+            Console.Write("Enter your password: ");  // Ask for user input.
             password = Console.ReadLine();
             
-            if (password.Length < 7) Console.WriteLine("Weak\n");
+            if (password.Length < 7) Console.WriteLine("Weak\n");  // Check if password length is good.
             else
             {
-                for (i = 0; i < password.Length; i++)
+                for (i = 0; i < password.Length; i++)  // Iterate through characters of password.
                 {
-                    if (Char.IsDigit(password[i])) nums++;
-                    else if (Char.IsSymbol(password[i]) || Char.IsPunctuation(password[i])) symbols++;
+                    if (Char.IsDigit(password[i])) nums++;  // If char is number, do nums++
+                    else if (Char.IsSymbol(password[i]) || Char.IsPunctuation(password[i])) symbols++;  // If char is symbol or punctuation, do symbols++.
                 }
-                if (nums >= req_nums && symbols >= req_symbols) Console.WriteLine("Strong\n");
+                if (nums >= req_nums && symbols >= req_symbols) Console.WriteLine("Strong\n");  // Check if requirements are met.
                 else Console.WriteLine("Weak\n");
             }
+
+            return 0;
         }
     }
 }
