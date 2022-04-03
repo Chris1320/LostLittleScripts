@@ -25,31 +25,27 @@
  */
 
 #include <stdio.h>
-#include <ctype.h>
-#include <string.h>
+#include <ctype.h>  // For checking type of character.
+#include <string.h>  // For getting string length
 
 int main()
 {
-    char password[13];
+    // Declare and assign variables
+    char password[40];
     int i, digits = 0, symbols = 0, required_digits = 2, required_symbols = 2;;
 
+    // Ask for user input.
     printf("Enter your password: ");
-    scanf("%13s", &password);
+    scanf("%40s", password);
 
-    if (strlen(password) >= 7)
+    if (strlen(password) >= 7)  // Check password length before checking for other things.
     {
-        for (i = 0; i < strlen(password); i++)
+        for (i = 0; i < strlen(password); i++)  // Iterate through each character in <password>.
         {
-            if (isdigit(password[i]))
-            {
-                digits++;
-            }
-            else if (ispunct(password[i]))
-            {
-                symbols++;
-            }
+            if (isdigit(password[i])) digits++;  // If character is a number, add 1 to <digits>.
+            else if (ispunct(password[i])) symbols++;  // If character is a punctuation, add 1 to <symbols>.
         }
-        if (digits < required_digits || symbols < required_symbols) printf("Weak\n");
+        if (digits < required_digits || symbols < required_symbols) printf("Weak\n");  // If it does not meet the requirements, print "Weak".
         else printf("Strong\n");
     }
     else printf("Weak\n");
