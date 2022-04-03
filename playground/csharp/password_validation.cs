@@ -41,6 +41,7 @@ namespace Sololearn
             string password;
             int i, nums = 0, symbols = 0, req_nums = 2, req_symbols = 2;
             
+            Console.Write("Enter your password: ");
             password = Console.ReadLine();
             
             if (password.Length < 7) Console.WriteLine("Weak\n");

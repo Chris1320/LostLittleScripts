@@ -30,10 +30,11 @@
 
 int main()
 {
-    char password[50];
+    char password[13];
     int i, digits = 0, symbols = 0, required_digits = 2, required_symbols = 2;;
 
-    scanf("%50s", &password);
+    printf("Enter your password: ");
+    scanf("%13s", &password);
 
     if (strlen(password) >= 7)
     {
