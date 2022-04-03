@@ -22,7 +22,7 @@ Strong
 
 import string
 
-password = str(input())
+password = str(input("Enter your password: "))
 nums, symbols = 0, 0
 req_nums, req_symbols = 2, 2
 if len(password) < 7:
