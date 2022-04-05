@@ -21,7 +21,7 @@
  *
  * Sample Input
  * 3 9
- * 
+ *
  * Sample Output
  * give away
  */
@@ -35,15 +35,15 @@ namespace Popsicles
         static int Main(string[] args)
         {
             int siblings, popsicles;  // Declare variables
-            
+
             // Read user input
             siblings = Convert.ToInt32(Console.ReadLine());
             popsicles = Convert.ToInt32(Console.ReadLine());
-            
+
             // Validate
             if (popsicles % siblings == 0) Console.WriteLine("give away");
             else Console.WriteLine("eat them yourself");
-            
+
             return 0;
         }
     }

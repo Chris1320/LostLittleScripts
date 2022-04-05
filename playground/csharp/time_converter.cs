@@ -22,7 +22,7 @@ namespace TimeConverter
         {
             Console.Write("Enter number of days: ");
             int days = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine(days * (24 * 3600));
+            Console.WriteLine(days * (24 * 3600));  // calculate day -> seconds
 
             return 0;
         }
