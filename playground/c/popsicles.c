@@ -21,7 +21,7 @@
  *
  * Sample Input
  * 3 9
- * 
+ *
  * Sample Output
  * give away
  */
@@ -36,7 +36,7 @@ int main() {
     // Evaluate
     if (popsicles % siblings == 0) printf("give away\n");
     else printf("eat them yourself\n");
-    
+
     return 0;
 }
 

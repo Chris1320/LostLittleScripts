@@ -28,19 +28,14 @@
 int main() {
     // Declare variables.
     int sales, _;
-    float profit, monthly_cost = 0, monthly_sale = 0, cost = 2000000, sale = 3000000, expense = 1000000;
+    float profit, monthly_cost, cost = 2000000, sale = 3000000, expense = 1000000;
     monthly_cost = cost * 10;
-    
+
     // Ask for user input.
     printf("How many sales did you make this month? > ");
     scanf("%i", &sales);
 
-    for (_ = 0; _ < sales; _++)  // Get total monthly sale
-    {
-        monthly_sale += sale;
-    }
-
-    profit = (monthly_sale - monthly_cost) - expense;  // Calculate profit.
+    profit = ((sale * sales) - monthly_cost) - expense;  // Calculate profit.
     if (profit > 0) printf("Profit\n");  // If profit > 0, we gained profit.
     else if (profit < 0) printf("Loss\n");
     else printf("Broke Even\n");
