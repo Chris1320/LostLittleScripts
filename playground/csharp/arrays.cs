@@ -4,7 +4,7 @@ namespace ArrayExample
 {
     class Program
     {
-        static void printDiv(int length)
+        static void printDiv(int length)  // Print a divider
         {
             if (!(length < 1))
             {
@@ -14,7 +14,7 @@ namespace ArrayExample
             else Console.Write('\n');
             return;
         }
-        
+
         static int Main(string[] args)
         {
             int _, head = 0;  // Temporary variables
@@ -28,10 +28,7 @@ namespace ArrayExample
             {
                 printDiv(40);
                 Console.WriteLine("There are " + head + " elements in the array.");
-                for (_ = 0; _ < head; _++)
-                {
-                    Console.WriteLine("Index #" + _ + ": " + array[_]);
-                }
+                for (_ = 0; _ < head; _++) Console.WriteLine("Index #" + _ + ": " + array[_]);  // Print elements in array
                 Console.Write("\nOperations\n\n[01] Add\n[02] Remove\n\n[99] Quit\n\n >>> ");
                 selection = Convert.ToInt32(Console.ReadLine());
                 switch (selection)

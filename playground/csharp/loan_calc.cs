@@ -36,10 +36,7 @@ namespace LoanCalc
             Console.Write("Enter amount: ");
             int i;
             double amount = Convert.ToDouble(Console.ReadLine());
-            for (i = 0; i < 3; i++)
-            {
-                amount -= (amount * 0.10);
-            }
+            for (i = 0; i < 3; i++) amount -= (amount * 0.10);  // Deduct (amount * 10%) to balance every month
             Console.WriteLine(amount);
 
             return 0;

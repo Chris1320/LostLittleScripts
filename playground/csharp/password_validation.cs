@@ -36,10 +36,10 @@ namespace PasswordValidation
             // Declare variables
             string password;
             int i, nums = 0, symbols = 0, req_nums = 2, req_symbols = 2;  // Assign values to 4 variables
-            
+
             Console.Write("Enter your password: ");  // Ask for user input.
             password = Console.ReadLine();
-            
+
             if (password.Length < 7) Console.WriteLine("Weak\n");  // Check if password length is good.
             else
             {
@@ -51,9 +51,7 @@ namespace PasswordValidation
                 if (nums >= req_nums && symbols >= req_symbols) Console.WriteLine("Strong\n");  // Check if requirements are met.
                 else Console.WriteLine("Weak\n");
             }
-
             return 0;
         }
     }
 }
-
