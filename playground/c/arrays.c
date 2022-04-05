@@ -23,11 +23,8 @@ int main()
         printf("\n");
         printDiv(40);  // Call a function to show a divider.
         printf("\nThere are currently %d elements in the array.\n\n", selector);
-        for (_ = 0; _ < selector; _++)  // Print all elements in the array for the user to see.
-        {
-            printf("+ Index #%d: %d\n", _, array[_]);
-        }
-        
+        for (_ = 0; _ < selector; _++) printf("+ Index #%d: %d\n", _, array[_]);  // Print all elements in the array for the user to see.
+
         printf("\nOperation\n[01] Add\n[02]Remove\n\n[99] Quit\n\n\n >>> ");
         scanf("%d", &user_selection);
 

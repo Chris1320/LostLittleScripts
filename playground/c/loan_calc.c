@@ -34,7 +34,7 @@ int main()
     printf("Enter amount: ");
     scanf("%d", &amount);
 
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)  // calculate the remaining amount
     {
         amount -= (amount * 0.10);
     }

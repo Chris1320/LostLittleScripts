@@ -16,7 +16,7 @@
  *
  * Output Format:
  * A string that says 'Strong' if the input meets the requirements, or 'Weak', if not
- * 
+ *
  * Sample Input:
  * Hello@$World19
  *

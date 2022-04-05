@@ -25,8 +25,8 @@
  */
 
 #include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
+#include <string.h>  // For using strlen() function.
+#include <stdbool.h>  // For using a boolean datatype.
 
 int main() {
     int _, c;  // Temporary variables
