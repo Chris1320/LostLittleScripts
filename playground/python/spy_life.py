@@ -20,10 +20,10 @@ Hello World
 """
 
 encoded = str(input("Enter encoded message: "))
-clear = encoded[::-1]
-alphas = [c for c in clear if c.isalpha() or c == ' ']
-result = ""
+clear = encoded[::-1]  # Flip encoded message
+alphas = [c for c in clear if c.isalpha() or c == ' ']  # Add c to alphas if it is a letter or space
+result = ""  # Create a new string
 for c in alphas:
-    result += c
+    result += c  # Add each character from alphas to result
 
 print(result)
