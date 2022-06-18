@@ -21,7 +21,7 @@ namespace ArrayExample
             bool value_found;
             int selection, user_value;
 
-            int ARRAY_SIZE = 10;
+            const int ARRAY_SIZE = 10;
             int[] array = new int[ARRAY_SIZE];
 
             while (true)  // Enter loop
