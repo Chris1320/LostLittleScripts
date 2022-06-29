@@ -7,4 +7,3 @@ fn main()  // Define the main function.
      * calling a macro, and not a function.
      */
 }
-
