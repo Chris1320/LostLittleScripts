@@ -1,8 +1,28 @@
 from time import time
 
 class QuickFind:
-    """
+    r"""
     This class provides methods for the quick find algorithm.
+
+        1--------2        3-.      4
+                 |           \     |
+                 |            \    |
+                 |             \   |
+                 |              \  |
+        5--------6        7      '-8
+
+    In this example, the groups are as follows:
+
+        {1, 2, 5, 6}
+        {3, 4, 8}
+        {7}
+
+    When checking the connection of p and q, we just need to
+    check if they have the same ID (group).
+
+    When connecting p and q, we need to iterate through the list
+    and check if they have the same ID as p. If so, change its ID
+    to the ID of q.
     """
 
     def __init__(self, length: int):
