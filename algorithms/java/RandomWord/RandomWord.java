@@ -7,15 +7,17 @@
 //
 // `echo "word1 word2 word3 word4 word5" | CLASSPATH=$PWD/algs4.jar java RandomWord.java`
 
+// Import algs4 classes.
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
+
 
 public class RandomWord
 {
     public static void main(String[] args)
     {
-        String champion = "";  // This is the word we are going to print.
+        String champion = "";  // This will be the word we are going to print.
         int n = 1;  // The index of the word.
         while (!StdIn.isEmpty())  // Loop while stdin is not empty.
         {
