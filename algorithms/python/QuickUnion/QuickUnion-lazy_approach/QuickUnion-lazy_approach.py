@@ -1,5 +1,6 @@
 from time import time
 
+
 class QuickUnion:
     r"""
     This class provides methods for the quick union algorithm.
@@ -50,23 +51,32 @@ class QuickUnion:
 
         return result
 
+    def _getList(self) -> list[int]:
+        return self.__list
+
     def getRoot(self, x: int) -> int:
         """
         Get the root of x.
         """
-        
+
         while self.__list[x] != x:  # Check if the ID of x is equal to itself.
             return self.getRoot(self.__list[x])
 
         return x
+
+    def getParent(self, x: int) -> int:
+        """
+        Get the parent of x.
+        """
+
+        return self.__list[x]
 
     def union(self, p: int, q: int) -> None:
         """
         Connect p and q together.
         """
 
-        q_root = self.getRoot(q)  # Get the root of p.
-        self.__list[self.getRoot(p)] = q_root  # Merge p_root to q_root.
+        self.__list[self.getRoot(p)] = q  # Merge p_root to q_root.
 
     def connected(self, p: int, q: int) -> bool:
         """
@@ -99,6 +109,7 @@ def main():
         print()
         print("[01] Check if an index (p) has the same group (ID) as another index (q).")
         print("[02] Join two indexes p and q.")
+        print("[03] See individual indexes")
         print()
         print("[99] Quit")
         print()
@@ -122,18 +133,37 @@ def main():
             total_time = time() - start_time
 
             print(f"p ({QUDemo.getRoot(p)}) and q ({QUDemo.getRoot(q)}) are {sentence_negation}connected.")
+            print(f"Index {p}: parent: {QUDemo.getParent(p)}; root: {QUDemo.getRoot(p)}")
+            print(f"Index {q}: parent: {QUDemo.getParent(q)}; root: {QUDemo.getRoot(q)}")
             print(f"Time spent: {total_time}")
 
         elif option == 2:
             p = int(input("Enter p: "))
             q = int(input("Enter q: "))
             print()
-            print(f"ID (group) of p ({p}) and q ({q}) before union: {QUDemo.getRoot(p)}, {QUDemo.getRoot(q)}")
+            print("Before Union:")
+            print(f"ID (group) of p ({p}) and q ({q}): {QUDemo.getRoot(p)}, {QUDemo.getRoot(q)}")
+            print(f"Index {p}: parent: {QUDemo.getParent(p)}; root: {QUDemo.getRoot(p)}")
+            print(f"Index {q}: parent: {QUDemo.getParent(q)}; root: {QUDemo.getRoot(q)}")
             start_time = time()
             QUDemo.union(p, q)
             total_time = time() - start_time
-            print(f"ID (group) of p ({p}) and q ({q}) after union: {QUDemo.getRoot(p)}, {QUDemo.getRoot(q)}")
+            print("After Union:")
+            print(f"ID (group) of p ({p}) and q ({q}): {QUDemo.getRoot(p)}, {QUDemo.getRoot(q)}")
+            print(f"Index {p}: parent: {QUDemo.getParent(p)}; root: {QUDemo.getRoot(p)}")
+            print(f"Index {q}: parent: {QUDemo.getParent(q)}; root: {QUDemo.getRoot(q)}")
             print(f"Time spent: {total_time}")
+
+        elif option == 3:
+            print()
+            for index, group in enumerate(QUDemo._getList()):
+                if index > max_groups_to_list:
+                    print(f"... ({len(QUDemo._getList()) - (index - 1)} indexes more)")
+                    break
+
+                print(f"Index {index}: parent: {QUDemo.getParent(index)}; root: {QUDemo.getRoot(index)}")
+
+            print()
 
 
 main()
