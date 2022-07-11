@@ -1,5 +1,6 @@
 from time import time
 
+
 class QuickFind:
     r"""
     This class provides methods for the quick find algorithm.
@@ -34,6 +35,9 @@ class QuickFind:
 
         for i in range(0, length):  # Set the group number of each index to their index number.
             self.__list.append(i)
+
+    def _getList(self) -> list[int]:
+        return self.__list
 
     def getGroup(self, x: int) -> int:
         """
@@ -102,6 +106,7 @@ def main():
         print()
         print("[01] Check if an index (p) has the same group (ID) as another index (q).")
         print("[02] Join two indexes p and q.")
+        print("[03] See individual indexes")
         print()
         print("[99] Quit")
         print()
@@ -137,6 +142,17 @@ def main():
             total_time = time() - start_time
             print(f"ID (group) of p ({p}) and q ({q}) after union: {QFDemo.getGroup(p)}, {QFDemo.getGroup(q)}")
             print(f"Time spent: {total_time}")
+
+        elif option == 3:
+            print()
+            for index, group in enumerate(QFDemo._getList()):
+                if index > max_groups_to_list:
+                    print(f"... ({len(QFDemo._getList()) - (index - 1)} indexes more)")
+                    break
+
+                print(f"Index {index}: id (group): {QFDemo.getGroup(index)}")
+
+            print()
 
 
 if __name__ == "__main__":
