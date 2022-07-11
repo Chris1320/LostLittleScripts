@@ -1,86 +1,122 @@
-import time
+from time import time
 
-def main():
-    # Create a list of items.
-    group: list[int] = []  # The elements are the "group numbers" and the index are the items.
-                # If the items have the same group number, they are connected to each other.
-
-    r"""
-            1--------2        3-.      4
-                     |           \     |
-                     |            \    |
-                     |             \   |
-                     |              \  |
-            5--------6        7      '-8
-
-            In this example, the groups are as follows:
-
-                {1, 2, 5, 6}
-                {3, 4, 8}
-                {7}
+class QuickFind:
+    """
+    This class provides methods for the quick find algorithm.
     """
 
-    for i in range(0, int(input("How many elements do you want in the array? > "))):
-        group.append(i)
+    def __init__(self, length: int):
+        """
+        :param length: The size of the list in type<int>.
+        """
 
-    while True:
-        print("Groups:")
-        groups: dict[int, list[int, ...]] = {}
-        for index, group_number in enumerate(group):
-            if group_number not in groups:
-                groups[group_number]: list[int] = [index]
+        self.__list = []  # Initialize an empty list.
+
+        for i in range(0, length):  # Set the group number of each index to their index number.
+            self.__list.append(i)
+
+    def getGroup(self, x: int) -> int:
+        """
+        Get the id (group) of x.
+        """
+
+        return self.__list[x]
+
+    def getGroups(self) -> dict[int, list[int]]:
+        """
+        Return a dictionary containing {<group number>: <list of indexes>}
+        """
+
+        result = {}  # Initialize an empty dictionary.
+
+        for index, group in enumerate(self.__list):
+            if group not in result:
+                result[group] = [index]  # Create a new group and add index to it as its first value.
 
             else:
-                groups[group_number].append(index)
+                result[group].append(index)  # Add index to the existing list.
 
-        for g in groups:
-            print(f"Group {g}: {', '.join(str(x) for x in groups[g])}")
+        return result
 
-        print("\n")
-        print("Options:")
-        print("[01] Check if an element (p) is connected to another element (q).")
-        print("[02] Connect an element (p) to another element (q).")
+    def union(self, p: int, q: int) -> None:
+        """
+        Group p and q.
+        """
+
+        p_group = self.__list[p]  # Get the group of p.
+        q_group = self.__list[q]  # Get the group of q.
+
+        # Move all indexes in p_group and move them to q_group.
+        for index, group in enumerate(self.__list):
+            if group == p_group:
+                self.__list[index] = q_group
+
+    def connected(self, p: int, q: int) -> bool:
+        """
+        Evaluate whether p and q are connected or not.
+
+        :returns bool: Returns True if p and q are connected. Otherwise, returns False.
+        """
+
+        return self.__list[p] == self.__list[q]
+
+
+def main():
+    QFDemo: QuickFind = QuickFind(int(input("Enter the amount of indexes to create: ")))
+    max_groups_to_list = 10
+    while True:
+        print()
+        print('=' * 30)
+        print()
+        print("Groups:")
+        groups = QFDemo.getGroups()
+        for i, group in enumerate(groups):
+            if i > max_groups_to_list:  # only list groups 0 to <max_groups_to_list>.
+                print(f"... ({len(groups) - (i - 1)} groups more)")
+                break
+
+            print(f"\tGroup #{group}: {', '.join(str(i) for i in groups[group])}")
+
+        print()
+        print("OPTIONS:")
+        print()
+        print("[01] Check if an index (p) has the same group (ID) as another index (q).")
+        print("[02] Join two indexes p and q.")
+        print()
         print("[99] Quit")
         print()
+        print()
         option = int(input(" >>> "))
+
         if option == 99:
-            return 0
+            return
 
         elif option == 1:
             p = int(input("Enter p: "))
             q = int(input("Enter q: "))
-            start_time = time.time()
-            try:
-                if group[p] == group[q]:
-                    print("p and q are connected to each other.")
+            print()
+            start_time = time()
+            if QFDemo.connected(p, q):
+                sentence_negation = ""
 
-                else:
-                    print("p and q are not connected to each other.")
+            else:
+                sentence_negation = "not "
 
-            except IndexError:
-                print("One or more of the elements is not in the array.")
-                continue
+            total_time = time() - start_time
 
-            print(f"Evaluation Time: {time.time() - start_time}s")
+            print(f"p ({QFDemo.getGroup(p)}) and q ({QFDemo.getGroup(q)}) are {sentence_negation}connected.")
+            print(f"Time spent: {total_time}")
 
         elif option == 2:
             p = int(input("Enter p: "))
             q = int(input("Enter q: "))
-            try:
-                id_p = group[p]  # The group number of p
-                id_q = group[q]  # The group number of q
-
-            except IndexError:
-                print("One or more of the elements is not in the array.")
-                continue
-
-            start_time = time.time()
-            for index, group_number in enumerate(group):
-                if group_number == id_p:  # Check if the group number of the current element is p.
-                    group[index] = id_q  # If so, change the group number of the current element to q.
-
-            # In the end, all elements in group p must be connected to q.
-            print(f"Evaluation Time: {time.time() - start_time}s")
+            print()
+            print(f"ID (group) of p ({p}) and q ({q}) before union: {QFDemo.getGroup(p)}, {QFDemo.getGroup(q)}")
+            start_time = time()
+            QFDemo.union(p, q)
+            total_time = time() - start_time
+            print(f"ID (group) of p ({p}) and q ({q}) after union: {QFDemo.getGroup(p)}, {QFDemo.getGroup(q)}")
+            print(f"Time spent: {total_time}")
 
 
 if __name__ == "__main__":
