@@ -1,8 +1,26 @@
 from time import time
 
 class QuickUnion:
-    """
-    The class
+    r"""
+    This class provides methods for the quick union algorithm.
+
+    1           4        6        10
+     \         /        / \
+      \       /        /   \
+       3     9        5     8
+            /        /
+           /        /
+          2        7
+
+    In this example, the groups are as follows:
+        {6, 5, 7, 8}
+        {2, 4, 9}
+        {1, 3}
+        {10}
+
+    Each index have parents (another index), and each group has a root (an index with itself as its parent).
+    In this example, index 7 has index 5 as its parent, and index 5 has index 6 as its parent. Index 6 is
+    the root of the group because it is the top-most item in the tree. (index 6 is equal to itself)
     """
 
     def __init__(self, length: int):
