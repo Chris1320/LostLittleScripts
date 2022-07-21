@@ -1,9 +1,10 @@
 import time
 
+
 def main():
     # Create a list of items.
     group: list[int] = []  # The elements are the "group numbers" and the index are the items.
-                # If the items have the same group number, they are connected to each other.
+    # If the items have the same group number, they are connected to each other.
 
     r"""
             1--------2        3-.      4
@@ -25,10 +26,10 @@ def main():
 
     while True:
         print("Groups:")
-        groups: dict[int, list[int, ...]] = {}
+        groups: dict[int, list[int]] = {}
         for index, group_number in enumerate(group):
             if group_number not in groups:
-                groups[group_number]: list[int] = [index]
+                groups[group_number] = [index]
 
             else:
                 groups[group_number].append(index)
