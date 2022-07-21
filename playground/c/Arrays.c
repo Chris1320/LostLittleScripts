@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+
 void printDiv(int length)  /* Print a divider. */
 {
     printf("*");
@@ -8,6 +9,7 @@ void printDiv(int length)  /* Print a divider. */
     printf("\n");
     return;
 }
+
 
 int main()
 {
