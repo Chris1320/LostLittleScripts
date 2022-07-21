@@ -32,12 +32,12 @@ int evenFibonacciNumbers(int x, int y, int sequence_sum)
     }
 }
 
-void main()
+int main()
 {
     // Give the default values of x, y, and sequence_sum.
     // sequence_sum is already at value 2 because `y` (an even number)
     // will not be evaluated by the function, resulting to a value two
     // less than the expected output.
     printf("%d\n", evenFibonacciNumbers(1, 2, 2));
-    return;
+    return 0;
 }
