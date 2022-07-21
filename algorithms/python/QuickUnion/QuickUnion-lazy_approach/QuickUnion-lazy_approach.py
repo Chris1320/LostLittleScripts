@@ -3,7 +3,7 @@ from time import time
 
 class QuickUnion:
     r"""
-    This class provides methods for the quick union algorithm.
+    This class provides methods for the quick union (lazy approach) algorithm.
 
     1           4        6        10
      \         /        / \
@@ -98,8 +98,8 @@ def main():
         print("Groups:")
         groups = QUDemo.getGroups()
         for i, group in enumerate(groups):
-            if i > max_groups_to_list:  # only list groups 0 to <max_groups_to_list>.
-                print(f"... ({len(groups) - (i - 1)} groups more)")
+            if i >= max_groups_to_list:  # only list groups 0 to <max_groups_to_list>.
+                print(f"... ({len(groups) - (i)} groups more)")
                 break
 
             print(f"\tGroup #{group}: {', '.join(str(i) for i in groups[group])}")
