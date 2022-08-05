@@ -1,0 +1,6 @@
+#!usr/bin/env bash
+
+world="Universe"  # Set the value of the variable `world` to "Universe".
+
+echo "Hello, $world"  # This is called weak quoting. Output: "Hello, Universe"
+echo 'Hello, $world'  # This is called strong quoting. Output: "Hello, $world"
