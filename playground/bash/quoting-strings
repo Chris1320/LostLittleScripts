@@ -2,5 +2,6 @@
 
 world="Universe"  # Set the value of the variable `world` to "Universe".
 
-echo "Hello, $world"  # This is called weak quoting. Output: "Hello, Universe"
-echo 'Hello, $world'  # This is called strong quoting. Output: "Hello, $world"
+echo "Hello, $world"   # This is called weak quoting. Output: "Hello, Universe"
+echo 'Hello, $world'   # This is called strong quoting. Output: "Hello, $world"
+echo "Hello, \$world"  # Another way to prevent expansion of the variable without using single quotes. Output: "Hello, $world"
