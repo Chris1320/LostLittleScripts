@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Information:
+# "$1" expands to the first command-line argument while '$1' evaluates to literal string $1.
+printf "The value of %s is %s.\n" '$1' "$1"  # echo does not support this kind of string formatting.
