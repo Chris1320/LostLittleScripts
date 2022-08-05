@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# $1 is the first argument from the command-line. $2 is the second. (and so on...)
+printf "Hello $1 and $2.\nGoodbye $2 and $1.\n"
+
+# It can also be written as:
+# printf "Hello %s and %s.\nGoodbye %s and %s.\n" "$1" "$2" "$2" "$1"
