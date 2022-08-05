@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+value1="Hello"
+value2="World"
+
+echo "${value1}, ${value2}!"  # Output: "Hello, World!"
+
+unset value2
+
+echo "${value1}, ${value2}!"  # Output: "Hello, !"
