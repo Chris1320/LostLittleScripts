@@ -19,10 +19,21 @@ source: How to Train Your Python (book)
 """
 
 import math
+import cmath
 
 
-def calculate(a: int, b: int, c: int) -> tuple[float, float]:
-    x = math.sqrt((b ** 2) - (4 * a * c))  # Re-use inner equation.
+def calculate(a: int, b: int, c: int) -> tuple:
+    """
+    Returns either a float or complex data type.
+    """
+
+    w = (b ** 2) - (4 * a * c)  # Re-use inner equation.
+    if w <= 0:
+        x = cmath.sqrt(w)
+
+    else:
+        x = math.sqrt(w)
+
     y = (-b + x) / (2 * a)  # Get first equation.
     z = (-b - x) / (2 * a)  # Get next equation.
 
