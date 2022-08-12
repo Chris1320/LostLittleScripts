@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+printf "This line will change after three seconds.\r"
+sleep 3
+printf "This line has changed after three seconds.\n"
+exit 0
