@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+printf "What's your name? > "
+read name
+if [[ "$name" =~ ^[c|C].* ]]; then
+    # `^[c|C].*` is a pattern that matches any string
+    # that starts with either `c` or `C`.
+    # `=~` is a pattern matching operator.
+
+    echo "We have the same first letter in our name."
+
+else
+    echo "We do not have the same first letter in our name."
+
+fi
+
+exit 0
