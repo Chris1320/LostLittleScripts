@@ -8,9 +8,9 @@ def nextFibonacciNumber(x: int, y: int):
 
 
 def main() -> int:
-    sequence_length: int = int(input("How many fibonacci numbers should be seen? > "))
+    sequence_length: int = int(input("How many Fibonacci numbers should be seen? > "))
     print()
-    print(f"Listing {sequence_length} fibonacci numbers...")
+    print(f"Listing {sequence_length} Fibonacci numbers...")
     print()
     i: int = 2  # This is already two because the first two numbers in the sequence is defined below.
     x: int = 1  # These are the starting values of the Fibonacci sequence.

@@ -17,12 +17,12 @@ def main() -> int:
 
     previous_generation_pairs: list[int] = [0, 1]  # The two previous generations.
     pairs_of_rabbits: int = 1  # The starting pairs of rabbits.
-    generation: int = 2  # The current generation.
+    generation: int = 1  # The current generation.
     sleep_length: int = 1
 
-    print(f"Generation 1: There are {pairs_of_rabbits} starting pair(s) of rabbits.")
+    print(f"Generation 0: There are {pairs_of_rabbits} starting pair(s) of rabbits.")
     time.sleep(sleep_length)
-    while generation <= target_month:
+    while generation < target_month:
         print(f"Generation {generation}: There are now {pairs_of_rabbits} pair(s) of rabbits.")
         previous_generation_pairs[0] = previous_generation_pairs[1]
         previous_generation_pairs[1] = pairs_of_rabbits
