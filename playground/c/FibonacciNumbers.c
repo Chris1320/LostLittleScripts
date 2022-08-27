@@ -1,10 +1,5 @@
 #include <stdio.h>
 
-int nextFibonacciNumber(int x, int y)
-{
-    return x + y;
-}
-
 int main()
 {
     int sequence_length;
@@ -30,8 +25,8 @@ int main()
     printf("[2] %i\n", y);
     for (int i = 2; i < sequence_length; i++)
     {
-        z = nextFibonacciNumber(x, y);
-        x = y;
+        z = x + y;  // Calculate the next number in the sequence.
+        x = y;  // Move y to x and z to y to be ready for the next iteration.
         y = z;
         printf("[%i] %i\n", i + 1, z);
     }

@@ -3,10 +3,6 @@
 import sys
 
 
-def nextFibonacciNumber(x: int, y: int):
-    return x + y
-
-
 def main() -> int:
     sequence_length: int = int(input("How many Fibonacci numbers should be seen? > "))
     print()
@@ -25,8 +21,8 @@ def main() -> int:
 
     print(f"[2] {y}")
     while i < sequence_length:
-        z: int = nextFibonacciNumber(x, y)
-        x, y = y, z  # Move the values.
+        z: int = x + y  # Calculate the next number in the sequence.
+        x, y = y, z  # Move the values for the next iteration.
         print(f"[{i + 1}] {z}")
         i += 1
 
