@@ -4,7 +4,12 @@ import sys
 
 
 def main() -> int:
-    sequence_length: int = int(input("How many Fibonacci numbers should be seen? > "))
+    try:
+        sequence_length: int = int(sys.argv[1])
+
+    except IndexError:
+        sequence_length: int = int(input("How many Fibonacci numbers should be seen? > "))
+
     print()
     print(f"Listing {sequence_length} Fibonacci numbers...")
     print()
