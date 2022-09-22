@@ -4,7 +4,7 @@ import os
 import sys
 
 
-class Decimal():
+class Decimal:
     """
     This class performs conversion from Decimal to Binary, Octal, and Hexadecimal.
 
@@ -15,6 +15,17 @@ class Decimal():
 
     def __init__(self, value: int):
         self.value = value
+
+    def __call__(self) -> None:
+        """
+        Print the value in three number systems.
+        """
+
+        print(f"Decimal:     {self.value}")
+        print(f"Binary:      {self.toBinary()}")
+        print(f"Octal:       {self.toOctal()}")
+        print(f"Hexadecimal: {self.toHexadecimal()}")
+        print()
 
     def toBinary(self) -> str:
         """
@@ -76,17 +87,31 @@ class Decimal():
         return result[::-1]
 
 
-class Binary():
+class Binary:
     """
     This class performs conversion from Binary to Decimal, Octal, and Hexadecimal.
     """
 
     def __init__(self, value: str):
+        while value[0] == '0':
+            value = value[1:]
+
         self.value = value
+
+    def __call__(self) -> None:
+        """
+        Print the value in three number systems.
+        """
+
+        print(f"Decimal:     {self.toDecimal()}")
+        print(f"Binary:      {self.value}")
+        print(f"Octal:       {self.toOctal()}")
+        print(f"Hexadecimal: {self.toHexadecimal()}")
+        print()
 
     def toDecimal(self) -> int:
         """
-        Convert to decimal.
+        Convert to decimal number system.
 
         This method determines the place value of each binary digit, and then adding it
         to `result` if the binary digit is `1`.
@@ -94,20 +119,20 @@ class Binary():
         :returns int:
         """
 
-        base = 1  # The place value of the right-most binary digit.
+        place_value = 1  # The place value of the right-most binary digit.
         result = 0
 
         for digit in self.value[::-1]:
             if digit == '1':
-                result += base
+                result += place_value
 
-            base = base * 2  # Get the place value of the next binary digit.
+            place_value = place_value * 2  # Get the place value of the next binary digit.
 
         return result
 
     def toOctal(self) -> str:
         """
-        Convert to octal.
+        Convert to octal number system.
 
         This method uses the "splicing" method, where you divide the
         binary number into three digits, and then checking the value of each chunks.
@@ -145,7 +170,7 @@ class Binary():
 
     def toHexadecimal(self) -> str:
         """
-        Convert to hexadecimal.
+        Convert to hexadecimal number system.
 
         This method uses the "splicing" method, where you divide the
         binary number into four digits, and then checking the value of each chunks.
@@ -193,20 +218,36 @@ class Binary():
         return result[::-1]
 
 
-class Octal():
+class Octal:
     """
     This class performs conversion from Octal to Binary, Decimal, and Hexadecimal.
     """
 
     def __init__(self, value: str):
+        while value[0] == '0':
+            value = value[1:]
+
         self.value = value
+
+    def __call__(self) -> None:
+        """
+        Print the value in three number systems.
+        """
+
+        print(f"Decimal:     {self.toDecimal()}")
+        print(f"Binary:      {self.toBinary()}")
+        print(f"Octal:       {self.value}")
+        print(f"Hexadecimal: {self.toHexadecimal()}")
+        print()
 
     def toDecimal(self) -> int:
         """
-        Convert to decimal.
+        Convert to decimal number system.
 
         This method determines the value of each octal digit
         (`digit * 8^exponent`), and then adding it to `result`.
+
+        :returns int:
         """
 
         exponent = 0  # The exponent of the right-most binary digit.
@@ -219,7 +260,142 @@ class Octal():
 
         return result
 
-    # TODO: def toBinary(self) -> str:
+    def toBinary(self) -> str:
+        """
+        Convert to binary number system.
+
+        This method determines which "bits" to turn on to make a binary number
+        with the same value as the source number. (Octal number)
+        """
+
+        result = ""
+
+        for digit in self.value:
+            remaining = int(digit)
+            chunk_value = [0, 0, 0]  # Values: [4, 2, 1]
+            if remaining >= 4:
+                chunk_value[0] = 1
+                remaining -= 4
+
+            if remaining >= 2:
+                chunk_value[1] = 1
+                remaining -= 2
+
+            if remaining >= 1:
+                chunk_value[2] = 1
+                remaining -= 1
+
+            result += ''.join(map(str, chunk_value))
+
+        while result[0] == '0':
+            result = result[1:]  # Remove leading 0s.
+
+        return result
+
+    def toHexadecimal(self) -> str:
+        """
+        Convert to hexadecimal number system.
+
+        There is no way to directly convert from octal to hexadecimal so
+        we're going to convert from octal to decimal, and decimal to hexadecimal.
+        """
+
+        return Decimal(self.toDecimal()).toHexadecimal()
+
+
+class Hexadecimal:
+    """
+    This class performs conversion from Hexadecimal to Decimal, Binary, and Octal.
+    """
+
+    def __init__(self, value: str):
+        while value[0] == '0':
+            value = value[1:]
+
+        self.value = value.upper()
+        self.letters = {
+            'A': 10,
+            'B': 11,
+            'C': 12,
+            'D': 13,
+            'E': 14,
+            'F': 15
+        }
+
+    def __call__(self) -> None:
+        """
+        Print the value in three number systems.
+        """
+
+        print(f"Decimal:     {self.toDecimal()}")
+        print(f"Binary:      {self.toBinary()}")
+        print(f"Octal:       {self.toOctal()}")
+        print(f"Hexadecimal: {self.value}")
+        print()
+
+    def toDecimal(self) -> int:
+        """
+        Convert to decimal number system.
+
+        This method determines the value of each hex digit,
+        and then adding it to `result`.
+
+        :returns int:
+        """
+
+        exponent = 0  # The exponent of the right-most binary digit.
+        result = 0
+
+        for digit in self.value[::-1]:
+            digit = self.letters[digit] if not digit.isdigit() else digit
+            result += int(digit) * (16 ** exponent)
+
+            exponent += 1  # Get the place value of the next octal digit.
+
+        return result
+
+    def toBinary(self) -> str:
+        """
+        Convert to binary number system.
+        """
+
+        result = ""
+
+        for digit in self.value:
+            remaining = int(digit) if digit.isdigit() else self.letters[digit]
+            chunk_value = [0, 0, 0, 0]  # Values: [8, 4, 2, 1]
+            if remaining >= 8:
+                chunk_value[0] = 1
+                remaining -= 8
+
+            if remaining >= 4:
+                chunk_value[1] = 1
+                remaining -= 4
+
+            if remaining >= 2:
+                chunk_value[2] = 1
+                remaining -= 2
+
+            if remaining >= 1:
+                chunk_value[3] = 1
+                remaining -= 1
+
+            result += ''.join(map(str, chunk_value))
+
+        while result[0] == '0':
+            result = result[1:]
+
+        return result
+
+    def toOctal(self) -> str:
+        """
+        Convert to octal number system.
+
+        This will convert from hex to decimal, and then decimal to octal since there is
+        no way to directly convert from hex to dec.
+        """
+
+        return Decimal(self.toDecimal()).toOctal()
 
 
 def clrscrn() -> None:
@@ -265,20 +441,64 @@ def main() -> int:
 
             source_value: str = input("Enter the source number: ")
             if source_base == 1:
-                return Decimal(source_value)()
+                try:
+                    Decimal(int(source_value))()
+                    input("Press enter to continue...")
+
+                except Exception as e:
+                    print("[ERROR] Invalid decimal number.")
+                    input("Press enter to continue...")
 
             elif source_base == 2:
-                return Binary(source_value)()
+                cancel_operation = False
+                for digit in source_value:
+                    if digit not in ('0', '1'):
+                        print("[ERROR] Invalid binary number.")
+                        input("Press enter to continue...")
+                        cancel_operation = True
+
+                if not cancel_operation:
+                    Binary(source_value)()
+                    input("Press enter to continue...")
 
             elif source_base == 3:
-                return Octal(source_value)()
+                cancel_operation = False
+                for digit in source_value:
+                    try:
+                        if int(digit) > 7 or int(digit) < 0:
+                            print("[ERROR] Invalid octal number.")
+                            input("Press enter to continue...")
+                            cancel_operation = True
+
+                    except (TypeError, ValueError):
+                        print("[ERROR] Invalid octal number.")
+                        input("Press enter to continue...")
+                        cancel_operation = True
+
+                if not cancel_operation:
+                    Octal(source_value)()
+                    input("Press enter to continue...")
 
             elif source_base == 4:
-                return Hexadecimal(source_value)()
+                cancel_operation = False
+                for digit in source_value:
+                    if not digit.isdigit():
+                        if digit.upper() not in ('A', 'B', 'C', 'D', 'E', 'F'):
+                            print("[ERROR] Invalid hexadecimal number.")
+                            input("Press enter to continue...")
+                            cancel_operation = True
+
+                if not cancel_operation:
+                    Hexadecimal(source_value)()
+                    input("Press enter to continue...")
 
             else:
                 print("[ERROR] Unknown base system.")
                 return 2
+
+        except (TypeError, ValueError):
+            input("[ERROR] The choice you entered does not exist. Press enter to continue...")
+            continue
 
         except Exception as e:
             print(f"[ERROR] An unhandled exception occured: {e}")
@@ -289,4 +509,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
