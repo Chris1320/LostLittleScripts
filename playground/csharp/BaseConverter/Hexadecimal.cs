@@ -1,5 +1,9 @@
 class Hexadecimal
 {
+    /// <summary>
+    /// This class does the conversion from hexadecimal to other number systems.
+    /// </summary>
+
     private string _val = "";
     public string val {
         get {return _val;}
@@ -51,6 +55,9 @@ class Hexadecimal
 
     public int toDecimal()
     {
+        /// <summary>
+        /// Convert to decimal.
+        /// </summary>
         int result = 0;
         int current_exponent = _val.Length - 1;
 
@@ -64,6 +71,10 @@ class Hexadecimal
 
     public string toBinary()
     {
+        /// <summary>
+        /// Convert to binary.
+        /// </summary>
+
         string result = "";
         for (int i = 0; i < _val.Length; i++)
         {
@@ -115,6 +126,13 @@ class Hexadecimal
 
     public string toOctal()
     {
+        /// <summary>
+        /// Convert to octal.
+        ///
+        /// There is no direct way to convert hex to octal, so we
+        /// will convert it to decimal first, and then into octal.
+        /// </summary>
+
         return new Decimal(toDecimal()).toOctal();
     }
 
