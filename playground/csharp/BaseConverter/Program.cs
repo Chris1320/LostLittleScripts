@@ -43,7 +43,7 @@
                         Console.Write("Enter the source number: ");
                         source_value = Console.ReadLine();
                     }
-                    while (source_value == null);
+                    while (source_value == null || source_value == "");
                 }
 
                 switch (option)
