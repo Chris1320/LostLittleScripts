@@ -5,7 +5,8 @@ class Decimal
     /// </summary>
 
     private int _val = 0;
-    public int val {
+    public int val
+    {
         get {return _val;}
         private set {}
     }

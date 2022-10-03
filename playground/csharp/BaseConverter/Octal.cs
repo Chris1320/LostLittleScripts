@@ -5,7 +5,8 @@ class Octal
     /// </summary>
 
     private string _val = "0";
-    public string val {
+    public string val
+    {
         get {return _val;}
         private set {}
     }
@@ -18,8 +19,8 @@ class Octal
 
         for (int i = 0; i < user_input_value.Length; i++)
         {
-            int v = (int) Char.GetNumericValue(user_input_value[i]);
-                if (v < 0 || v > 7) throw new ArgumentException("You entered an invalid octal number.");
+            int v = (int)Char.GetNumericValue(user_input_value[i]);
+            if (v < 0 || v > 7) throw new ArgumentException("You entered an invalid octal number.");
         }
 
         for (int i = 0; i < user_input_value.Length; i++)
@@ -58,7 +59,7 @@ class Octal
         for (int i = 0; i < _val.Length; i++)
         {
             string chunk_value = "";
-            int remaining = (int) Char.GetNumericValue(_val[i]);
+            int remaining = (int)Char.GetNumericValue(_val[i]);
 
             // Calculate the third bit.
             if (remaining >= 4)

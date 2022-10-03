@@ -5,7 +5,8 @@ class Hexadecimal
     /// </summary>
 
     private string _val = "";
-    public string val {
+    public string val
+    {
         get {return _val;}
         private set {}
     }
@@ -147,7 +148,7 @@ class Hexadecimal
             return hex_values[num];
         }
 
-        return (char) num;
+        return (char)num;
     }
 
     public static int hex2Num(char hex_char)
@@ -161,6 +162,6 @@ class Hexadecimal
             return dec_values[hex_char];
         }
 
-        return (int) Char.GetNumericValue(hex_char);
+        return (int)Char.GetNumericValue(hex_char);
     }
 }

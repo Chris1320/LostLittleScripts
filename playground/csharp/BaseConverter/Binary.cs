@@ -5,7 +5,8 @@ class Binary
     /// </summary>
 
     private string _val = "0";
-    public string val {  // Return the private value `_val` and make it read-only.
+    public string val
+    {  // Return the private value `_val` and make it read-only.
         get {return _val;}
         private set {}
     }
