@@ -40,7 +40,7 @@ class Decimal
         while (remaining > 0)
         {
             result = Convert.ToString(remaining % 2) + result;  // Get the remainder of `remaining mod 2`.
-            remaining = remaining / 2;  // Perform an integer division.
+            remaining /= 2;  // Perform an integer division.
         }
 
         return result;
@@ -57,7 +57,7 @@ class Decimal
         while (remaining > 0)
         {
             result = Convert.ToString(remaining % 8) + result;
-            remaining = remaining / 8;  // Perform an integer division.
+            remaining /= 8;  // Perform an integer division.
         }
 
         return result;
@@ -77,7 +77,7 @@ class Decimal
             remainder = remaining % 16;
             if (remainder > 9) result = Hexadecimal.num2Hex(remainder) + result;
             else result = Convert.ToString(remainder) + result;
-            remaining = remaining / 16;  // Perform an integer division.
+            remaining /= 16;  // Perform an integer division.
         }
 
         return result;

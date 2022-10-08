@@ -15,6 +15,10 @@
         char option;
         string? source_value;  // Declare a nullable string.
 
+        int value_dec = 0;
+        bool show_output = false;
+        string value_bin = "0", value_oct = "0", value_hex = "0";
+
         while (true)  // Loops to ask user what operation to do.
         {
             try
@@ -50,49 +54,62 @@
                 {
                     case '1':  // Decimal
                         var decimal_converter = new Decimal(source_value);
-                        Console.WriteLine($"Decimal:     {decimal_converter.val}");
-                        Console.WriteLine($"Binary:      {decimal_converter.toBinary()}");
-                        Console.WriteLine($"Octal:       {decimal_converter.toOctal()}");
-                        Console.WriteLine($"Hexadecimal: {decimal_converter.toHexadecimal()}");
-                        Console.Write("\nPress any key to continue...");
-                        Console.ReadKey();
+                        value_dec = decimal_converter.val;
+                        value_bin = decimal_converter.toBinary();
+                        value_oct = decimal_converter.toOctal();
+                        value_hex = decimal_converter.toHexadecimal();
+                        show_output = true;
                         break;
 
                     case '2':  // Binary
                         var binary_converter = new Binary(source_value);
-                        Console.WriteLine($"Decimal:     {binary_converter.toDecimal()}");
-                        Console.WriteLine($"Binary:      {binary_converter.val}");
-                        Console.WriteLine($"Octal:       {binary_converter.toOctal()}");
-                        Console.WriteLine($"Hexadecimal: {binary_converter.toHexadecimal()}");
-                        Console.Write("\nPress any key to continue...");
-                        Console.ReadKey();
+                        value_dec = binary_converter.toDecimal();
+                        value_bin = binary_converter.val;
+                        value_oct = binary_converter.toOctal();
+                        value_hex = binary_converter.toHexadecimal();
+                        show_output = true;
                         break;
 
                     case '3':  // Octal
                         var octal_converter = new Octal(source_value);
-                        Console.WriteLine($"Decimal:     {octal_converter.toDecimal()}");
-                        Console.WriteLine($"Binary:      {octal_converter.toBinary()}");
-                        Console.WriteLine($"Octal:       {octal_converter.val}");
-                        Console.WriteLine($"Hexadecimal: {octal_converter.toHexadecimal()}");
-                        Console.Write("\nPress any key to continue...");
-                        Console.ReadKey();
+                        value_dec = octal_converter.toDecimal();
+                        value_bin = octal_converter.toBinary();
+                        value_oct = octal_converter.val;
+                        value_hex = octal_converter.toHexadecimal();
+                        show_output = true;
                         break;
 
                     case '4':  // Hexadecimal
                         var hex_converter = new Hexadecimal(source_value);
-                        Console.WriteLine($"Decimal:     {hex_converter.toDecimal()}");
-                        Console.WriteLine($"Binary:      {hex_converter.toBinary()}");
-                        Console.WriteLine($"Octal:       {hex_converter.toOctal()}");
-                        Console.WriteLine($"Hexadecimal: {hex_converter.val}");
-                        Console.Write("\nPress any key to continue...");
-                        Console.ReadKey();
+                        value_dec = hex_converter.toDecimal();
+                        value_bin = hex_converter.toBinary();
+                        value_oct = hex_converter.toOctal();
+                        value_hex = hex_converter.val;
+                        show_output = true;
                         break;
 
                     default:  // If no options matched
+                        show_output = false;
                         Console.WriteLine("[!] Unknown option. Press any key to continue...");
                         Console.ReadKey();
                         break;
                 }
+
+                if (show_output)
+                {
+                    Console.WriteLine($"Decimal:     {value_dec}");
+                    Console.WriteLine($"Binary:      {value_bin}");
+                    Console.WriteLine($"Octal:       {value_oct}");
+                    Console.WriteLine($"Hexadecimal: {value_hex}");
+                    Console.Write("\nPress any key to continue...");
+                    Console.ReadKey();
+                }
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine($"[ERROR] {e.Message}");
+                Console.Write("Press any key to continue...");
+                    Console.ReadKey();
             }
             catch (System.FormatException)
             {

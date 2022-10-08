@@ -61,10 +61,7 @@ class Binary
 
         // Check the value first and pad if neccessary.
         string bin_value = _val;  // Copy it to a new variable because we will modify it.
-        while (bin_value.Length % 3 != 0)  // Check if the value can be divided into three values per chunk.
-        {
-            bin_value = "0" + bin_value;
-        }
+        while (bin_value.Length % 3 != 0) bin_value = "0" + bin_value;  // Check if the value can be divided into three values per chunk.
 
         // Perform the conversion.
         string result = "";
@@ -72,20 +69,9 @@ class Binary
         {
             int chunk_value = 0;
 
-            if (bin_value[i] == '1')  // Check the last digit of the current chunk.
-            {
-                chunk_value += 1;
-            }
-
-            if (bin_value[i - 1] == '1')  // Check the second to the last digit of the current chunk.
-            {
-                chunk_value += 2;
-            }
-
-            if (bin_value[i - 2] == '1')  // Check the third to the last digit of the current chunk.
-            {
-                chunk_value += 4;
-            }
+            if (bin_value[i] == '1') chunk_value += 1;  // Check the last digit of the current chunk.
+            if (bin_value[i - 1] == '1') chunk_value += 2;  // Check the second to the last digit of the current chunk.
+            if (bin_value[i - 2] == '1') chunk_value += 4;  // Check the third to the last digit of the current chunk.
 
             result = $"{chunk_value}" + result;
         }
@@ -101,35 +87,17 @@ class Binary
 
         // Check the value first and pad if neccessary.
         string bin_value = _val;  // Copy it to a new variable because we will modify it.
-        while (bin_value.Length % 4 != 0)
-        {
-            bin_value = "0" + bin_value;
-        }
+        while (bin_value.Length % 4 != 0) bin_value = "0" + bin_value;
 
         // Perform the conversion.
         string result = "";
         for (int i = bin_value.Length - 1; i >= 0; i -= 4)
         {
             int chunk_value = 0;
-            if (bin_value[i] == '1')
-            {
-                chunk_value += 1;
-            }
-
-            if (bin_value[i - 1] == '1')
-            {
-                chunk_value += 2;
-            }
-
-            if (bin_value[i - 2] == '1')
-            {
-                chunk_value += 4;
-            }
-
-            if (bin_value[i - 3] == '1')
-            {
-                chunk_value += 8;
-            }
+            if (bin_value[i] == '1') chunk_value += 1;
+            if (bin_value[i - 1] == '1') chunk_value += 2;
+            if (bin_value[i - 2] == '1') chunk_value += 4;
+            if (bin_value[i - 3] == '1') chunk_value += 8;
 
             if (chunk_value > 9) result = Hexadecimal.num2Hex(chunk_value) + result;
             else result = $"{chunk_value}" + result;
