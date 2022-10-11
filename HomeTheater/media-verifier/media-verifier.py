@@ -23,10 +23,10 @@ import json
 import zipfile
 import subprocess
 
-import ass
-import prettytable
-from PIL import Image
-from PyPDF2 import PdfFileReader
+import ass  # For checking `.ass` subtitle formats
+import prettytable  # For cleaner-looking tables
+from PIL import Image  # For checking image file formats.
+from PyPDF2 import PdfFileReader  # For checking PDFs.
 
 ERRED_LIST = "problematic-media.txt"
 JSON_OUTPUT_PATH = "media-verifier-output.json"  # The output file.
@@ -50,12 +50,10 @@ def imageVerifier(image_path: str) -> dict[str, str]:
             image.verify()
 
     except Exception as e:
-        result = {"status": "corrupted", "message": str(e)}
+        return {"status": "corrupted", "message": str(e)}
 
     else:
-        result = {"status": "ok"}
-
-    return result
+        return {"status": "ok"}
 
 
 def videoVerifier(video_path: str) -> dict[str, str]:
@@ -83,13 +81,7 @@ def videoVerifier(video_path: str) -> dict[str, str]:
     #     # TODO: Check if the video is not corrupted.
 
     ffmpeg_result = subprocess.getoutput(ffmpeg_command.format(exe="ffmpeg", filename=video_path.replace('"', '\'').replace("$", "\\$")))
-    if ffmpeg_result == '':
-        result = {"status": "ok"}
-
-    else:
-        result = {"status": "anomalous", "message": ffmpeg_result}
-
-    return result
+    return {"status": "ok"} if ffmpeg_result == '' else {"status": "anomalous", "message": ffmpeg_result}
 
 
 def audioVerifier(audio_path: str) -> dict[str, str]:
@@ -115,18 +107,14 @@ def txtVerifier(txt_path: str) -> dict[str, str]:
 
     try:
         with open(txt_path, 'r', encoding="utf-8") as f:
-            data = f.read()
-
-        if data == '':
-            raise Exception("Empty file.")
+            if f.read() == '':
+                raise Exception("Empty file.")
 
     except Exception as e:
-        result = {"status": "corrupted", "message": str(e)}
+        return {"status": "corrupted", "message": str(e)}
 
     else:
-        result = {"status": "ok"}
-
-    return result
+        return {"status": "ok"}
 
 
 def subVerifier(sub_path: str) -> dict[str, str]:
@@ -149,12 +137,10 @@ def subVerifier(sub_path: str) -> dict[str, str]:
         #     data.events[event].dump()
 
     except Exception as e:
-        result = {"status": "corrupted", "message": str(e)}
+        return {"status": "corrupted", "message": str(e)}
 
     else:
-        result = {"status": "ok"}
-
-    return result
+        return {"status": "ok"}
 
 
 def bookVerifier(book_path: str) -> dict:
@@ -166,7 +152,7 @@ def bookVerifier(book_path: str) -> dict:
     :returns: The verification result.
     """
 
-    book_ext = book_path[::-1].partition('.')[0][::-1].lower()
+    book_ext = book_path[::-1].partition('.')[0][::-1].lower()  # Get the file extension of the file.
 
     if book_ext == "pdf":
         try:
