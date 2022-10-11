@@ -23,7 +23,7 @@ import sys
 
 class Solution:
     def isEven(self, x: int | float) -> bool:
-        return True if x % 2 == 0 else False
+        return x % 2 == 0
 
     def countOdds(self, low: int, high: int) -> int:
         """
@@ -37,7 +37,7 @@ class Solution:
 
         else:
             if self.isEven(low) and self.isEven(high):
-                return (int(num_in_range) // 2)
+                return int(num_in_range) // 2
 
             else:
                 return (int(num_in_range) // 2) + 1
