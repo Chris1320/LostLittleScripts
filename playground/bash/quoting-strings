@@ -1,4 +1,4 @@
-#!usr/bin/env bash
+#!/usr/bin/env bash
 
 world="Universe"  # Set the value of the variable `world` to "Universe".
 
