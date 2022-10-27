@@ -10,6 +10,11 @@ public class Solution
         System.out.print("Enter the width of the rectangle: ");
         int width = user_input.nextInt();
 
-        System.out.println("The area of " + height + 'x' + width + " is " + (height * width) + '.');
+        System.out.printf(
+            "The area of a %sx%s rectangle is %s.",
+            height,
+            width,
+            height * width
+        );
     }
 }

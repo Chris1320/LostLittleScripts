@@ -19,7 +19,8 @@ public class DaysToYWD
 
         // ? Perform the operations.
         years = days / 365.25;  // There are 365.25 days in a year including leap years.
-        weeks = days / 7;  // There are 7 days in a week.
+        weeks = (days % 365.25) / 7;  // There are 7 days in a week.
+        days = (days % 365.25) % 7;
 
         // ? Print the result.
         System.out.printf("%s days is equivalent to...\n", days);
