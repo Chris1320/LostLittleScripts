@@ -1,14 +1,14 @@
 /*
  * Write a java program that will assign a value in a variable called V_Class and km.
  * The program will then identify the rate and additional fee according to the following.
- * 
+ *
  * | Class | Rate | Additional Fee |
  * | 1     | 41   | 20 per km      |
  * | 2     | 102  | 35 per km      |
  * | 3     | 122  | 50 per km      |
  *
  * The program will also compute for the total amount to be paid according to the table above.
- * Formula is `rate + (km * additional fee)`. 
+ * Formula is `rate + (km * additional fee)`.
  *
  * Test Data:
  * - Vehicle Class:  1
