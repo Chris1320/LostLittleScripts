@@ -1,3 +1,6 @@
+rem Based on the following Reddit post:
+rem https://www.reddit.com/r/PowerShell/comments/tcoxcx/repairing_wmi_in_2022/i0i1fwd/
+
 @echo off
 
 echo [i] Disabling and stopping WMI service...
