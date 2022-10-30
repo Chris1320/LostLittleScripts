@@ -31,7 +31,7 @@ public static class TwoFer
 
     public static void Main(string[] args)
     {
-        Console.WriteLine(Speak());
-        Console.WriteLine(Speak("Alice"));
+        if (args.Length == 0) Console.WriteLine(Speak());
+        else Console.WriteLine(Speak(args[0]));
     }
 }
