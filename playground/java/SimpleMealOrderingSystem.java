@@ -35,10 +35,10 @@ public class SimpleMealOrderingSystem
                 null,
                 String.format(
                     "Please choose a meal:\n\n%s\n%s\n%s\n%s\n\n%s",
-                    "[ A ] Chicken & Spaghetti         150",
-                    "[ B ] Hamburger & Fries           145",
-                    "[ C ] Cheesedog                   100",
-                    "[ D ] Pizza                       80",
+                    "[ A ] Chicken & Spaghetti         150",  // TODO: Manually align for now...
+                    "[ B ] Hamburger & Fries            145",
+                    "[ C ] Cheesedog                          100",
+                    "[ D ] Pizza                                      80",
                     "[ Q ] Quit"
                 )
             ).toLowerCase().toCharArray()[0];
@@ -49,8 +49,8 @@ public class SimpleMealOrderingSystem
                 null,
                 String.format(
                     "Please choose a drink:\n\n%s\n%s\n%s\n",
-                    "[ A ] Small          30",
-                    "[ B ] Medium         35",
+                    "[ A ] Small          30",  // TODO: Manually align for now...
+                    "[ B ] Medium      35",
                     "[ C ] Large          40"
                 )
             ).toLowerCase().toCharArray()[0];
@@ -108,7 +108,7 @@ public class SimpleMealOrderingSystem
             }
             catch (NumberFormatException e)
             {
-                JOptionPane.showMessageDialog(null, "Please enter a valid number.", program_name, 0);
+                JOptionPane.showMessageDialog(null, "Please enter a valid quantity.", program_name, 0);
                 continue;
             }
 
