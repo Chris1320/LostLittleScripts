@@ -14,15 +14,27 @@ public class BingoCardGenerator
         var card1 = new BingoCard();
         var card2 = new BingoCard();
 
-        // ? Re-populate cards.
-        // card1.generateCard();
-        // card2.generateCard();
-
         // ? Print card contents.
         System.out.println("Card #1:");
         System.out.println(card1.printCard());
         System.out.println("Card #2:");
         System.out.println(card2.printCard());
+
+        // ? Re-shuffle cards.
+        card1.regenerateCard();
+        card2.regenerateCard();
+
+        // ? Print card contents in the same line
+        String[] card1_result = card1.printCard().split("\n");  // Create a string array.
+        String[] card2_result = card2.printCard().split("\n");
+        var result = new StringBuilder();
+
+        for (int i = 0; i < card1_result.length && i < card2_result.length; i++)
+        {
+            result.append(card1_result[i] + " ".repeat(20) + card2_result[i] + '\n');
+        }
+
+        System.out.println(result.toString());
     }
 }
 
@@ -84,6 +96,13 @@ public class BingoCard
         {
             for (int row = 0; row < this.card_length; row++)
             {
+                if (column == 2 && row == 2)
+                {
+                    // Set it as a free square. (This is a Bingo rule, iirc)
+                    this.card_contents[column][row] = 0;
+                    continue;
+                }
+
                 int possible_candidate;
                 do
                 {
@@ -106,11 +125,13 @@ public class BingoCard
             result.append('|');
             for (int column = 0; column < this.card_width; column++)
             {
-                result.append(
-                    this.centerText(
-                        Integer.toString(this.card_contents[column][row]), 5
-                    ) + "|"
-                );
+                String square_content;
+                if (this.card_contents[column][row] == 0) square_content = this.centerText("FREE!", 5) + "|";
+                else square_content = this.centerText(
+                    Integer.toString(this.card_contents[column][row]), 5
+                ) + "|";
+
+                result.append(square_content);
             }
             result.append('\n');
         }
