@@ -3,16 +3,16 @@ public class EnumeratedTypes
     public static void main(String[] args)
     {
         var brand_new_car = new Car("Bob", Car.colors.GREEN);
-
         brand_new_car.announce();
     }
 }
 
 public class Car
 {
+    public static enum colors {BLUE, RED, GREEN, BLACK, WHITE};
+
     String owner;
     colors color;
-    public static enum colors {BLUE, RED, GREEN, BLACK, WHITE};
 
     public Car(String owner, Car.colors color)
     {
