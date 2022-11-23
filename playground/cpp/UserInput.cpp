@@ -1,14 +1,12 @@
 #include <iostream>
 
-using namespace std;
-
 int main()
 {
     int num;
 
-    cout << "Enter a number: ";
-    cin >> num;
-    cout << "You entered the number " << num << endl;
+    std::cout << "Enter a number: ";
+    std::cin >> num;
+    std::cout << "You entered the number " << num << std::endl;
 
     return 0;
 }

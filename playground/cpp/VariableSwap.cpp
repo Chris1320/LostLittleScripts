@@ -8,16 +8,14 @@
 
 #include <iostream>
 
-using namespace std;
-
 int main()
 {
     int aquariumDavid = 8;
     int aquariumAlex = 11;
 
-    swap(aquariumAlex, aquariumDavid);  // swap contents of the variables.
+    std::swap(aquariumAlex, aquariumDavid);  // swap contents of the variables.
 
-    cout << "David's aquarium: " << aquariumDavid << endl;
-    cout << "Alex's aquarium: " << aquariumAlex << endl;
+    std::cout << "David's aquarium: " << aquariumDavid << '\n';
+    std::cout << "Alex's aquarium: " << aquariumAlex << std::endl;
     return 0;
 }
