@@ -11,17 +11,9 @@ int main()
     scanf("%i", &sequence_length);
     printf("\nListing %i Fibonacci numbers...\n\n", sequence_length);
 
-    if (sequence_length < 1)
-    {
-        return 0;
-    }
-
+    if (sequence_length < 1) return 0;
     printf("[1] %i\n", x);
-    if (sequence_length < 2)
-    {
-        return 0;
-    }
-
+    if (sequence_length < 2) return 0;
     printf("[2] %i\n", y);
     for (int i = 2; i < sequence_length; i++)
     {
