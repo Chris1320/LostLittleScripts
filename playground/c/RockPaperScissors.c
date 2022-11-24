@@ -2,13 +2,15 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <stdbool.h>
+
+#define MIN_PLAYERS 1
+#define MAX_PLAYERS 2
 
 #ifdef _WIN32
-    const int IS_WIN = true;
+    const int IS_WIN = 1;
 
 #else
-    const int IS_WIN = false;
+    const int IS_WIN = 0;
 
 #endif
 
@@ -17,10 +19,7 @@ void setupGame();
 void clearScreen();
 void startGame(int players);
 
-// Constants
 const char PROGRAM_NAME[] = "Rock Paper Scissors";
-const int MIN_PLAYERS = 1;
-const int MAX_PLAYERS = 2;
 
 void clearScreen()
 {
@@ -31,7 +30,7 @@ void clearScreen()
 void setupGame()
 {
     int number_of_players;
-    while (true)
+    while (1)
     {
         clearScreen();
         printf("\n%s\n[1] One Player\n[2] Two Players\n\n >>> ", PROGRAM_NAME);
@@ -54,10 +53,11 @@ void startGame(int players)
     int p1_choice, p2_choice;
     char weapon_names[][9] = {"Rock", "Paper", "Scissors"};
     // ? The arrangement of the weapons are used in the evaluation of the winner below.
-    char prompt[] = "Player #2\n\n[1] Rock\n[2] Paper\n[3] Scissors\n\nChoose your weapon >>> ";
-    clearScreen();
+    char prompt[] = "[1] Rock\n[2] Paper\n[3] Scissors\n\nChoose your weapon >>> ";
     do  // Ask player 1 for input.
     {
+        clearScreen();
+        printf("Player #1\n\n");
         printf("%s", prompt);
         scanf("%d%*c", &p1_choice);
     }
@@ -68,10 +68,11 @@ void startGame(int players)
         do  // Ask player 2 for input.
         {
             clearScreen();
+            printf("Player #2\n\n");
             printf("%s", prompt);
             scanf("%d%*c", &p2_choice);
         }
-        while (p1_choice < 1 || p1_choice > 3);
+        while (p2_choice < 1 || p2_choice > 3);
     }
     else p2_choice = (rand() % 3) + 1;
 
@@ -91,7 +92,7 @@ int main(int argc, char *argv[])
 {
     char menu_choice;
     srand(time(NULL));  // Seed the random number generator.
-    while (true)
+    while (1)
     {
         clearScreen();
         printf("\n%s\n[S] Start Game\n[Q] Quit\n\n >>> ", PROGRAM_NAME);
