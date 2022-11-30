@@ -10,5 +10,5 @@ int main()
     cin >> x;
     cout << "Enter number y: ";
     cin >> y;
-    cout << x * y << std::endl;
+    cout << "Answer: " << x * y << std::endl;
 }
