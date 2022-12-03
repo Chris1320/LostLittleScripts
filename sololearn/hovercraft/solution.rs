@@ -6,7 +6,7 @@ fn main()
     let cost = 2_000_000.0;  // How much does it cost to build a hovercraft
     let price = 3_000_000.0;  // How much is the hovercraft being sold
     let insurance = 1_000_000.0;  // Paid every month
-    let quantity: f64 = 10.0;  // How many hovercrafts are made every month.
+    let quantity = 10.0;  // How many hovercrafts are made every month.
     let mut number_of_customers = String::new();  // How many customers bought a hovercraft that month.
 
     print!("How many hovercrafts did you sell this month? > ");
