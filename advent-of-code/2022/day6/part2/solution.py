@@ -3,7 +3,7 @@ import sys
 
 from typing import Final
 
-MARKER_LENGTH: Final[int] = 4
+MARKER_LENGTH: Final[int] = 14
 
 
 def main() -> int:
