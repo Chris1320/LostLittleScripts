@@ -1,5 +1,10 @@
 fn main()
 {
+    // Rust is a statically-typed language, but most of the time the compiler can
+    // infer the type of the variable we are using.
+    // The following code is also a valid variable initialization:
+    // let an_int = 512;
+
     let an_int: i32 = 512;  // All variations: u8, i8, u16, i16, u32, i32, u64, i64, u128, i128
     let a_float: f64 = 67.1262;  // All variations: f32, f64
     let a_boolean: bool = true;  // Another possible value: false
