@@ -12,8 +12,8 @@ fn main()
     let a_tuple: (char, char, char, char, char) = ('H', 'E', 'L', 'L', 'O');
     let an_array: [i32; 3] = [2, 4, 6];
 
-    println!("Integer:   {}", an_int);
-    println!("Float:     {}", a_float);
+    println!("Integer:   {} (Range: {}-{})", an_int, std::i32::MIN, std::i32::MAX);
+    println!("Float:     {}", a_float);  // `std::f64::MIN, std::f64::MAX)` to get the min and max values of f64.
     println!("Boolean:   {}", a_boolean);
     println!("Character: {}", a_char);
     println!("Tuple:     {:?}", a_tuple);
