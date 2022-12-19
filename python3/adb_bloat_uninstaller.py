@@ -389,17 +389,19 @@ class Device(ADB):
         packages = []
         user_packages = self._listInstalledPackages(user, "-3")
         system_packages = self._listInstalledPackages(user, "-s")
+
         enabled_packages = self._listInstalledPackages(user, "-e")
         disabled_packages = self._listInstalledPackages(user, "-d")
-        uninstalled_packages = self._listInstalledPackages(user, "-u")
-        all_packages = set(user_packages + system_packages + enabled_packages + disabled_packages + uninstalled_packages)
 
-        for package in all_packages:
+        all_packages = set(user_packages) | set(system_packages) | set(enabled_packages) | set(disabled_packages)
+        uninstalled_packages = list(set(self._listInstalledPackages(user, "-u")) - set(all_packages))
+
+        for package in set(all_packages) | set(uninstalled_packages):
             packages.append([
                 package,
                 {
                     "type": "user" if package in user_packages else "system",
-                    "enabled": package in enabled_packages,
+                    "enabled": package not in disabled_packages,
                     "uninstalled": package in uninstalled_packages
                     # All possible switches:
                     # "user_package": package in user_packages,
