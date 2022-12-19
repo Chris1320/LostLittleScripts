@@ -385,7 +385,7 @@ class Device(ADB):
 
         return result
 
-    def getPackages(self, user: Optional[str] = None) -> list[dict[str, dict]]:
+    def getPackages(self, user: Optional[str] = None) -> list[list[str | dict]]:
         packages = []
         user_packages = self._listInstalledPackages(user, "-3")
         system_packages = self._listInstalledPackages(user, "-s")
@@ -395,17 +395,21 @@ class Device(ADB):
         all_packages = set(user_packages + system_packages + enabled_packages + disabled_packages + uninstalled_packages)
 
         for package in all_packages:
-            packages.append({
-                package: {
-                    "user_package": package in user_packages,
-                    "system_package": package in system_packages,
-                    "enabled_package": package in enabled_packages,
-                    "disabled_package": package in disabled_packages,
-                    "uninstalled_packages": package in uninstalled_packages
+            packages.append([
+                package,
+                {
+                    "type": "user" if package in user_packages else "system",
+                    "enabled": package in enabled_packages,
+                    "uninstalled": package in uninstalled_packages
+                    # All possible switches:
+                    # "user_package": package in user_packages,
+                    # "system_package": package in system_packages,
+                    # "enabled_package": package in enabled_packages and package not in disabled_packages,
+                    # "disabled_package": package in disabled_packages,
+                    # "uninstalled_packages": package in uninstalled_packages
                 }
-            })
+            ])
 
-        print(f"there are a total of {len(all_packages)} packages.")
         return packages
 
     def removeOrDisable(self, package_name: str) -> str:
@@ -431,42 +435,92 @@ class Device(ADB):
 
 if __name__ == "__main__":
     try:
-        adb = ADB()
-
-    except ValueError:
         try:
-            adb = ADB(InputBox(PROGRAM_NAME, "ADB Path not detected!\nPlease enter the path of your ADB binary.")())
+            adb = ADB()
 
         except ValueError:
-            print("[CRITICAL] The ADB path you entered does not exist. Please download the Android Debug Bridge (ADB) binary and try again.")
-            sys.exit(1)
+            try:
+                adb = ADB(InputBox(PROGRAM_NAME, "ADB Path not detected!\nPlease enter the path of your ADB binary.")())
 
-    # ? Choose device to modify
-    while True:
-        print("[i] Scanning for devices...")
-        devices = adb.getDeviceInfo()
-        device_choices = {idx + 1: f"{dev_info['device']} {dev_info['model']} ({dev_info['id']})" for idx, dev_info in devices}
-        chosen_device = devices[int(Choices(device_choices, PROGRAM_NAME, "Please select a device to modify.")()) - 1]
-        if Choices(
-            {'Y': "Yes", 'N': "No"},
-            PROGRAM_NAME,
-            f"Are you sure that you want to modify {chosen_device['device']} {chosen_device['model']}?\nNOTE: CREATE A BACKUP OF YOUR DATA FIRST"
-        )().lower() == 'y':
-            break
+            except ValueError:
+                print("[CRITICAL] The ADB path you entered does not exist. Please download the Android Debug Bridge (ADB) binary and try again.")
+                sys.exit(1)
 
-    # ? Scan device packages.
-    device = Device(chosen_device["id"], adb.executable)
-    device_packages = {}
-    for user in device.getUsers():
-        device_packages[user["id"]] = device.getPackages(user["id"])
+        # ? Choose device to modify
+        while True:
+            print("[i] Scanning for devices...")
+            devices = adb.getDeviceInfo()
+            device_choices = {
+                str(idx + 1): f"{dev_info['device']} {dev_info['model']} ({dev_info['id']})"
+                for idx, dev_info in enumerate(devices)
+            }
+            chosen_device = devices[
+                int(Choices(
+                    device_choices,
+                    PROGRAM_NAME,
+                    "Please select a device to modify.\nNOTE: CREATE A BACKUP OF YOUR DATA FIRST"
+                )()) - 1
+            ]
+            if Choices(
+                {'Y': "Yes", 'N': "No"},
+                PROGRAM_NAME,
+                "{0}\n{1}".format(
+                    "Are you sure that you want to modify the following device?",
+                    f"{chosen_device['device']} {chosen_device['model']} ({chosen_device['id']})"
+                )
+            )().lower() == 'y':
+                break
 
-    results = []
-    for idx, pkg in enumerate(sys.argv):
-        if idx == 0:
-            continue
+        device = Device(chosen_device["id"], adb.executable)
+        # ? Get packages to uninstall/disable
+        while True:
+            if Choices(
+                {"F": "Use a file containing a list of package names", "M": "Manually enter package names"},
+                PROGRAM_NAME,
+                "How are we going to determine which packages to uninstall/disable?"
+            )().lower() == 'f':
+                filepath = InputBox(
+                    PROGRAM_NAME,
+                    input_prompt="Enter the filepath >>> "
+                )()
+                try:
+                    with open(filepath, 'r') as f:
+                        packages_to_remove = f.read().split()
 
-        print(f"Attempting to uninstall or disable `{pkg}`")
-        results.append((pkg, device.removeOrDisable(pkg)))
+                    break
 
-    for result in results:
-        print(f"{result[0]}: {result[1]}")
+                except FileNotFoundError:
+                    print("[ERROR] File does not exist.")
+                    confirm()
+
+            else:
+                package = InputBox(
+                    PROGRAM_NAME,
+                    "Enter the packages to uninstall/disable below. Package names can be separated by a comma (,)"
+                )().replace(' ', '')
+                packages_to_remove: list[str] = package.split(',') if ',' in package else [package]
+                break
+
+        clearScreen()
+        for pkg in packages_to_remove:
+            print(pkg)
+
+        print()
+        print(f"{len(packages_to_remove)} package(s) will be uninstalled/disabled.")
+        print("Enter `continue` to start the operation.\n")
+        if input(" >>> ") != "continue":
+            print("\nOperation cancelled.")
+            sys.exit(3)
+
+        # ? Perform the operations
+        results = []
+        for idx, package in enumerate(packages_to_remove):
+            print(f"Attempting to uninstall or disable `{package}`")
+            results.append((package, device.removeOrDisable(package)))
+
+        for result in results:
+            print(f"{result[0]}: {result[1]}")
+
+    except KeyboardInterrupt:
+        print("\n\n[!] CTRL+C detected, exiting...")
+        sys.exit(2)
