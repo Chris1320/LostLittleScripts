@@ -420,17 +420,18 @@ class Device(ADB):
         uninstall -> disable -> disable-user
         """
 
+        # FIXME: User ID is hardcoded (0) which may differ from phone to phone.
         cmd_output = self._uninstallPackage(package_name, '0')
-        if "fail" not in cmd_output[1].lower() and "error" not in cmd_output[1].lower():
-            return f"[uninstall] {cmd_output[1]}"
+        if "fail" not in cmd_output.lower() and "error" not in cmd_output.lower():
+            return f"[uninstall] {cmd_output}"
 
         cmd_output = self._disablePackage(package_name, '0')
-        if "fail" not in cmd_output[1].lower() and "error" not in cmd_output[1].lower():
-            return f"[disable] {cmd_output[1]}"
+        if "fail" not in cmd_output.lower() and "error" not in cmd_output.lower():
+            return f"[disable] {cmd_output}"
 
         cmd_output = self._disableUserPackage(package_name, '0')
-        if "fail" not in cmd_output[1].lower() and "error" not in cmd_output[1].lower():
-            return f"[disable-user] {cmd_output[1]}"
+        if "fail" not in cmd_output.lower() and "error" not in cmd_output.lower():
+            return f"[disable-user] {cmd_output}"
 
         return "[E] Unable to uninstall nor disable the package."
 
