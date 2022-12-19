@@ -499,9 +499,9 @@ if __name__ == "__main__":
             else:
                 package = InputBox(
                     PROGRAM_NAME,
-                    "Enter the packages to uninstall/disable below. Package names can be separated by a comma (,)"
+                    "Enter the packages to uninstall/disable below. Package names can be separated by a semicolon (;)"
                 )().replace(' ', '')
-                packages_to_remove: list[str] = package.split(',') if ',' in package else [package]
+                packages_to_remove: list[str] = package.split(';') if ';' in package else [package]
                 break
 
         clearScreen()
@@ -515,12 +515,15 @@ if __name__ == "__main__":
             print("\nOperation cancelled.")
             sys.exit(3)
 
+        print()
+        print("Uninstalling/disabling packages...")
         # ? Perform the operations
         results = []
         for idx, package in enumerate(packages_to_remove):
             print(f"Attempting to uninstall or disable `{package}`")
             results.append((package, device.removeOrDisable(package)))
 
+        print()
         for result in results:
             print(f"{result[0]}: {result[1]}")
 
