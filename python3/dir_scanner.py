@@ -16,7 +16,7 @@ from typing import Optional
 
 EXTENSION_SEPARATOR: Final[str] = '.'
 HELP_MENU: Final[str] = """
-    USAGE: {cmd} [--include|-i <ext>] [--exclude|-e <ext>] [--output|-o <filename>]
+USAGE: {cmd} [--include|-i <ext>] [--exclude|-e <ext>] [--output|-o <filename>]
 
     -i    --include        Include files ending in list <ext>. (separated by commas `,`)
     -e    --exclude        Exclude files ending in list <ext>. (separated by commas `,`)
