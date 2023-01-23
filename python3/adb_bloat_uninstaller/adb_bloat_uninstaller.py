@@ -15,7 +15,7 @@ from typing import Optional
 
 
 PROGRAM_NAME: Final[str] = "ADB Bloat Uninstaller"
-PROGRAM_VERSION: Final[tuple[int, int, int]] = (0, 1, 0)
+PROGRAM_VERSION: Final[tuple[int, int, int]] = (0, 2, 0)
 
 
 # START: User Interface Objects taken from ConfigHandler-python (https://github.com/Chris1320/ConfigHandler-python/blob/master/config_handler/_ui.py)
@@ -414,26 +414,26 @@ class Device(ADB):
 
         return packages
 
-    def removeOrDisable(self, package_name: str) -> str:
+    def removeOrDisable(self, package_name: str, user_id: str = '0') -> str:
         """
         Attemps to uninstall or disable the package in the following order:
         uninstall -> disable -> disable-user
         """
 
         # FIXME: User ID is hardcoded (0) which may differ from phone to phone.
-        cmd_output = self._uninstallPackage(package_name, '0')
+        cmd_output = self._uninstallPackage(package_name, user_id)
         if "fail" not in cmd_output.lower() and "error" not in cmd_output.lower():
-            return f"[uninstall] {cmd_output}"
+            return f"[uninstall][UID {user_id}] {cmd_output}"
 
-        cmd_output = self._disablePackage(package_name, '0')
+        cmd_output = self._disablePackage(package_name, user_id)
         if "fail" not in cmd_output.lower() and "error" not in cmd_output.lower():
-            return f"[disable] {cmd_output}"
+            return f"[disable][UID {user_id}] {cmd_output}"
 
-        cmd_output = self._disableUserPackage(package_name, '0')
+        cmd_output = self._disableUserPackage(package_name, user_id)
         if "fail" not in cmd_output.lower() and "error" not in cmd_output.lower():
-            return f"[disable-user] {cmd_output}"
+            return f"[disable-user][UID {user_id}] {cmd_output}"
 
-        return "[E] Unable to uninstall nor disable the package."
+        return f"[E][UID {user_id}] Unable to uninstall nor disable the package."
 
 
 if __name__ == "__main__":
@@ -457,13 +457,19 @@ if __name__ == "__main__":
                 str(idx + 1): f"{dev_info['device']} {dev_info['model']} ({dev_info['id']})"
                 for idx, dev_info in enumerate(devices)
             }
-            chosen_device = devices[
-                int(Choices(
-                    device_choices,
-                    PROGRAM_NAME,
-                    "Please select a device to modify.\nNOTE: CREATE A BACKUP OF YOUR DATA FIRST"
-                )()) - 1
-            ]
+            try:
+                chosen_device = devices[
+                    int(Choices(
+                        device_choices,
+                        PROGRAM_NAME,
+                        "Please select a device to modify. If there is no device model/brand/serial shown, please restart the program by pressing CTRL+C.\nNOTE: CREATE A BACKUP OF YOUR DATA FIRST"
+                    )()) - 1
+                ]
+
+            except ValueError:
+                print("There are no devices available. Please make sure that you have a stable connection to the device.")
+                sys.exit(4)
+
             if Choices(
                 {'Y': "Yes", 'N': "No"},
                 PROGRAM_NAME,
@@ -504,6 +510,20 @@ if __name__ == "__main__":
                 packages_to_remove: list[str] = package.split(';') if ';' in package else [package]
                 break
 
+        # ? Select users to modify.
+        users_to_modify: list[list[dict | bool]] = [[user, False] for user in device.getUsers()]
+        while True:
+            try:
+                idx = int(Choices(
+                              {str(idx + 1): f"{user_info[0]['name']} ({user_info[0]['id']}) [Modify: {user_info[1]}]" for idx, user_info in enumerate(users_to_modify)},  # type: ignore
+                    "Select Users to Modify",
+                    "Press CTRL+C to finish."
+                )()) - 1
+                users_to_modify[idx][1] = not users_to_modify[idx][1]
+
+            except KeyboardInterrupt:
+                break
+
         clearScreen()
         for pkg in packages_to_remove:
             print(pkg)
@@ -520,8 +540,10 @@ if __name__ == "__main__":
         # ? Perform the operations
         results = []
         for idx, package in enumerate(packages_to_remove):
-            print(f"Attempting to uninstall or disable `{package}`")
-            results.append((package, device.removeOrDisable(package)))
+            for user in users_to_modify:
+                if user[1]:
+                    print(f"Attempting to uninstall or disable `{package}` on user {user[0]['name']} (ID: {user[0]['id']})")  # type: ignore
+                    results.append((package, device.removeOrDisable(package, user[0]['id'])))  # type: ignore
 
         print()
         for result in results:
