@@ -1,4 +1,5 @@
-; This will print "Hello, World!" to your terminal.
+; This is a 32-bit program written in Assembly that
+; will print "Hello, World!" to your terminal.
 
 ; The following commands will make an object file and then compile it into an executable.
 ; $ nasm -f elf32 -o hello.o hello.asm
