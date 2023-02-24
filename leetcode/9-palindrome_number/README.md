@@ -25,4 +25,3 @@ Given an integer `x`, return `true` if `x` is a *palindrome*, and `false` otherw
 `-231 <= x <= 231 - 1`
 
 > **Follow up**: Could you solve it without converting the integer to a string?
-
