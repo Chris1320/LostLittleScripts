@@ -11,18 +11,20 @@ class MainProgram(QtWidgets.QMainWindow):
         self.setWindowTitle("Button Actions")
         self.setMinimumSize(QtCore.QSize(350, 200))
 
-        self.button = QtWidgets.QPushButton("Click Me!")  # Create a button.
-        self.button.clicked.connect(self.buttonClicked)  # Connect the button to a method.
+        self.button = QtWidgets.QPushButton("Click Me!")
+        self.button.setCheckable(True)
+        self.button.clicked.connect(self.CheckButtonState)
 
         self.setCentralWidget(self.button)
 
-    def buttonClicked(self):
+    def CheckButtonState(self, clicked: bool):
         """
         This method changes the text in the button when it is clicked.
         """
 
-        if self.button.text() == "Click Me!":
-            self.button.setText("I have been clicked!")
+        print(f"Button clicked state: {clicked}")
+        if clicked:
+            self.button.setText("Clicked!")
 
         else:
             self.button.setText("Click Me!")
