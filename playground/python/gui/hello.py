@@ -8,12 +8,15 @@ class MainProgram(QtWidgets.QMainWindow):
     # A class that represents the main window of the program.
 
     def __init__(self):
-        super().__init__()  # Call the superclass's constructor.
-
-        self.setWindowTitle("First Python GUI Program")  # Set the window title.
+        super().__init__()
 
         label = QtWidgets.QLabel("Hello, World!")  # Create a label that contains "Hello, World!".
         label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)  # Align the text to the center.
+
+        self.setWindowTitle("First Python GUI Program")  # Set the window title.
+        self.setMinimumSize(QtCore.QSize(350, 200))  # Set the minimum size of the window.
+        # The commented code below sets the window size to 350x200 (width x height). This makes the window non-resizable.
+        # self.setFixedSize(QtCore.QSize(350, 200))
 
         self.setCentralWidget(label)  # Set the central widget of the window.
 
