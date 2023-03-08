@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+  db:
+    image: mysql
+    restart: always
+    ports:
+      - 32513:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 32512:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
