@@ -77,7 +77,7 @@ public class SignUpForm
             public void keyReleased(KeyEvent e)
             {
                 super.keyReleased(e);
-                username_constraint_label.setVisible(!Utils.validateUsername(username.getText()));
+                username_constraint_label.setVisible(Utils.checkInvalidUsername(username.getText()));
             }
         });
         password.addKeyListener(new KeyAdapter()
@@ -89,7 +89,7 @@ public class SignUpForm
                 password_constraint_label.setVisible(
                     Utils.checkForInvalidPassword(Utils.convertPasswordToString(password.getPassword()))
                 );
-                password_mismatch_label.setVisible(!comparePasswords());
+                password_mismatch_label.setVisible(checkPasswordsMismatch());
             }
         });
         password_confirm.addKeyListener(new KeyAdapter()
@@ -102,7 +102,7 @@ public class SignUpForm
                 password_constraint_label.setVisible(
                     Utils.checkForInvalidPassword(Utils.convertPasswordToString(password.getPassword()))
                 );
-                password_mismatch_label.setVisible(!comparePasswords());
+                password_mismatch_label.setVisible(checkPasswordsMismatch());
             }
         });
         registerButton.addActionListener(new ActionListener()
@@ -110,7 +110,7 @@ public class SignUpForm
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if (!Utils.validateUsername(username.getText()))
+                if (Utils.checkInvalidUsername(username.getText()))
                 {
                     JOptionPane.showMessageDialog(null, "Invalid username!");
                     return;
@@ -120,7 +120,7 @@ public class SignUpForm
                     JOptionPane.showMessageDialog(null, "Invalid password!");
                     return;
                 }
-                else if (!comparePasswords())
+                else if (checkPasswordsMismatch())
                 {
                     JOptionPane.showMessageDialog(null, "Passwords does not match!");
                     return;
@@ -225,13 +225,13 @@ public class SignUpForm
         });
     }
 
-    public boolean comparePasswords()
+    public boolean checkPasswordsMismatch()
     {
-        return Utils.convertPasswordToString(
+        return !Utils.convertPasswordToString(
             password.getPassword()
         ).equals(
             Utils.convertPasswordToString(password_confirm.getPassword()
-        ));
+            ));
     }
 
     public void backToMenu(JFrame main_frame)

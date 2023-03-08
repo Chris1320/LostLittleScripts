@@ -15,9 +15,9 @@ public class Utils
      * @param username The username to check.
      * @return true if the password is valid.
      */
-    public static boolean validateUsername(String username)
+    public static boolean checkInvalidUsername(String username)
     {
-        return !(username.length() < Info.USER_LEN[0] || username.length() > Info.USER_LEN[1]);
+        return username.length() < Info.USER_LEN[0] || username.length() > Info.USER_LEN[1];
     }
 
     /**
