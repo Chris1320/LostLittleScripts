@@ -6,7 +6,6 @@ public class Utils
     {
         StringBuilder result = new StringBuilder();
         for (char c : password) result.append(c);
-
         return result.toString();
     }
 

@@ -111,7 +111,6 @@ public class LoginForm
         catch (SQLException ex)
         {
             JOptionPane.showMessageDialog(null, "Unable to log in.");
-            return;
         }
     }
 
