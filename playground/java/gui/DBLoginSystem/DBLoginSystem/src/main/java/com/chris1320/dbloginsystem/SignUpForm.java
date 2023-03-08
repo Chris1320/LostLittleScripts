@@ -110,6 +110,31 @@ public class SignUpForm
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                if (!Utils.validateUsername(username.getText()))
+                {
+                    JOptionPane.showMessageDialog(null, "Invalid username!");
+                    return;
+                }
+                else if (Utils.checkForInvalidPassword(Utils.convertPasswordToString(password.getPassword())))
+                {
+                    JOptionPane.showMessageDialog(null, "Invalid password!");
+                    return;
+                }
+                else if (!comparePasswords())
+                {
+                    JOptionPane.showMessageDialog(null, "Passwords does not match!");
+                    return;
+                }
+                else if (name_first.getText().length() == 0 || name_last.getText().length() == 0)
+                {
+                    JOptionPane.showMessageDialog(null, "Please enter your name.");
+                    return;
+                }
+                else if (course == 0)
+                {
+                    JOptionPane.showMessageDialog(null, "Please select your course.");
+                    return;
+                }
                 try
                 {
                     // Get the latest student ID.
