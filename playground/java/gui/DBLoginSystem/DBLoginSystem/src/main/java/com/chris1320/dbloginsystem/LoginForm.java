@@ -117,7 +117,6 @@ public class LoginForm
 
     public void backToMenu(JFrame main_frame)
     {
-        main_panel.removeAll();
         main_frame.setContentPane(new LandingPanel(main_frame).getPanel());
         main_frame.validate();  // refresh the frame.
     }
