@@ -26,7 +26,7 @@ public class Utils
      * @param password The password to check.
      * @return true if the password is valid.
      */
-    public static boolean checkForInvalidPassword(String password)
+    public static boolean checkInvalidPassword(String password)
     {
         return password.length() < Info.PASS_LEN[0] || password.length() > Info.PASS_LEN[1];
     }

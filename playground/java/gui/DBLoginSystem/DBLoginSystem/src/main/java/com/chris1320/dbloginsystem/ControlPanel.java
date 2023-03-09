@@ -37,7 +37,6 @@ public class ControlPanel
         catch (SQLException e)
         {
             JOptionPane.showMessageDialog(null, "Unable to connect to the database server.");
-            return;
         }
 
         quitButton.addActionListener(new ActionListener()
@@ -66,7 +65,7 @@ public class ControlPanel
                         clearTextFields();
                     }
                 }
-                catch (SQLException ex)
+                catch (SQLException | NullPointerException ex)
                 {
                     JOptionPane.showMessageDialog(null, "Cannot remove student! " + ex.getMessage());
                 }
@@ -95,7 +94,7 @@ public class ControlPanel
                         course.setText(search_result.getString("course"));
                     }
                 }
-                catch (SQLException ex)
+                catch (SQLException | NullPointerException ex)
                 {
                     JOptionPane.showMessageDialog(null, "Cannot find student! " + ex.getMessage());
                 }

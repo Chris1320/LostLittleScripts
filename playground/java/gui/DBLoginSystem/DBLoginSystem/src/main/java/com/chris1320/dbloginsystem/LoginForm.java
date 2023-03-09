@@ -34,7 +34,6 @@ public class LoginForm
         catch (SQLException e)
         {
             JOptionPane.showMessageDialog(null, "Unable to connect to the database server.");
-            return;
         }
 
         logInButton.addActionListener(new ActionListener()
@@ -108,7 +107,7 @@ public class LoginForm
                 JOptionPane.showMessageDialog(null, "Invalid username/password!");
             }
         }
-        catch (SQLException ex)
+        catch (SQLException | NullPointerException ex)
         {
             JOptionPane.showMessageDialog(null, "Unable to log in.");
         }

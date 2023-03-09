@@ -31,6 +31,8 @@ public class SignUpForm
 
     SignUpForm(JFrame main_frame)
     {
+        this.title.setText(Info.NAME);
+
         // Hide the warnings at start.
         this.password_mismatch_label.setVisible(false);
         this.password_constraint_label.setVisible(false);
@@ -60,7 +62,6 @@ public class SignUpForm
         catch (SQLException e)
         {
             JOptionPane.showMessageDialog(null, "Unable to connect to the database server.");
-            return;
         }
 
         backToMenuButton.addActionListener(new ActionListener()
@@ -87,7 +88,7 @@ public class SignUpForm
             {
                 super.keyReleased(e);
                 password_constraint_label.setVisible(
-                    Utils.checkForInvalidPassword(Utils.convertPasswordToString(password.getPassword()))
+                    Utils.checkInvalidPassword(Utils.convertPasswordToString(password.getPassword()))
                 );
                 password_mismatch_label.setVisible(checkPasswordsMismatch());
             }
@@ -100,7 +101,7 @@ public class SignUpForm
                 super.keyReleased(e);
                 // Show the "password mismatch" label when the two passwords are not equal.
                 password_constraint_label.setVisible(
-                    Utils.checkForInvalidPassword(Utils.convertPasswordToString(password.getPassword()))
+                    Utils.checkInvalidPassword(Utils.convertPasswordToString(password.getPassword()))
                 );
                 password_mismatch_label.setVisible(checkPasswordsMismatch());
             }
@@ -115,7 +116,7 @@ public class SignUpForm
                     JOptionPane.showMessageDialog(null, "Invalid username!");
                     return;
                 }
-                else if (Utils.checkForInvalidPassword(Utils.convertPasswordToString(password.getPassword())))
+                else if (Utils.checkInvalidPassword(Utils.convertPasswordToString(password.getPassword())))
                 {
                     JOptionPane.showMessageDialog(null, "Invalid password!");
                     return;
@@ -198,7 +199,7 @@ public class SignUpForm
                     JOptionPane.showMessageDialog(null, "You have successfully registered!");
                     backToMenu(main_frame);
                 }
-                catch (SQLException ex)
+                catch (SQLException | NullPointerException ex)
                 {
                     JOptionPane.showMessageDialog(
                         null,
