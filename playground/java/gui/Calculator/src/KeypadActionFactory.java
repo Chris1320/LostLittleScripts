@@ -30,8 +30,7 @@ public class KeypadActionFactory
 
                 if (current_operation == 5)  // If `=` is pressed, perform the final operation.
                 {
-                    switch (memory.operation)
-                    {
+                    switch (memory.operation) {
                         case 1 -> {memory.prev_input = memory.prev_input + Double.parseDouble(memory.input);}
                         case 2 -> {memory.prev_input = memory.prev_input - Double.parseDouble(memory.input);}
                         case 3 -> {memory.prev_input = memory.prev_input * Double.parseDouble(memory.input);}
@@ -42,34 +41,29 @@ public class KeypadActionFactory
 
                     // Clear memory.
                     memory.operation = 0;
-                    memory.input = new String();
+                    memory.input = "";
                     return;
                 }
-                switch (memory.operation)
-                {
-                    case 1 ->
-                    {
+                switch (memory.operation) {
+                    case 1 -> {
                         memory.prev_input += Double.parseDouble(memory.input);
-                        memory.input = new String();
+                        memory.input = "";
                     }
-                    case 2 ->
-                    {
+                    case 2 -> {
                         memory.prev_input -= Double.parseDouble(memory.input);
-                        memory.input = new String();
+                        memory.input = "";
                     }
-                    case 3 ->
-                    {
+                    case 3 -> {
                         memory.prev_input *= Double.parseDouble(memory.input);
-                        memory.input = new String();
+                        memory.input = "";
                     }
-                    case 4 ->
-                    {
+                    case 4 -> {
                         memory.prev_input /= Double.parseDouble(memory.input);
-                        memory.input = new String();
+                        memory.input = "";
                     }
                     default -> {
                         if (memory.input.length() != 0) memory.prev_input = Double.parseDouble(memory.input);
-                        memory.input = new String();
+                        memory.input = "";
                     }
                 }
                 memory.operation = current_operation;
