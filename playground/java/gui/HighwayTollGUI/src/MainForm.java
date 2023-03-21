@@ -96,7 +96,8 @@ public class MainForm
             }
         }
 
-        if (!Double.isNaN(total_amount)) {
+        if (!Double.isNaN(total_amount))
+        {
             this.result.setText(String.valueOf(total_amount));
         }
     }
