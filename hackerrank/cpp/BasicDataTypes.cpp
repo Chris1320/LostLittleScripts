@@ -66,19 +66,19 @@
 
 int main()
 {
-    int a;
-    long b;
-    char c;
-    float d;
-    double e;
+    int an_int;
+    long a_long;
+    char a_char;
+    float a_float;
+    double a_double;
 
     // Get user input.
-    std::cin >> a >> b >> c >> d >> e;
+    std::cin >> an_int >> a_long >> a_char >> a_float >> a_double;
 
     // Print variables.
-    std::cout << a << std::endl;
-    std::cout << b << std::endl;
-    std::cout << c << std::endl;
-    std::cout << d << std::endl;
-    std::cout << e << std::endl;
+    std::cout << an_int << std::endl;
+    std::cout << a_long << std::endl;
+    std::cout << a_char << std::endl;
+    printf("%.3f\n", a_float);
+    printf("%.9f\n", a_double);
 }
