@@ -11,7 +11,8 @@
  * cout << value_to_print << value_to_print;
  *
  * Any number of values can be printed using one command as shown.
- * The printf command comes from C language. It accepts an optional format specification and a list of variables. Two examples for printing a string are:
+ * The printf command comes from C language. It accepts an optional format specification
+ * and a list of variables. Two examples for printing a string are:
  *
  * printf("%s", string); printf(string);
  *
@@ -28,7 +29,8 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     // cout and endl comes from the std namespace.
     cout << "Hello, World!" << endl;
     return 0;
