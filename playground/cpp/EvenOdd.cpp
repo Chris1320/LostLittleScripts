@@ -25,6 +25,6 @@ int main() {
 
     // Print the result.
     std::cout << "There are " << even << " even numbers and "
-        << odd << " numbers between " << START << " and " << end <<
+        << odd << " odd numbers between " << START << " and " << end <<
         '.' << std::endl;
 }
