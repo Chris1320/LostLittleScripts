@@ -34,8 +34,8 @@ fn main() {
         }
 
         tries -= 1;
-        println!("\nYou have {tries} tries left.");
+        println!("You have {tries} tries left.\n");
     }
 
-    println!("The number is {num}.\n");
+    println!("\nThe number is {num}.");
 }
