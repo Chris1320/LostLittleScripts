@@ -114,7 +114,7 @@ int main() {
         - pension_plan_amount
         - health_insurance_amount;
 
-    // ? Step 4: Calculate the results.
+    // ? Step 4: Format the result.
     string result = formatEmployeeSalaryReport(
         employee_name,
         gross_amount,
@@ -126,9 +126,9 @@ int main() {
         health_insurance_amount,
         net_pay
     );
-    cout << result << std::endl;
 
     // ? Step 5: Print and save the results to a file.
+    cout << result << std::endl;
     printf("[i] Saving results to `%s`...\n", DEFAULT_OUTPUT_FILE);
     std::ofstream file(DEFAULT_OUTPUT_FILE);
     file << result;
