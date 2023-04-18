@@ -7,7 +7,7 @@ fn main() {
     const MIN_GUESS: u32 = 1;  // The minimum possible number.
     const MAX_GUESS: u32 = 100;  // The maximum possible number.
 
-    let num = rand::thread_rng().gen_range(MIN_GUESS, MAX_GUESS + 1);  // Generate a random number based on the constants.
+    let num = rand::thread_rng().gen_range(MIN_GUESS..=MAX_GUESS);  // Generate a random number based on the constants.
     let mut tries = 5;  // Maximum number of guesses.
     println!("Guessing Game\n");
     loop {
