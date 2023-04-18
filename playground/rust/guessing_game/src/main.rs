@@ -16,7 +16,7 @@ fn main() {
             break;
         }
 
-        print!("Please enter your guess ({0}-{1}): ", MIN_GUESS, MAX_GUESS);
+        print!("Please enter your guess ({MIN_GUESS}-{MAX_GUESS}): ");
         io::stdout().flush().expect("Failed to flush stdout.");
         let mut guess = String::new();  // Create a new string value.
         io::stdin().read_line(&mut guess).expect("Failed to read user input.");
@@ -28,7 +28,7 @@ fn main() {
         };
 
         if guess < MIN_GUESS || guess > MAX_GUESS {
-            println!("Valid guesses are {0}-{1} only.", MIN_GUESS, MAX_GUESS);
+            println!("Valid guesses are {MIN_GUESS}-{MAX_GUESS} only.");
             continue;
         }
 
