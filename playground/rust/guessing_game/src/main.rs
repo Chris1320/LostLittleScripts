@@ -4,8 +4,11 @@ use std::io;             // For stdin and stdout.
 use std::io::Write;      // For flushing stdout.
 
 fn main() {
-    let num = rand::thread_rng().gen_range(1, 101);  // Generate a random number from 1 to 100.
-    let mut tries = 5;                               // Maximum number of guesses.
+    const MIN_GUESS: u32 = 1;  // The minimum possible number.
+    const MAX_GUESS: u32 = 100;  // The maximum possible number.
+
+    let num = rand::thread_rng().gen_range(MIN_GUESS, MAX_GUESS + 1);  // Generate a random number based on the constants.
+    let mut tries = 5;  // Maximum number of guesses.
     println!("Guessing Game\n");
     loop {
         if tries == 0 {
@@ -13,7 +16,7 @@ fn main() {
             break;
         }
 
-        print!("Please enter your guess (1-100): ");
+        print!("Please enter your guess ({0}-{1}): ", MIN_GUESS, MAX_GUESS);
         io::stdout().flush().expect("Failed to flush stdout.");
         let mut guess = String::new();  // Create a new string value.
         io::stdin().read_line(&mut guess).expect("Failed to read user input.");
@@ -23,6 +26,11 @@ fn main() {
             Ok(num) => num,  // return num if result is OK.
             Err(_) => continue  // continue loop if parse() returned an error.
         };
+
+        if guess < MIN_GUESS || guess > MAX_GUESS {
+            println!("Valid guesses are {0}-{1} only.", MIN_GUESS, MAX_GUESS);
+            continue;
+        }
 
         match guess.cmp(&num) {
             Ordering::Less => println!("Your number is too small."),
