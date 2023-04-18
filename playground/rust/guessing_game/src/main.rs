@@ -23,7 +23,7 @@ fn main() {
 
         // "shadows" the previous `guess` variable. String -> u32
         let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,  // return num if result is OK.
+            Ok(result) => result,  // return the result if OK.
             Err(_) => continue  // continue loop if parse() returned an error.
         };
 
