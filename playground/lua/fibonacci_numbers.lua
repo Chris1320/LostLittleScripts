@@ -1,5 +1,5 @@
 -- Get the next fibonacci number from x and y.
-local function next(x, y)
+local function nextFibonacciNumber(x, y)
     return x + y
 end
 
@@ -10,7 +10,7 @@ local function main()
     -- Set up the first three fibonacci numbers.
     local x = 1
     local y = 1
-    local z = next(x, y)
+    local z = nextFibonacciNumber(x, y)
     local n = 0
 
     io.write("\nListing " .. nums .. " Fibonacci numbers...\n\n")
@@ -33,7 +33,7 @@ local function main()
     while n < nums do
         x = y
         y = z
-        z = next(x, y)
+        z = nextFibonacciNumber(x, y)
         n = n + 1
         io.write('[' .. n .. '] ' .. z .. '\n')
     end
