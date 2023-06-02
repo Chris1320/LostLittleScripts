@@ -20,15 +20,15 @@ class IPAddress:
         if not IPAddress.isValidIP(ip):
             raise ValueError("Invalid IP address.")
 
-        self.ip: str = ip  # decimal form
+        self._ip: str = ip  # decimal form
 
     @property
     def decimal(self) -> str:
-        return self.ip
+        return self._ip
 
     @property
     def binary(self) -> str:
-        return IPAddress._toBinary(self.ip)
+        return IPAddress._toBinary(self.decimal)
 
     @staticmethod
     def isValidIP(ip_to_check: str) -> bool:
@@ -90,11 +90,11 @@ class SubnetMask(IPAddress):
         if not SubnetMask.isValidIP(mask):
             raise ValueError("Invalid subnet mask.")
 
-        self.ip: str = mask # decimal form
+        self._ip: str = mask # decimal form
 
     @property
     def cidr(self) -> int:
-        return SubnetMask._maskToCIDR(self.ip)
+        return SubnetMask._maskToCIDR(self.decimal)
 
     @property
     def total(self) -> int:
@@ -102,7 +102,7 @@ class SubnetMask(IPAddress):
         Get the total number of addresses in a subnet.
         """
 
-        return 2**(32 - self.cidr)
+        return 2 ** (32 - self.cidr)
 
     @property
     def usable(self) -> int:
@@ -136,6 +136,64 @@ class SubnetMask(IPAddress):
         return mask[:-1]
 
 
+class Network:
+    def __init__(self, network_address: IPAddress, subnet_mask: SubnetMask):
+        self._network_address = network_address
+        self._subnet_mask = subnet_mask
+
+    @property
+    def network_address(self) -> IPAddress:
+        return self._network_address
+
+    @property
+    def subnet_mask(self) -> SubnetMask:
+        return self._subnet_mask
+
+    @property
+    def broadcast_address(self) -> IPAddress:
+        return self.next(self.subnet_mask.total - 1)
+
+    @property
+    def first_and_last_usable(self) -> tuple[IPAddress, IPAddress]:
+        return (self.next(1), self.next(self.subnet_mask.total - 2))
+
+    @property
+    def usable(self) -> int:
+        return self.subnet_mask.usable
+
+    def next(self, n: int) -> IPAddress:
+        """
+        Get the nth next IP address in the network.
+        """
+
+        network_octets: list[str] = self.network_address.decimal.split('.')
+
+        while n > 0:
+            if int(network_octets[3]) + n <= 255:
+                network_octets[3] = str(int(network_octets[3]) + n)
+                break
+
+            else:
+                n -= 255 - int(network_octets[3])
+                if int(network_octets[2]) + 1 <= 255:
+                    network_octets[2] = str(int(network_octets[2]) + 1)
+                    continue
+
+                else:
+                    if int(network_octets[1]) + 1 <= 255:
+                        network_octets[1] = str(int(network_octets[1]) + 1)
+                        continue
+
+                    else:
+                        if int(network_octets[0]) + 1 <= 255:
+                            network_octets[0] = str(int(network_octets[0]) + 1)
+                            continue
+
+                        else:
+                            raise ValueError("Too many hosts.")
+
+        return IPAddress('.'.join(network_octets))
+
 def getMaskFromNeededHosts(hosts: int, use_total: bool = False) -> SubnetMask | None:
     """
     Get the smallest subnet mask that can fit the number of hosts.
@@ -165,8 +223,9 @@ def main() -> int:
         print("[02] Subnet mask conversion")
         print("[03] Get subnet mask from number of usable hosts")
         print("[04] Get subnet mask from number of total hosts")
-        print("[05] [WIP] Get network information")
-        print("[06] [WIP] Design a network!")
+        print("[05] Get single network information")
+        print("[06] Design a network! (Constant subnet mask)")
+        print("[07] Design a network! (VLSM)")
         print()
         print("[99] Exit")
         print()
@@ -224,6 +283,43 @@ def main() -> int:
             except ValueError:
                 print()
                 print("Invalid number of hosts.")
+                print()
+
+        elif selection == 5:
+            try:
+                ip = IPAddress(input("Enter IP address: "))
+                mask = SubnetMask(input("Enter subnet mask (prefix with `/` for CIDR): "))
+                network = Network(ip, mask)
+
+                print()
+                print(f"Information about {ip.decimal}/{mask.cidr}:")
+                print()
+                print(f"Network address:      {network.network_address.decimal}")
+                print(f"Subnet mask:          {network.subnet_mask.decimal}")
+                try:
+                    print(f"Broadcast address:    {network.broadcast_address.decimal}")
+
+                except ValueError as e:
+                    print(f"Broadcast address:    {e}")
+
+                alt_interval = 'or 1' if network.subnet_mask.total == 256 else ''
+                print(f"Interval:             {network.subnet_mask.total} {alt_interval}")
+                print(f"Usable addresses:     {network.subnet_mask.usable}")
+                try:
+                    print(f"First usable address: {network.first_and_last_usable[0].decimal}")
+                except ValueError as e:
+                    print(f"Fist usable address:  {e}")
+
+                try:
+                    print(f"Last usable address:  {network.first_and_last_usable[1].decimal}")
+
+                except ValueError as e:
+                    print(f"Last usable address:  {e}")
+
+                print()
+
+            except ValueError as e:
+                print(e)
                 print()
 
     return 0
