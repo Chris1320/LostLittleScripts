@@ -1,128 +1,123 @@
 """
-A quick and dirty way to calculate IP addresses and subnet masks.
+A quick and dirty way to calculate
+IP addresses, subnet masks, and networks.
 
-Made in an hour.
+Made in an hour, might be buggy af.
 """
 
 import sys
 
 
-# IP Address conversion
-def ipToBinary(ip: str) -> str:
+class IPAddress:
     """
-    Convert an IP address to its binary representation.
-    """
-
-    return '.'.join([bin(int(x)+256)[3:] for x in ip.split('.')])
-
-
-def binaryToIp(binary: str) -> str:
-    """
-    Convert a binary representation of an IP address to its decimal representation.
+    An object representation of an IP address.
     """
 
-    return '.'.join([str(int(x, 2)) for x in binary.split('.')])
+    def __init__(self, ip: str):
+        if len(ip) == 35:  # 32 bits, including the dots.
+            ip = IPAddress._toDecimal(ip)
 
+        if not IPAddress.isValidIP(ip):
+            raise ValueError("Invalid IP address.")
 
-# Subnet mask conversion
-def maskToCidr(mask: str) -> int:
-    return ipToBinary(mask).count('1')
+        self.ip: str = ip  # decimal form
 
+    @property
+    def decimal(self) -> str:
+        return self.ip
 
-def cidrToMask(cidr: int) -> str:
-    """
-    Convert a CIRD (like `/24`) to its decimal representation (255.255.255.0).
-    """
+    @property
+    def binary(self) -> str:
+        return IPAddress._toBinary(self.ip)
 
-    mask: str = ''
-    for i in range(4):
-        if i < cidr // 8:
-            mask += '255.'
-        elif i == cidr // 8:
-            mask += str(256 - 2**(8 - cidr % 8)) + '.'
-        else:
-            mask += '0.'
+    @staticmethod
+    def isValidIP(ip_to_check: str) -> bool:
+        """
+        Check if an IP address is in its valid decimal form.
+        """
 
-    return mask[:-1]
+        ip: list[str] = ip_to_check.split('.')
 
-
-# Validation
-def isValidIp(ip_to_check: str) -> bool:
-    """
-    Check if an IP address is in its valid decimal form.
-    """
-
-    ip: list[str] = ip_to_check.split('.')
-
-    if len(ip) != 4:
-        return False
-
-    for octet in ip:
-        if not 0 <= int(octet) <= 255:
+        if len(ip) != 4:
             return False
 
-    return True
+        for octet in ip:
+            if not 0 <= int(octet) <= 255:
+                return False
+
+        return True
+
+    @staticmethod
+    def _toBinary(decimal_ip: str) -> str:
+        """
+        Convert an IP address to its binary representation.
+        """
+
+        return '.'.join(
+            [
+                bin(int(x) + 256)[3:]
+                for x in decimal_ip.split('.')
+            ]
+        )
+
+    @staticmethod
+    def _toDecimal(binary_ip: str) -> str:
+        """
+        Convert a binary representation of an IP address to its decimal representation.
+        """
+
+        return '.'.join(
+            [
+                str(int(x, 2))
+                for x in binary_ip.split('.')
+            ]
+        )
 
 
-def getNetworkInfo(ip: str, mask: str) -> tuple[str, str, str, str, str]:
-    """
-    Get the following network information:
+class SubnetMask(IPAddress):
+    def __init__(self, mask_or_cidr: str):
+        if mask_or_cidr.startswith('/'):
+            # if parameter is a CIDR.
+            mask = SubnetMask._toMask(int(mask_or_cidr[1:]))
 
-    - Broadcast address
-    - Number of usable addresses
-    - First usable address
-    - Last usable address.
-    """
+        elif len(mask_or_cidr) == 35:
+            # if parameter is an IP in binary form.
+            mask = SubnetMask._toDecimal(mask_or_cidr)
 
-    broadcast: str = ''
-    usable: int = 0
-    first: str = ''
-    last: str = ''
+        else:
+            mask = mask_or_cidr
 
-    ip_binary: str = ipToBinary(ip)
-    mask_binary: str = ipToBinary(mask)
+        if not SubnetMask.isValidIP(mask):
+            raise ValueError("Invalid subnet mask.")
 
-    for i in range(4):
-        broadcast += str(int(ip_binary.split('.')[i], 2) |
-                         (255 - int(mask_binary.split('.')[i], 2))) + '.'
+        self.ip: str = mask # decimal form
 
-    broadcast = broadcast[:-1]
+    @property
+    def cidr(self) -> int:
+        return SubnetMask._toCIDR(self.ip)
 
-    usable = 2**(32 - maskToCidr(mask)) - 2
+    @staticmethod
+    def _toCIDR(mask: str) -> int:
+        return SubnetMask._toBinary(mask).count('1')
 
-    first = binaryToIp(ipToBinary(ip)[:-1] + '1')
-    last = binaryToIp(ipToBinary(broadcast)[:-1] + '0')
+    @staticmethod
+    def _toMask(cidr: int) -> str:
+        """
+        Convert a CIRD (like `/24`) to its decimal representation (255.255.255.0).
+        """
 
-    return (ip, broadcast, str(usable), first, last)
+        mask: str = ''
+        for i in range(4):
+            if i < cidr // 8:
+                mask += '255.'
 
+            elif i == cidr // 8:
+                mask += str(256 - 2**(8 - cidr % 8)) + '.'
 
-def getNextIp(ip: str, interval: int) -> str:
-    """
-    Get the next IP address in the network.
-    """
+            else:
+                mask += '0.'
 
-    network_octets: list[str] = ip.split('.')
-    network_octets[3] = str(int(network_octets[3]) + interval)
-    # consider when the last octet goes over 255.
-    for i in range(3, 0, -1):
-        if int(network_octets[i]) > 255:
-            network_octets[i] = str(int(network_octets[i]) - 256)
-            network_octets[i - 1] = str(int(network_octets[i - 1]) + 1)
-
-    return '.'.join(network_octets)
-
-
-def getMaskFromNeededHosts(hosts: int) -> str | None:
-    """
-    Get the smallest subnet mask that can fit the number of hosts.
-    """
-
-    # loop from the smallest possible CIDR to the biggest and check if the hosts can fit there.
-    for i in range(32):
-        if (2**i) - 2 >= hosts:
-            return cidrToMask(32 - i)
-
-    return None
+        return mask[:-1]
 
 
 def main() -> int:
@@ -132,9 +127,9 @@ def main() -> int:
         print()
         print("[01] IP address conversion")
         print("[02] Subnet mask conversion")
-        print("[03] Get subnet mask from number of hosts")
-        print("[04] Get network information")
-        print("[05] Design a network!")
+        print("[03] [WIP] Get subnet mask from number of hosts")
+        print("[04] [WIP] Get network information")
+        print("[05] [WIP] Design a network!")
         print()
         print("[99] Exit")
         print()
@@ -149,105 +144,29 @@ def main() -> int:
             break
 
         elif selection == 1:
-            # detect if the IP address is in decimal or binary form.
-            ip = input("Enter IP address: ")
-            if len(ip) == 35:  # 32 bits, including the dots.
-                print(f"Decimal: {binaryToIp(ip)}")
+            try:
+                ip = IPAddress(input("Enter IP address: "))
+                print()
+                print(f"Decimal: {ip.decimal}")
+                print(f"Binary:  {ip.binary}")
+                print()
 
-            elif isValidIp(ip):
-                print(f"Binary: {ipToBinary(ip)}")
-
-            else:
-                print("Invalid IP address.")
+            except ValueError as e:
+                print(e)
+                print()
 
         elif selection == 2:
-            # detect if the subnet mask is in decimal or CIDR form.
-            mask = input("Enter subnet mask (prefix with `/` for CIDR): ")
-            if mask.startswith('/'):
-                try:
-                    print(f"Decimal: {cidrToMask(int(mask[1:]))}")
-
-                except ValueError:
-                    print("Invalid CIDR.")
-
-            elif isValidIp(mask):
-                print(f"CIDR: {maskToCidr(mask)}")
-
-            else:
-                print("Invalid subnet mask.")
-
-        elif selection == 3:
-            hosts = input("Enter number of hosts: ")
-            mask = getMaskFromNeededHosts(int(hosts))
-            if mask is not None:
-                print(f"Smallest subnet mask: {mask}")
-
-            else:
-                print("Cannot fit that many hosts in a subnet.")
-
-        elif selection == 4:
-            ip = input("Enter IP address: ")
-            mask = input("Enter subnet mask: ")
-
-            # convert IP and mask to decimal representation if it's in binary/CIDR form.
-            if len(ip) == 35:
-                ip = binaryToIp(ip)
-
-            if mask.startswith('/'):
-                try:
-                    mask = cidrToMask(int(mask[1:]))
-
-                except ValueError:
-                    print("Invalid CIDR.")
-                    continue
-
-            if isValidIp(ip) and isValidIp(mask):
-                network, broadcast, usable, first, last = getNetworkInfo(
-                    ip, mask)
-
+            try:
+                mask = SubnetMask(input("Enter subnet mask (prefix with `/` for CIDR): "))
                 print()
-                print(f"Network address:            {network}")
-                print(f"Broadcast address:          {broadcast}")
-                print(f"Number of usable addresses: {usable}")
-                print(f"First usable address:       {first}")
-                print(f"Last usable address:        {last}")
+                print(f"Decimal: {mask.decimal}")
+                print(f"Binary:  {mask.binary}")
+                print(f"CIDR:    {mask.cidr}")
 
-            else:
-                print("Invalid IP address or subnet mask.")
-
-        elif selection == 5:
-            ip = input("Enter first network IP address: ")
-            mask = input("Enter first subnet mask: ")
-            networks = int(input("Enter number of networks to make: "))
-
-            if len(ip) == 35:
-                ip = binaryToIp(ip)
-
-            if mask.startswith('/'):
-                try:
-                    mask = cidrToMask(int(mask[1:]))
-
-                except ValueError:
-                    print("Invalid CIDR.")
-                    continue
-
-            # get the interval between networks using the subnet mask.
-            interval = 2**(32 - maskToCidr(mask))
-
-            print()
-            print(f"Network Interval: {interval}")
-            print("Networks:")
-            for i in range(networks):
-                network, broadcast, usable, first, last = getNetworkInfo(ip, mask)
+            except ValueError as e:
+                print(e)
                 print()
-                print(f"Network {i}:")
-                print(f"    Network address:            {network}")
-                print(f"    Broadcast address:          {broadcast}")
-                print(f"    Number of usable addresses: {usable}")
-                print(f"    First usable address:       {first}")
-                print(f"    Last usable address:        {last}")
-                # Increment network address by the interval.
-                ip = getNextIp(ip, interval)
+
 
     return 0
 
