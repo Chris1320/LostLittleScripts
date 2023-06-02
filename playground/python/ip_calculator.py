@@ -112,6 +112,19 @@ def getNextIp(ip: str, interval: int) -> str:
     return '.'.join(network_octets)
 
 
+def getMaskFromNeededHosts(hosts: int) -> str | None:
+    """
+    Get the smallest subnet mask that can fit the number of hosts.
+    """
+
+    # loop from the smallest possible CIDR to the biggest and check if the hosts can fit there.
+    for i in range(32):
+        if (2**i) - 2 >= hosts:
+            return cidrToMask(32 - i)
+
+    return None
+
+
 def main() -> int:
     while True:
         print('=' * 40)
@@ -119,8 +132,9 @@ def main() -> int:
         print()
         print("[01] IP address conversion")
         print("[02] Subnet mask conversion")
-        print("[03] Get network information")
-        print("[04] Design a network!")
+        print("[03] Get subnet mask from number of hosts")
+        print("[04] Get network information")
+        print("[05] Design a network!")
         print()
         print("[99] Exit")
         print()
@@ -163,6 +177,15 @@ def main() -> int:
                 print("Invalid subnet mask.")
 
         elif selection == 3:
+            hosts = input("Enter number of hosts: ")
+            mask = getMaskFromNeededHosts(int(hosts))
+            if mask is not None:
+                print(f"Smallest subnet mask: {mask}")
+
+            else:
+                print("Cannot fit that many hosts in a subnet.")
+
+        elif selection == 4:
             ip = input("Enter IP address: ")
             mask = input("Enter subnet mask: ")
 
@@ -192,7 +215,7 @@ def main() -> int:
             else:
                 print("Invalid IP address or subnet mask.")
 
-        elif selection == 4:
+        elif selection == 5:
             ip = input("Enter first network IP address: ")
             mask = input("Enter first subnet mask: ")
             networks = int(input("Enter number of networks to make: "))
