@@ -214,6 +214,35 @@ def getMaskFromNeededHosts(hosts: int, use_total: bool = False) -> SubnetMask | 
     return None
 
 
+def printNetworkInfo(ip: IPAddress, mask: SubnetMask, network: Network):
+    print()
+    print(f"Information about {ip.decimal}/{mask.cidr}:")
+    print()
+    print(f"Network address:      {network.network_address.decimal}")
+    print(f"Subnet mask:          {network.subnet_mask.decimal} (/{network.subnet_mask.cidr})")
+    try:
+        print(f"Broadcast address:    {network.broadcast_address.decimal}")
+
+    except ValueError as e:
+        print(f"Broadcast address:    {e}")
+
+    alt_interval = 'or 1' if network.subnet_mask.total == 256 else ''
+    print(f"Interval:             {network.subnet_mask.total} {alt_interval}")
+    print(f"Usable addresses:     {network.subnet_mask.usable}")
+    try:
+        print(f"First usable address: {network.first_and_last_usable[0].decimal}")
+    except ValueError as e:
+        print(f"Fist usable address:  {e}")
+
+    try:
+        print(f"Last usable address:  {network.first_and_last_usable[1].decimal}")
+
+    except ValueError as e:
+        print(f"Last usable address:  {e}")
+
+    print()
+
+
 def main() -> int:
     while True:
         print('=' * 40)
@@ -291,36 +320,28 @@ def main() -> int:
                 mask = SubnetMask(input("Enter subnet mask (prefix with `/` for CIDR): "))
                 network = Network(ip, mask)
 
-                print()
-                print(f"Information about {ip.decimal}/{mask.cidr}:")
-                print()
-                print(f"Network address:      {network.network_address.decimal}")
-                print(f"Subnet mask:          {network.subnet_mask.decimal}")
-                try:
-                    print(f"Broadcast address:    {network.broadcast_address.decimal}")
-
-                except ValueError as e:
-                    print(f"Broadcast address:    {e}")
-
-                alt_interval = 'or 1' if network.subnet_mask.total == 256 else ''
-                print(f"Interval:             {network.subnet_mask.total} {alt_interval}")
-                print(f"Usable addresses:     {network.subnet_mask.usable}")
-                try:
-                    print(f"First usable address: {network.first_and_last_usable[0].decimal}")
-                except ValueError as e:
-                    print(f"Fist usable address:  {e}")
-
-                try:
-                    print(f"Last usable address:  {network.first_and_last_usable[1].decimal}")
-
-                except ValueError as e:
-                    print(f"Last usable address:  {e}")
-
-                print()
+                printNetworkInfo(ip, mask, network)
 
             except ValueError as e:
                 print(e)
                 print()
+
+
+        elif selection == 6:
+            try:
+                ip = IPAddress(input("Enter the first network's IP address: "))
+                mask = SubnetMask(input("Enter the first network's subnet mask (prefix with `/` for CIDR): "))
+                networks = int(input("Enter how many networks to make: "))
+
+                for i in range(networks):
+                    network = Network(ip, mask)
+                    print()
+                    print(f"Network #{i}:")
+                    printNetworkInfo(ip, mask, network)
+                    ip = network.next(mask.total)
+
+            except ValueError as e:
+                print(e)
 
     return 0
 
