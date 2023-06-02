@@ -161,6 +161,10 @@ class Network:
     def usable(self) -> int:
         return self.subnet_mask.usable
 
+    @property
+    def total(self) -> int:
+        return self.subnet_mask.total
+
     def next(self, n: int) -> IPAddress:
         """
         Get the nth next IP address in the network.
@@ -174,17 +178,20 @@ class Network:
                 break
 
             else:
-                n -= 255 - int(network_octets[3])
+                n -= 256 - int(network_octets[3])
+                network_octets[3] = '0'
                 if int(network_octets[2]) + 1 <= 255:
                     network_octets[2] = str(int(network_octets[2]) + 1)
                     continue
 
                 else:
+                    network_octets[2] = '0'
                     if int(network_octets[1]) + 1 <= 255:
                         network_octets[1] = str(int(network_octets[1]) + 1)
                         continue
 
                     else:
+                        network_octets[1] = '0'
                         if int(network_octets[0]) + 1 <= 255:
                             network_octets[0] = str(int(network_octets[0]) + 1)
                             continue
@@ -331,9 +338,9 @@ def main() -> int:
             try:
                 ip = IPAddress(input("Enter the first network's IP address: "))
                 mask = SubnetMask(input("Enter the first network's subnet mask (prefix with `/` for CIDR): "))
-                networks = int(input("Enter how many networks to make: "))
+                num_of_networks = int(input("Enter how many networks to make: "))
 
-                for i in range(networks):
+                for i in range(num_of_networks):
                     network = Network(ip, mask)
                     print()
                     print(f"Network #{i}:")
@@ -342,6 +349,63 @@ def main() -> int:
 
             except ValueError as e:
                 print(e)
+
+        elif selection == 7:
+            try:
+                network_quantity = int(input("Enter how many networks to make: "))
+                network_masks = []
+                networks: list[Network] = []
+
+                first_network_address = IPAddress(input("Enter the first network's IP address: "))
+
+                print("Enter each network's information below:")
+                print("    - enter a subnet mask, CIDR, or number of hosts")
+                print("    - to enter a CIDR, prefix it with `/`")
+                print("    - to enter a number of hosts, postfix it with `h`")
+                for i in range(network_quantity):
+                    while True:
+                        try:
+                            mask = input(f"Network #{i}: ")
+                            if mask.endswith('h'):
+                                hosts = int(mask[:-1])
+                                mask = getMaskFromNeededHosts(int(mask[:-1]), False)
+                                if mask is None:
+                                    raise ValueError("No subnet mask can fit that many hosts.")
+
+                                print(f"[i] Using /{mask.cidr} as the subnet mask for {hosts} hosts.")
+
+                            else:
+                                mask = SubnetMask(mask)
+
+                            network_masks.append(mask)
+                            break  # break the inner while loop
+
+                        except ValueError as e:
+                            print(e)
+                            continue
+
+                # sort network_masks by number of hosts
+                network_masks.sort(key=lambda x: x.usable, reverse=True)
+
+                print()
+                print("Re-arranged network information:")
+                for subnet in network_masks:
+                    print(f"    - {subnet.decimal} (/{subnet.cidr}) {subnet.usable} hosts")
+
+                for _, mask in enumerate(network_masks):
+                    networks.append(Network(first_network_address, mask))
+                    print([n.network_address.decimal for n in networks])
+                    print(networks[-1].network_address.decimal)
+                    first_network_address = networks[-1].next(mask.total)
+
+                print()
+                for idx, network in enumerate(networks):
+                    print()
+                    print(f"Network #{idx}:")
+                    printNetworkInfo(network.network_address, network.subnet_mask, network)
+
+            except ValueError as e:
+                raise e
 
     return 0
 
