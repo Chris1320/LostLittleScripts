@@ -103,6 +103,11 @@ def getNextIp(ip: str, interval: int) -> str:
 
     network_octets: list[str] = ip.split('.')
     network_octets[3] = str(int(network_octets[3]) + interval)
+    # consider when the last octet goes over 255.
+    for i in range(3, 0, -1):
+        if int(network_octets[i]) > 255:
+            network_octets[i] = str(int(network_octets[i]) - 256)
+            network_octets[i - 1] = str(int(network_octets[i - 1]) + 1)
 
     return '.'.join(network_octets)
 
