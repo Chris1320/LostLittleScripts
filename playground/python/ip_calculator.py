@@ -7,6 +7,7 @@ Made in an hour.
 import sys
 
 
+# IP Address conversion
 def ipToBinary(ip: str) -> str:
     """
     Convert an IP address to its binary representation.
@@ -23,6 +24,7 @@ def binaryToIp(binary: str) -> str:
     return '.'.join([str(int(x, 2)) for x in binary.split('.')])
 
 
+# Subnet mask conversion
 def maskToCidr(mask: str) -> int:
     return ipToBinary(mask).count('1')
 
@@ -44,6 +46,7 @@ def cidrToMask(cidr: int) -> str:
     return mask[:-1]
 
 
+# Validation
 def isValidIp(ip_to_check: str) -> bool:
     """
     Check if an IP address is in its valid decimal form.
@@ -109,9 +112,9 @@ def main() -> int:
         print('=' * 40)
         print("What do you want to do?")
         print()
-        print("[01] IP Address")
-        print("[02] Subnet Mask")
-        print("[03] Get Network Information")
+        print("[01] IP address conversion")
+        print("[02] Subnet mask conversion")
+        print("[03] Get network information")
         print("[04] Design a network!")
         print()
         print("[99] Exit")
