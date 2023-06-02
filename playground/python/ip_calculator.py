@@ -2,7 +2,7 @@
 A quick and dirty way to calculate
 IP addresses, subnet masks, and networks.
 
-Made in an hour, might be buggy af.
+Made in ~~an hour~~ 4 hours, ~~might be~~ still buggy af.
 """
 
 import sys
@@ -293,7 +293,7 @@ def main() -> int:
                 print()
                 print(f"Decimal: {mask.decimal}")
                 print(f"Binary:  {mask.binary}")
-                print(f"CIDR:    {mask.cidr}")
+                print(f"CIDR:    /{mask.cidr}")
 
             except ValueError as e:
                 print(e)
@@ -305,7 +305,7 @@ def main() -> int:
                 hosts = int(input("Enter number of hosts needed: "))
                 mask = getMaskFromNeededHosts(hosts, use_total)
                 if mask is None:
-                    print()    
+                    print()
                     print("No subnet mask can fit that many hosts.")
 
                 else:
@@ -394,8 +394,6 @@ def main() -> int:
 
                 for _, mask in enumerate(network_masks):
                     networks.append(Network(first_network_address, mask))
-                    print([n.network_address.decimal for n in networks])
-                    print(networks[-1].network_address.decimal)
                     first_network_address = networks[-1].next(mask.total)
 
                 print()
