@@ -310,7 +310,12 @@ def main() -> int:
 
                 else:
                     print()
-                    print(f"This subnet mask can fit {mask.usable} hosts:")
+                    if use_total:
+                        print(f"This subnet mask can fit {mask.total} hosts, including network and broadcast addresses:")
+
+                    else:
+                        print(f"This subnet mask can fit {mask.usable} hosts:")
+
                     print()
                     print(f"Decimal: {mask.decimal}")
                     print(f"Binary:  {mask.binary}")
