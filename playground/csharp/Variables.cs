@@ -6,7 +6,8 @@ namespace Variables
     {
         static void Main()
         {
-            const double PI = 3.14;
+            const double PI = 3.14;  // A constant variable.
+            var a_letter = 'C';  // `var` infers the datatype of the variable.
             string username;
             int userage;
 
@@ -16,6 +17,7 @@ namespace Variables
             userage = Convert.ToInt32(Console.ReadLine());
 
             Console.WriteLine($"PI = {PI}");
+            Console.WriteLine($"Letter = {a_letter}");
             Console.WriteLine($"\n{username}'s age is {userage}.");
         }
     }
