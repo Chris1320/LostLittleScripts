@@ -1,0 +1,18 @@
+/*
+ * Create a custom style that will be applied to
+ * all elements with the class `custom-heading`.
+ *
+ * If you want to apply this style to all h1 and h2
+ * elements, you can use `h1, h2` instead of `.custom-heading`.
+ */
+.custom-heading {
+    color: green;
+    font-size: 22pt;
+    font-family: 'Times New Roman';
+}
+
+/* Apply the style to all <p> elements. */
+p {
+    font-size: 12pt;
+    font-family: 'Times New Roman';
+}
