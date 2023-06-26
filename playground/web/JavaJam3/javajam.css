@@ -1,0 +1,86 @@
+/*
+ * Color palette:
+ * - Text:                   #221811
+ * - Background:             #FCEBB6
+ * - Alternative Background: #D2B48C
+ */
+
+body {
+    background-image: url(./assets/chapter4/fadedroad50.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #fcebb6;
+    color: #221811;
+    font-family: Verdana, Arial, sans-serif;
+    padding: 2em;
+    display: block;
+}
+
+h1 {
+    background-color: #d2b48c;
+    font-size: 3em;
+    text-align: center;
+}
+
+h3, dt {
+    color: #8c3826;
+}
+
+h4 {
+    background-color: #d2b48c;
+    font-size: 1.2em;
+    padding-left: 0.5em;
+    padding-bottom: 0.25em;
+}
+
+nav {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/* Select all <a> tags inside <nav> tags. */
+nav a {
+    text-decoration: none;
+}
+
+img {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+footer {
+    background-color: #d2b48c;
+    font-size: 0.6em;
+    font-style: italic;
+    text-align: center;
+    border-color: #8c3826;
+    border-top: 2px;
+    padding: 1em;
+}
+
+/* ? `#` is for ids, `.` is for classes. */
+#wrapper {
+    background-color: #fcebb6;
+    width: 80%;
+    min-width: 900px;
+    max-width: 1280px;
+    box-shadow: 20px 20px 20px #221811;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#homehero {  /* Used as background */
+    height: 300px;
+    background-image: url(./assets/chapter4/hero.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.details {
+    padding-left: 20%;
+    padding-right: 20%;
+}
