@@ -1,0 +1,74 @@
+#activity7-1 {
+    /*
+     * Activity 7.1:
+     * Write the CSS for an id with the following attributes:
+     *
+     * - float to the left of the page
+     * - light tan background
+     * - Verdana or sans-serif large font
+     * - 20 pixels of padding.
+     */
+    background-color: tan;
+    font-family: Verdana, sans-serif;
+    float: left;
+    padding: 20px;
+}
+
+.activity7-2 {
+    /*
+     * Activity 7.2:
+     * Write the CSS to configure a class that will produce
+     * a headline with a dotted line underneath it. Choose
+     * a color that you like for the text and dotted line.
+     */
+
+    color: #8B9556;
+    border-bottom: dotted #8B9556;
+}
+
+#activity7-3 {
+    /*
+     * Activity 7.3:
+     * Write the CSS for an id that will be absolutely
+     * positioned on a page 20 pixels from the top and 40
+     * pixels from the right. This area should have a light
+     * gray background and a solid border.
+     */
+
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    background-color: lightgray;
+    border: 3px solid black;
+}
+
+.activity7-4 {
+    /*
+     * Activity 7.4:
+     * Write the CSS for a class that is relatively positioned.
+     * This class should appear 15 pixels in from the left.
+     * Configure the class to have a light green background.
+     */
+
+    position: relative;
+    left: 15px;
+    background-color: lightgreen;
+}
+
+#activity7-5 {
+    /*
+     * Activity 7.5:
+     * Write the CSS for an id with the following characteristics:
+     *
+     * - fixed position at the top of the browser viewport
+     * - light gray background color
+     * - bold font weight
+     * - 10 pixels of padding
+     */
+
+    position: fixed;
+    top: 0;
+    background-color: lightgray;
+    font-weight: bold;
+    padding: 10px;
+}
