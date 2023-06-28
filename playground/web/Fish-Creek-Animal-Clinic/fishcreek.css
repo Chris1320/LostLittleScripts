@@ -1,0 +1,51 @@
+/*
+ * Color Palette:
+ * - #FFFFFF
+ * - #F0F0F0
+ * - #5280C5
+ * - #AEC3E3
+ * - #003366
+ */
+
+#wrapper {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #F0F0F0;
+}
+
+body {
+    background-color: #FFFFFF;
+    color: #003366;
+    font-family: Verdana, Arial, sans-serif;
+}
+
+nav {
+    font-weight: bold;
+}
+
+header {
+    background-color: #003366;
+    color: #AEC3E3;
+    font-family: Georgia, 'Times New Roman', serif;
+}
+
+h1 {
+    line-height: 200%;
+    text-indent: 1em;
+}
+
+h2 {
+    font-size: 1.2em;
+}
+
+dt, li {  /* Adding `li` was not in the instruction. */
+    color: #5280C5;
+    font-size: 1.1em;
+    font-family: Georgia, 'Times New Roman', serif;
+}
+
+footer {
+    font-size: small;
+    font-style: italic;
+}
