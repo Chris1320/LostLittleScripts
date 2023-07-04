@@ -1,0 +1,10 @@
+assets/chapter4/fadedroad50.jpg filter=lfs diff=lfs merge=lfs -text
+assets/chapter4/greg.jpg filter=lfs diff=lfs merge=lfs -text
+assets/chapter4/gregthumb.jpg filter=lfs diff=lfs merge=lfs -text
+assets/chapter4/melanie.jpg filter=lfs diff=lfs merge=lfs -text
+assets/chapter4/melaniethumb.jpg filter=lfs diff=lfs merge=lfs -text
+assets/chapter4/mugs.jpg filter=lfs diff=lfs merge=lfs -text
+assets/chapter6/coffeelogo.jpg filter=lfs diff=lfs merge=lfs -text
+assets/chapter6/heroguitar.jpg filter=lfs diff=lfs merge=lfs -text
+assets/chapter6/heromugs.jpg filter=lfs diff=lfs merge=lfs -text
+assets/chapter4/hero.jpg filter=lfs diff=lfs merge=lfs -text
