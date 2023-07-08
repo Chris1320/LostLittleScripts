@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>JavaJam Coffee House</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="javajam.css" />
+    </head>
+    <body>
+        <div id="wrapper">
+            <header>  <!-- The header of the page -->
+                <h1><a href="index.html">JavaJam Coffee Bar</a></h1>
+            </header>
+            <nav>  <!-- The navigation bar of the page -->
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Menu</a></li>
+                    <li><a href="music.html">Music</a></li>
+                    <li><a href="jobs.html">Jobs</a></li>
+                </ul>
+            </nav>
+            <main>  <!-- The main body of the page -->
+                <div id="herojobs"></div>
+                <h2>Jobs at JavaJam</h2>
+                <p>
+                    Want to work at JavaJam? Fill out the form below to start
+                    your application. All information is required.
+                </p>
+                <form action="https://webdevbasics.net/scripts/javajam8.php" method="POST">
+                    <label for="myName">Name:</label>
+                    <input type="text" name="myName" required>
+                    <label for="myEmail">E-Mail:</label>
+                    <input type="email" name="myEmail" required>
+                    <label for="myStart">Start Date:</label>
+                    <input type="date" name="myStart" required>
+                    <label for="myExperience">Experience:</label>
+                    <textarea name="myExperience" cols="20" rows="2" required></textarea>
+                    <input type="submit" value="Apply Now">
+                </form>
+            </main>
+            <footer>  <!-- The footer of the page -->
+                Copyright &copy; 2018 JavaJam Coffee House<br />
+                <a href="mailto:someone@example.com">someone@example.com</a>
+            </footer>
+        </div>
+    </body>
+</html>
