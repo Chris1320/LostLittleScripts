@@ -133,17 +133,6 @@ footer {
     overflow: auto;
 }
 
-.floatleft {
-    /* float: left;
-    padding-right: 2em;
-    padding-bottom: 2em; */
-}
-
-.onethird {
-    /* float: left;
-    width: 33%; */
-}
-
 table {
     text-align: center;
     width: 90%;
