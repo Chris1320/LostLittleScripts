@@ -1,0 +1,37 @@
+* {font-family: 'Roboto', sans-serif;}
+header {text-align: center;}
+
+form {
+    margin: 20px 50px;
+    max-width: 50%;
+}
+
+form > * {margin: 10px 0;}
+
+#fam-bg, #comments {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+}
+
+#fam-bg > label, #comments > label {padding-bottom: 10px;}
+#fam-bg > textarea, #comments > textarea {padding: 10px;}
+
+#control-buttons > input {
+    width: 100px;
+    margin-top: 10px;
+    margin-left: 20px;
+    padding: 7.5px;
+}
+
+.grid-container, .grid-container-no-wrap {
+    display: grid;
+    grid-template-columns: 0.25fr 1.75fr;
+    grid-gap: 10px;
+    align-items: center;
+}
+
+.grid-container > input,
+.grid-container-no-wrap > input {padding: 10px;}
+
+.grid-container-no-wrap {white-space: nowrap;}
