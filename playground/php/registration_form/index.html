@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Registration Form</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+            <h1>Registration Form</h1>
+        </header>
+        <main>
+            <form action="submit.php" method="POST">
+                <div class="grid-container">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name here">
+                    <label for="birthday">Birthday</label>
+                    <input type="date" id="birthday" name="birthday">
+                    <label for="gender">Gender</label>
+                    <section class="grid-container">
+                        <input type="radio" name="gender" id="g_male" value="male">
+                        <label for="g_male">Male</label>
+                        <input type="radio" name="gender" id="g_female" value="female">
+                        <label for="g_female">Female</label>
+                    </section>
+                    <label for="school">School</label>
+                    <input type="text" id="school" name="school" placeholder="Enter your school name here">
+                    <label for="course">Course</label>
+                    <input type="text" id="course" name="course" placeholder="Enter your course here">
+                </div>
+                <div id="fam-bg">
+                    <label for="fam-bg-textarea">Family Background</label>
+                    <textarea rows="5" cols="20" name="fam-bg-textarea" id="fam-bg-textarea"></textarea>
+                </div>
+                <div id="control-buttons">
+                    <input type="reset" value="Clear">
+                    <input type="submit" value="Continue">
+                </div>
+            </form>
+        </main>
+    </body>
+</html>
