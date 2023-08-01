@@ -59,6 +59,7 @@ def main(
     errors = 0
     base_command: list[str] = [
         "yt-dlp",  # Use yt-dlp to download.
+        "--embed-metadata",
         "--embed-thumbnail",  # Embed the YouTube video's thumbnail as cover art.
         "--write-subs",  # Write the subtites as possible lyrics.
         "--extract-audio",  # Download only the audio.
