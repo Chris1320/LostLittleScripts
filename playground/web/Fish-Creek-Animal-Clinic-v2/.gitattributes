@@ -1,0 +1,6 @@
+assets/home.gif filter=lfs diff=lfs merge=lfs -text
+assets/services.gif filter=lfs diff=lfs merge=lfs -text
+assets/askthevet.gif filter=lfs diff=lfs merge=lfs -text
+assets/contact.gif filter=lfs diff=lfs merge=lfs -text
+assets/fishcreeklogo.gif filter=lfs diff=lfs merge=lfs -text
+assets/favicon.ico filter=lfs diff=lfs merge=lfs -text

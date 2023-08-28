@@ -1,0 +1,70 @@
+/*
+ * Color Palette:
+ * - #FFFFFF
+ * - #F0F0F0
+ * - #5280C5
+ * - #AEC3E3
+ * - #003366
+ */
+
+main {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+#wrapper {
+    min-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #f0f0f0;
+}
+
+body {
+    background-color: #ffffff;
+    color: #003366;
+    font-family: Verdana, Arial, sans-serif;
+}
+
+nav {
+    background-color: #5280c5;
+    padding: 0.5em;
+    text-align: center;
+    font-weight: bold;
+}
+
+header {
+    background-color: #003366;
+    background-image: url(assets/fishcreeklogo.gif);
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #f0f0f0;
+    font-family: Georgia, "Times New Roman", serif;
+    text-align: center;
+    padding: 1em;
+}
+
+h2 {
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px #777;
+}
+
+dt, li {
+    /* Adding `li` was not in the instruction. */
+    color: #5280c5;
+    font-size: 1.1em;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+footer {
+    background-color: #AEC3E3;
+    text-align: center;
+    font-size: small;
+    font-style: italic;
+    padding-bottom: .5em;
+}
+
+footer nav {
+    background-color: #f0f0f0;
+    font-size: 110%;
+    padding-bottom: .5em;
+}
