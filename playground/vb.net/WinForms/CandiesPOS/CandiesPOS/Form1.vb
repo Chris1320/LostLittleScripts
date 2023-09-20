@@ -1,4 +1,17 @@
-﻿Public Class Form1
+﻿' CandiesPOS
+'
+' A supermarket sells bags of mixed candies. Four types of candies
+' are for sale.
+'
+' Candy A                P42.25/kg
+' Candy B                P36.75/kg
+' Candy C                P48.00/kg
+' Candy D                P29.50/kg
+'
+' Calculate and print the amount of a bag of candies in terms of the
+' weights of each type of candy, as provided by the user.
+
+Public Class Form1
     Dim total_weight As Double = 0.00
     Dim total_bill As Double = 0.00
     ' Candy prices per kilogram.
@@ -12,6 +25,7 @@
         total_weight = numCandyAWeight.Value + numCandyBWeight.Value + numCandyCWeight.Value + numCandyDWeight.Value
         txtTotalWeight.Text = String.Format("{0} kg", total_weight.ToString())
 
+        ' Show the appropriate image depending on the total weight.
         Select Case total_weight
             Case Is <= 0
                 picCandyAmountHigh.Visible = False
