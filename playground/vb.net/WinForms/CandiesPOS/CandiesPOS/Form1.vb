@@ -11,6 +11,33 @@
     Private Sub computeTotalWeight()
         total_weight = numCandyAWeight.Value + numCandyBWeight.Value + numCandyCWeight.Value + numCandyDWeight.Value
         txtTotalWeight.Text = String.Format("{0} kg", total_weight.ToString())
+
+        Select Case total_weight
+            Case Is <= 0
+                picCandyAmountHigh.Visible = False
+                picCandyAmountMid.Visible = False
+                picCandyAmountLow.Visible = False
+                picCandyAmountNone.Visible = True
+
+            Case Is < 5
+                picCandyAmountHigh.Visible = False
+                picCandyAmountMid.Visible = False
+                picCandyAmountLow.Visible = True
+                picCandyAmountNone.Visible = False
+
+            Case Is < 10
+                picCandyAmountHigh.Visible = False
+                picCandyAmountMid.Visible = True
+                picCandyAmountLow.Visible = False
+                picCandyAmountNone.Visible = False
+
+            Case Is >= 10
+                picCandyAmountHigh.Visible = True
+                picCandyAmountMid.Visible = False
+                picCandyAmountLow.Visible = False
+                picCandyAmountNone.Visible = False
+
+        End Select
     End Sub
 
     Private Sub numCandyAWeight_ValueChanged(sender As Object, e As EventArgs) Handles numCandyAWeight.ValueChanged

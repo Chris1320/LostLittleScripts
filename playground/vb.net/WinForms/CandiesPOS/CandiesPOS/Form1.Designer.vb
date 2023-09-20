@@ -22,6 +22,7 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(Form1))
         lblTitle = New Label()
         lblCandyA = New Label()
         numCandyAWeight = New NumericUpDown()
@@ -47,10 +48,20 @@ Partial Class Form1
         txtCandyCPrice = New TextBox()
         txtCandyDPrice = New TextBox()
         txtTotalPrice = New TextBox()
+        picTitleLogo = New PictureBox()
+        picCandyAmountLow = New PictureBox()
+        picCandyAmountMid = New PictureBox()
+        picCandyAmountHigh = New PictureBox()
+        picCandyAmountNone = New PictureBox()
         CType(numCandyAWeight, ComponentModel.ISupportInitialize).BeginInit()
         CType(numCandyBWeight, ComponentModel.ISupportInitialize).BeginInit()
         CType(numCandyDWeight, ComponentModel.ISupportInitialize).BeginInit()
         CType(numCandyCWeight, ComponentModel.ISupportInitialize).BeginInit()
+        CType(picTitleLogo, ComponentModel.ISupportInitialize).BeginInit()
+        CType(picCandyAmountLow, ComponentModel.ISupportInitialize).BeginInit()
+        CType(picCandyAmountMid, ComponentModel.ISupportInitialize).BeginInit()
+        CType(picCandyAmountHigh, ComponentModel.ISupportInitialize).BeginInit()
+        CType(picCandyAmountNone, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' lblTitle
@@ -58,7 +69,7 @@ Partial Class Form1
         lblTitle.Anchor = AnchorStyles.Top
         lblTitle.AutoSize = True
         lblTitle.Font = New Font("Noto Sans", 21.7499962F, FontStyle.Bold, GraphicsUnit.Point)
-        lblTitle.Location = New Point(128, 9)
+        lblTitle.Location = New Point(137, 9)
         lblTitle.Name = "lblTitle"
         lblTitle.Size = New Size(322, 39)
         lblTitle.TabIndex = 0
@@ -79,6 +90,7 @@ Partial Class Form1
         ' 
         numCandyAWeight.DecimalPlaces = 2
         numCandyAWeight.Font = New Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point)
+        numCandyAWeight.Increment = New Decimal(New Integer() {25, 0, 0, 131072})
         numCandyAWeight.Location = New Point(213, 94)
         numCandyAWeight.Name = "numCandyAWeight"
         numCandyAWeight.Size = New Size(81, 35)
@@ -129,6 +141,7 @@ Partial Class Form1
         ' 
         numCandyBWeight.DecimalPlaces = 2
         numCandyBWeight.Font = New Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point)
+        numCandyBWeight.Increment = New Decimal(New Integer() {25, 0, 0, 131072})
         numCandyBWeight.Location = New Point(213, 147)
         numCandyBWeight.Name = "numCandyBWeight"
         numCandyBWeight.Size = New Size(81, 35)
@@ -169,6 +182,7 @@ Partial Class Form1
         ' 
         numCandyDWeight.DecimalPlaces = 2
         numCandyDWeight.Font = New Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point)
+        numCandyDWeight.Increment = New Decimal(New Integer() {25, 0, 0, 131072})
         numCandyDWeight.Location = New Point(213, 257)
         numCandyDWeight.Name = "numCandyDWeight"
         numCandyDWeight.Size = New Size(81, 35)
@@ -209,6 +223,7 @@ Partial Class Form1
         ' 
         numCandyCWeight.DecimalPlaces = 2
         numCandyCWeight.Font = New Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point)
+        numCandyCWeight.Increment = New Decimal(New Integer() {25, 0, 0, 131072})
         numCandyCWeight.Location = New Point(213, 204)
         numCandyCWeight.Name = "numCandyCWeight"
         numCandyCWeight.Size = New Size(81, 35)
@@ -228,7 +243,7 @@ Partial Class Form1
         ' btnCompute
         ' 
         btnCompute.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
-        btnCompute.Location = New Point(395, 383)
+        btnCompute.Location = New Point(395, 386)
         btnCompute.Name = "btnCompute"
         btnCompute.Size = New Size(116, 41)
         btnCompute.TabIndex = 17
@@ -239,7 +254,7 @@ Partial Class Form1
         ' 
         txtTotalWeight.BackColor = SystemColors.Window
         txtTotalWeight.Font = New Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point)
-        txtTotalWeight.Location = New Point(213, 327)
+        txtTotalWeight.Location = New Point(147, 327)
         txtTotalWeight.Name = "txtTotalWeight"
         txtTotalWeight.ReadOnly = True
         txtTotalWeight.Size = New Size(100, 27)
@@ -306,11 +321,66 @@ Partial Class Form1
         txtTotalPrice.Size = New Size(116, 35)
         txtTotalPrice.TabIndex = 24
         ' 
+        ' picTitleLogo
+        ' 
+        picTitleLogo.Image = My.Resources.Resources.logo
+        picTitleLogo.Location = New Point(81, 9)
+        picTitleLogo.Name = "picTitleLogo"
+        picTitleLogo.Size = New Size(50, 50)
+        picTitleLogo.SizeMode = PictureBoxSizeMode.Zoom
+        picTitleLogo.TabIndex = 25
+        picTitleLogo.TabStop = False
+        ' 
+        ' picCandyAmountLow
+        ' 
+        picCandyAmountLow.Image = My.Resources.Resources.candy_low_circled
+        picCandyAmountLow.Location = New Point(272, 327)
+        picCandyAmountLow.Name = "picCandyAmountLow"
+        picCandyAmountLow.Size = New Size(100, 100)
+        picCandyAmountLow.SizeMode = PictureBoxSizeMode.Zoom
+        picCandyAmountLow.TabIndex = 26
+        picCandyAmountLow.TabStop = False
+        picCandyAmountLow.Visible = False
+        ' 
+        ' picCandyAmountMid
+        ' 
+        picCandyAmountMid.Image = My.Resources.Resources.candy_mid_circled
+        picCandyAmountMid.Location = New Point(272, 327)
+        picCandyAmountMid.Name = "picCandyAmountMid"
+        picCandyAmountMid.Size = New Size(100, 100)
+        picCandyAmountMid.SizeMode = PictureBoxSizeMode.Zoom
+        picCandyAmountMid.TabIndex = 27
+        picCandyAmountMid.TabStop = False
+        picCandyAmountMid.Visible = False
+        ' 
+        ' picCandyAmountHigh
+        ' 
+        picCandyAmountHigh.Image = My.Resources.Resources.candy_high_circled
+        picCandyAmountHigh.Location = New Point(272, 327)
+        picCandyAmountHigh.Name = "picCandyAmountHigh"
+        picCandyAmountHigh.Size = New Size(100, 100)
+        picCandyAmountHigh.SizeMode = PictureBoxSizeMode.Zoom
+        picCandyAmountHigh.TabIndex = 28
+        picCandyAmountHigh.TabStop = False
+        picCandyAmountHigh.Visible = False
+        ' 
+        ' picCandyAmountNone
+        ' 
+        picCandyAmountNone.Image = My.Resources.Resources.circle
+        picCandyAmountNone.Location = New Point(272, 327)
+        picCandyAmountNone.Name = "picCandyAmountNone"
+        picCandyAmountNone.Size = New Size(100, 100)
+        picCandyAmountNone.SizeMode = PictureBoxSizeMode.Zoom
+        picCandyAmountNone.TabIndex = 29
+        picCandyAmountNone.TabStop = False
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(549, 450)
+        Controls.Add(picCandyAmountNone)
+        Controls.Add(picTitleLogo)
         Controls.Add(txtTotalPrice)
         Controls.Add(txtCandyDPrice)
         Controls.Add(txtCandyCPrice)
@@ -336,7 +406,11 @@ Partial Class Form1
         Controls.Add(numCandyAWeight)
         Controls.Add(lblCandyA)
         Controls.Add(lblTitle)
+        Controls.Add(picCandyAmountHigh)
+        Controls.Add(picCandyAmountMid)
+        Controls.Add(picCandyAmountLow)
         FormBorderStyle = FormBorderStyle.FixedSingle
+        Icon = CType(resources.GetObject("$this.Icon"), Icon)
         MaximizeBox = False
         MinimizeBox = False
         Name = "Form1"
@@ -345,6 +419,11 @@ Partial Class Form1
         CType(numCandyBWeight, ComponentModel.ISupportInitialize).EndInit()
         CType(numCandyDWeight, ComponentModel.ISupportInitialize).EndInit()
         CType(numCandyCWeight, ComponentModel.ISupportInitialize).EndInit()
+        CType(picTitleLogo, ComponentModel.ISupportInitialize).EndInit()
+        CType(picCandyAmountLow, ComponentModel.ISupportInitialize).EndInit()
+        CType(picCandyAmountMid, ComponentModel.ISupportInitialize).EndInit()
+        CType(picCandyAmountHigh, ComponentModel.ISupportInitialize).EndInit()
+        CType(picCandyAmountNone, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -374,4 +453,9 @@ Partial Class Form1
     Friend WithEvents txtCandyCPrice As TextBox
     Friend WithEvents txtCandyDPrice As TextBox
     Friend WithEvents txtTotalPrice As TextBox
+    Friend WithEvents picTitleLogo As PictureBox
+    Friend WithEvents picCandyAmountLow As PictureBox
+    Friend WithEvents picCandyAmountMid As PictureBox
+    Friend WithEvents picCandyAmountHigh As PictureBox
+    Friend WithEvents picCandyAmountNone As PictureBox
 End Class
