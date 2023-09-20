@@ -1,4 +1,4 @@
-﻿Public Class Form1
+﻿Public Class Wizard
     Private Sub btnShow_Click(sender As Object, e As EventArgs) Handles btnShow.Click
         ' You can use the Show and Hide methods to show and hide controls.
         pboxWizard.Show()
