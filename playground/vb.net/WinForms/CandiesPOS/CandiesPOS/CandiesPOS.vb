@@ -11,7 +11,7 @@
 ' Calculate and print the amount of a bag of candies in terms of the
 ' weights of each type of candy, as provided by the user.
 
-Public Class Form1
+Public Class CandiesPOS
     Dim total_weight As Double = 0.00
     Dim total_bill As Double = 0.00
     ' Candy prices per kilogram.
