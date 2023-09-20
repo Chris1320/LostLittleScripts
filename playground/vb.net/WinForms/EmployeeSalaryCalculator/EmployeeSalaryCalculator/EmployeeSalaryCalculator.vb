@@ -6,7 +6,7 @@
 ' day (for a total of 700 pesos). Given a number of days, compute
 ' how much will he earn.
 
-Public Class Form1
+Public Class EmployeeSalaryCalculator
     ' Compute the total salary of an employee.
     ' num_days: number of days worked
     ' base_salary: base salary of the employee
