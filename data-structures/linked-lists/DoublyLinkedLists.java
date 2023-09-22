@@ -8,7 +8,7 @@ public class DoublyLinkedLists {
         for (int i = 1; i < 10; i++) {
             // Add a new node to the end of the list
             current.setNext(new DoublyLinkedListNode(current.data * 2));
-            current.getNext().setPrev(current);  // Set the previous node
+            current.getNext().setPrev(current); // Set the previous node
             current = current.getNext(); // Advance to the newly-created node.
         }
 
@@ -18,7 +18,8 @@ public class DoublyLinkedLists {
         while (true) {
             // The output should be a list of powers of two.
             System.out.printf("Node %d: %d\n", node_count++, current.data);
-            if (current.getNext() == null) break;
+            if (current.getNext() == null)
+                break;
             current = current.getNext();
         }
 
