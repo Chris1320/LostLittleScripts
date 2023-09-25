@@ -8,6 +8,37 @@
     Dim candle_style As String = Nothing
     Dim candle_color As String = Nothing
 
+    Private Sub updateDisplayImage()
+        Select Case candle_style
+            Case "Tea Light"
+                Select Case listCandleColor.SelectedIndex
+                    Case 0 : picCandlePreview.Image = My.Resources.candle_tea_light_federal_blue
+                    Case 1 : picCandlePreview.Image = My.Resources.candle_tea_light_sunflower_yellow
+                    Case 2 : picCandlePreview.Image = My.Resources.candle_tea_light_christmas_red
+                    Case 3 : picCandlePreview.Image = My.Resources.candle_tea_light_lily_white
+                    Case Else : picCandlePreview.Image = My.Resources.candle_tea_light_clear
+                End Select
+            Case "Votive"
+                Select Case listCandleColor.SelectedIndex
+                    Case 0 : picCandlePreview.Image = My.Resources.candle_votive_federal_blue
+                    Case 1 : picCandlePreview.Image = My.Resources.candle_votive_sunflower_yellow
+                    Case 2 : picCandlePreview.Image = My.Resources.candle_votive_christmas_red
+                    Case 3 : picCandlePreview.Image = My.Resources.candle_votive_lily_white
+                    Case Else : picCandlePreview.Image = My.Resources.candle_votive_clear
+                End Select
+            Case "Pillar"
+                Select Case listCandleColor.SelectedIndex
+                    Case 0 : picCandlePreview.Image = My.Resources.candle_pillar_federal_blue
+                    Case 1 : picCandlePreview.Image = My.Resources.candle_pillar_sunflower_yellow
+                    Case 2 : picCandlePreview.Image = My.Resources.candle_pillar_christmas_red
+                    Case 3 : picCandlePreview.Image = My.Resources.candle_pillar_lily_white
+                    Case Else : picCandlePreview.Image = My.Resources.candle_pillar_clear
+                End Select
+            Case Else
+                picCandlePreview.Image = Nothing
+        End Select
+    End Sub
+
     Private Sub btnShowItemPrices_Click(sender As Object, e As EventArgs) Handles btnShowItemPrices.Click
         ShowItemPrices.ShowDialog()
     End Sub
@@ -126,13 +157,28 @@
 
     Private Sub btnTeaLight_CheckedChanged(sender As Object, e As EventArgs) Handles btnTeaLight.CheckedChanged
         candle_style = "Tea Light"
+        updateDisplayImage()
     End Sub
 
     Private Sub btnVotive_CheckedChanged(sender As Object, e As EventArgs) Handles btnVotive.CheckedChanged
         candle_style = "Votive"
+        updateDisplayImage()
     End Sub
 
     Private Sub RadioButton3_CheckedChanged(sender As Object, e As EventArgs) Handles btnPillar.CheckedChanged
         candle_style = "Pillar"
+        updateDisplayImage()
+    End Sub
+
+    Private Sub GalaxysCandles_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        picScented.Visible = checkScented.Checked
+    End Sub
+
+    Private Sub checkScented_CheckedChanged(sender As Object, e As EventArgs) Handles checkScented.CheckedChanged
+        picScented.Visible = checkScented.Checked
+    End Sub
+
+    Private Sub listCandleColor_SelectedIndexChanged(sender As Object, e As EventArgs) Handles listCandleColor.SelectedIndexChanged
+        updateDisplayImage()
     End Sub
 End Class

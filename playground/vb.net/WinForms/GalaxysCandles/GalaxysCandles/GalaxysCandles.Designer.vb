@@ -43,8 +43,14 @@ Partial Class GalaxysCandles
         checkScented = New CheckBox()
         btnOrder = New Button()
         btnShowItemPrices = New Button()
+        PictureBox1 = New PictureBox()
+        picScented = New PictureBox()
+        picCandlePreview = New PictureBox()
         GroupBox1.SuspendLayout()
         GroupBox2.SuspendLayout()
+        CType(PictureBox1, ComponentModel.ISupportInitialize).BeginInit()
+        CType(picScented, ComponentModel.ISupportInitialize).BeginInit()
+        CType(picCandlePreview, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' txtFullName
@@ -122,7 +128,7 @@ Partial Class GalaxysCandles
         ' 
         Label6.AutoSize = True
         Label6.Font = New Font("Segoe UI", 6F, FontStyle.Italic, GraphicsUnit.Point)
-        Label6.Location = New Point(369, 190)
+        Label6.Location = New Point(372, 191)
         Label6.Name = "Label6"
         Label6.Size = New Size(36, 11)
         Label6.TabIndex = 11
@@ -130,7 +136,7 @@ Partial Class GalaxysCandles
         ' 
         ' txtQuantity
         ' 
-        txtQuantity.Location = New Point(369, 204)
+        txtQuantity.Location = New Point(372, 205)
         txtQuantity.Name = "txtQuantity"
         txtQuantity.Size = New Size(69, 23)
         txtQuantity.TabIndex = 10
@@ -139,7 +145,7 @@ Partial Class GalaxysCandles
         ' 
         Label7.AutoSize = True
         Label7.Font = New Font("Segoe UI", 9F, FontStyle.Italic, GraphicsUnit.Point)
-        Label7.Location = New Point(444, 207)
+        Label7.Location = New Point(447, 208)
         Label7.Name = "Label7"
         Label7.Size = New Size(32, 15)
         Label7.TabIndex = 12
@@ -165,7 +171,7 @@ Partial Class GalaxysCandles
         GroupBox2.Controls.Add(btnPillar)
         GroupBox2.Controls.Add(btnVotive)
         GroupBox2.Controls.Add(btnTeaLight)
-        GroupBox2.Location = New Point(40, 187)
+        GroupBox2.Location = New Point(40, 201)
         GroupBox2.Name = "GroupBox2"
         GroupBox2.Size = New Size(163, 107)
         GroupBox2.TabIndex = 14
@@ -210,7 +216,7 @@ Partial Class GalaxysCandles
         listCandleColor.FormattingEnabled = True
         listCandleColor.ItemHeight = 15
         listCandleColor.Items.AddRange(New Object() {"Federal Blue", "Sunflower Yellow", "Christmas Red", "Lily White"})
-        listCandleColor.Location = New Point(217, 204)
+        listCandleColor.Location = New Point(217, 218)
         listCandleColor.Name = "listCandleColor"
         listCandleColor.Size = New Size(120, 79)
         listCandleColor.TabIndex = 15
@@ -218,7 +224,7 @@ Partial Class GalaxysCandles
         ' Label8
         ' 
         Label8.AutoSize = True
-        Label8.Location = New Point(237, 186)
+        Label8.Location = New Point(237, 200)
         Label8.Name = "Label8"
         Label8.Size = New Size(76, 15)
         Label8.TabIndex = 16
@@ -237,9 +243,9 @@ Partial Class GalaxysCandles
         ' btnOrder
         ' 
         btnOrder.Font = New Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point)
-        btnOrder.Location = New Point(369, 243)
+        btnOrder.Location = New Point(369, 278)
         btnOrder.Name = "btnOrder"
-        btnOrder.Size = New Size(215, 51)
+        btnOrder.Size = New Size(123, 51)
         btnOrder.TabIndex = 18
         btnOrder.Text = "Order Now"
         btnOrder.UseVisualStyleBackColor = True
@@ -253,12 +259,44 @@ Partial Class GalaxysCandles
         btnShowItemPrices.Text = "Show Item Prices"
         btnShowItemPrices.UseVisualStyleBackColor = True
         ' 
+        ' PictureBox1
+        ' 
+        PictureBox1.Image = My.Resources.Resources.logo
+        PictureBox1.Location = New Point(53, 16)
+        PictureBox1.Name = "PictureBox1"
+        PictureBox1.Size = New Size(65, 65)
+        PictureBox1.SizeMode = PictureBoxSizeMode.Zoom
+        PictureBox1.TabIndex = 20
+        PictureBox1.TabStop = False
+        ' 
+        ' picScented
+        ' 
+        picScented.Image = My.Resources.Resources.scented
+        picScented.Location = New Point(530, 253)
+        picScented.Name = "picScented"
+        picScented.Size = New Size(25, 25)
+        picScented.SizeMode = PictureBoxSizeMode.Zoom
+        picScented.TabIndex = 21
+        picScented.TabStop = False
+        ' 
+        ' picCandlePreview
+        ' 
+        picCandlePreview.Location = New Point(517, 279)
+        picCandlePreview.Name = "picCandlePreview"
+        picCandlePreview.Size = New Size(50, 50)
+        picCandlePreview.SizeMode = PictureBoxSizeMode.Zoom
+        picCandlePreview.TabIndex = 22
+        picCandlePreview.TabStop = False
+        ' 
         ' GalaxysCandles
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = SystemColors.Control
-        ClientSize = New Size(602, 312)
+        ClientSize = New Size(602, 360)
+        Controls.Add(picCandlePreview)
+        Controls.Add(picScented)
+        Controls.Add(PictureBox1)
         Controls.Add(btnShowItemPrices)
         Controls.Add(btnOrder)
         Controls.Add(checkScented)
@@ -281,6 +319,9 @@ Partial Class GalaxysCandles
         GroupBox1.PerformLayout()
         GroupBox2.ResumeLayout(False)
         GroupBox2.PerformLayout()
+        CType(PictureBox1, ComponentModel.ISupportInitialize).EndInit()
+        CType(picScented, ComponentModel.ISupportInitialize).EndInit()
+        CType(picCandlePreview, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -306,4 +347,7 @@ Partial Class GalaxysCandles
     Friend WithEvents checkScented As CheckBox
     Friend WithEvents btnOrder As Button
     Friend WithEvents btnShowItemPrices As Button
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents picScented As PictureBox
+    Friend WithEvents picCandlePreview As PictureBox
 End Class
