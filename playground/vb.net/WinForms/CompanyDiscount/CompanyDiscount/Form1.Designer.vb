@@ -54,6 +54,7 @@ Partial Class Form1
         ' 
         ' txtUnitPrice
         ' 
+        txtUnitPrice.BackColor = SystemColors.GradientActiveCaption
         txtUnitPrice.Location = New Point(194, 30)
         txtUnitPrice.Name = "txtUnitPrice"
         txtUnitPrice.PlaceholderText = "Unit Price"
@@ -62,6 +63,7 @@ Partial Class Form1
         ' 
         ' txtUnitQuantity
         ' 
+        txtUnitQuantity.BackColor = SystemColors.GradientActiveCaption
         txtUnitQuantity.Location = New Point(194, 61)
         txtUnitQuantity.Name = "txtUnitQuantity"
         txtUnitQuantity.PlaceholderText = "Unit Quantity"
@@ -70,6 +72,7 @@ Partial Class Form1
         ' 
         ' txtFullCost
         ' 
+        txtFullCost.BackColor = SystemColors.GradientActiveCaption
         txtFullCost.Location = New Point(194, 129)
         txtFullCost.Name = "txtFullCost"
         txtFullCost.ReadOnly = True
@@ -96,6 +99,7 @@ Partial Class Form1
         ' 
         ' txtTotalDiscount
         ' 
+        txtTotalDiscount.BackColor = SystemColors.GradientActiveCaption
         txtTotalDiscount.Location = New Point(194, 158)
         txtTotalDiscount.Name = "txtTotalDiscount"
         txtTotalDiscount.ReadOnly = True
@@ -113,6 +117,7 @@ Partial Class Form1
         ' 
         ' txtFinalPrice
         ' 
+        txtFinalPrice.BackColor = SystemColors.GradientActiveCaption
         txtFinalPrice.Location = New Point(194, 187)
         txtFinalPrice.Name = "txtFinalPrice"
         txtFinalPrice.ReadOnly = True
@@ -123,6 +128,7 @@ Partial Class Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
+        BackColor = Color.LightGreen
         ClientSize = New Size(408, 224)
         Controls.Add(Label5)
         Controls.Add(txtFinalPrice)
