@@ -1,26 +1,21 @@
 ﻿Public Class VirtualBrewCafe
     Const TAX As Double = 0.12
-    ' The items in the menu.
+    Dim total_price As Double = 0
     Dim items(,) As String = {
             {"Pancake ", "Hotdog", "Bread", "Cake", "Egg"},
             {"Chicken", "Beef and Mushroom", "Pork Steak", "Spaghetti", "Rice"},
             {"Chicken", "Beef and Mushroom", "Pork Adobo", "Rice", "Chocolate"}
         }
-
-    ' The prices of the items in the menu.
     Dim item_prices(,) As Double = {
             {110.0, 40.0, 45.0, 75.0, 20.0},
             {150.0, 170.0, 120.0, 90.0, 30.0},
             {150.0, 170.0, 130.0, 30.0, 250.0}
     }
 
-    Dim total_price As Double = 0
-
     Private Sub updateTotalPrice()
         ' Update the total price.
         total_price = 0
-        For Each row As DataGridViewRow In dgOrderList.Rows
-            total_price += row.Cells(2).Value
+        For Each row As DataGridViewRow In dgOrderList.Rows : total_price += row.Cells(2).Value
         Next
 
         ' Display the total price.
