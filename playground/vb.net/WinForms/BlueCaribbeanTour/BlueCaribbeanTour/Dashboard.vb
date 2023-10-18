@@ -1,6 +1,7 @@
 ﻿Public Class Dashboard
     Private kill_parent As Boolean = True
     Private selected_tour_length As Integer?
+    Private total_cost As Double = 0
 
     Public Sub resetForm()
         listTours.SelectedItems.Clear()
@@ -9,6 +10,16 @@
         numPeople.Value = 1
         dateDeparture.Value = DateTime.Now.AddDays(Info.minimum_preregistration)
         comboModeOfPayment.SelectedIndex = -1
+        lblTotalCost.Text = "N/A"
+    End Sub
+
+    Private Sub computeTotalCost()
+        If listTours.SelectedIndex = -1 Then : Return
+        ElseIf Not rbtnDays7.Checked And Not rbtnDays14.Checked Then : Return
+        End If
+
+        Me.total_cost = Info.tour_prices(listTours.SelectedItem)(Me.selected_tour_length) * numPeople.Value
+        lblTotalCost.Text = Me.total_cost.ToString("C")
     End Sub
 
     Private Sub Dashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -54,10 +65,12 @@
 
     Private Sub rbtnDays7_CheckedChanged(sender As Object, e As EventArgs) Handles rbtnDays7.CheckedChanged
         Me.selected_tour_length = 0
+        Me.computeTotalCost()
     End Sub
 
     Private Sub rbtnDays14_CheckedChanged(sender As Object, e As EventArgs) Handles rbtnDays14.CheckedChanged
         Me.selected_tour_length = 1
+        Me.computeTotalCost()
     End Sub
 
     Private Sub btnReserve_Click(sender As Object, e As EventArgs) Handles btnReserve.Click
@@ -99,7 +112,7 @@
             dateDeparture.Value,
             If(Me.selected_tour_length = 1, 14, 7),
             comboModeOfPayment.SelectedItem,
-            Info.tour_prices(listTours.SelectedItem)(Me.selected_tour_length) * numPeople.Value
+            Me.total_cost
         ) Then
             MessageBox.Show(
                 "Reservation successful!",
@@ -109,16 +122,21 @@
             )
             Me.resetForm()
         End If
-
-        MessageBox.Show(
-            $"Tour Location: {listTours.SelectedItem}{vbCrLf}" &
-            $"Tour Length: {If(Me.selected_tour_length = 0, "7 days", "14 days")}{vbCrLf}" &
-            $"Departure Date: {dateDeparture.Value.ToShortDateString()}{vbCrLf}" &
-            $"Mode of Payment: {comboModeOfPayment.SelectedItem}{vbCrLf}"
-        )
     End Sub
 
     Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
         Me.resetForm()
+    End Sub
+
+    Private Sub listTours_SelectedIndexChanged(sender As Object, e As EventArgs) Handles listTours.SelectedIndexChanged
+        Me.computeTotalCost()
+    End Sub
+
+    Private Sub numPeople_ValueChanged(sender As Object, e As EventArgs) Handles numPeople.ValueChanged
+        Me.computeTotalCost()
+    End Sub
+
+    Private Sub dateDeparture_ValueChanged(sender As Object, e As EventArgs) Handles dateDeparture.ValueChanged
+        Me.computeTotalCost()
     End Sub
 End Class

@@ -44,6 +44,8 @@ Partial Class Dashboard
         Me.lblUsername = New System.Windows.Forms.Label()
         Me.btnReserve = New System.Windows.Forms.Button()
         Me.btnReset = New System.Windows.Forms.Button()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.lblTotalCost = New System.Windows.Forms.Label()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         CType(Me.numPeople, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -243,11 +245,33 @@ Partial Class Dashboard
         Me.btnReset.Text = "Reset"
         Me.btnReset.UseVisualStyleBackColor = True
         '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.Location = New System.Drawing.Point(394, 198)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(71, 16)
+        Me.Label7.TabIndex = 17
+        Me.Label7.Text = "Total Cost:"
+        '
+        'lblTotalCost
+        '
+        Me.lblTotalCost.AutoSize = True
+        Me.lblTotalCost.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTotalCost.Location = New System.Drawing.Point(465, 192)
+        Me.lblTotalCost.Name = "lblTotalCost"
+        Me.lblTotalCost.Size = New System.Drawing.Size(53, 29)
+        Me.lblTotalCost.TabIndex = 18
+        Me.lblTotalCost.Text = "N/A"
+        '
         'Dashboard
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(622, 386)
+        Me.Controls.Add(Me.lblTotalCost)
+        Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.btnReset)
         Me.Controls.Add(Me.btnReserve)
         Me.Controls.Add(Me.lblUsername)
@@ -303,4 +327,6 @@ Partial Class Dashboard
     Friend WithEvents lblUsername As Label
     Friend WithEvents btnReserve As Button
     Friend WithEvents btnReset As Button
+    Friend WithEvents Label7 As Label
+    Friend WithEvents lblTotalCost As Label
 End Class

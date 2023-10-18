@@ -5,7 +5,7 @@
         Dim db_manager = New DatabaseManager()
         lblAdminAccountNotice.Visible = create_as_admin
         lnkToLogin.Visible = db_manager.databaseExists() _
-                                AndAlso Not db_manager.databaseIsEmpty()
+            AndAlso Not db_manager.databaseIsEmpty()
     End Sub
 
     Private Sub txtPassword_TextChanged(sender As Object, e As EventArgs) Handles txtPassword.TextChanged
