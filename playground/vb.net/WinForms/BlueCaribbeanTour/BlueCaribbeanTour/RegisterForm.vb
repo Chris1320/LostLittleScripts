@@ -60,28 +60,35 @@
         End If
 
         Dim user_manger = New UserManager()
-        If Not user_manger.registerUser(
+        Dim new_user = New User(
+            Nothing,
             txtUsername.Text,
             txtPassword.Text,
             If(create_as_admin, 0, 1),  ' 0 = admin, 1 = user
-            txtFirstName.Text,
-            txtMiddleInitial.Text,
-            txtLastName.Text,
+            New String() {
+                txtFirstName.Text,
+                txtMiddleInitial.Text,
+                txtLastName.Text
+            },
             txtAddress.Text,
             txtPhoneNumber.Text
-            ) Then : MessageBox.Show(
+        )
+
+        If Not user_manger.registerUser(new_user) Then
+            MessageBox.Show(
                 "Failed to register user.",
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
             )
         End If
+
         MessageBox.Show(
-        "User registered successfully.",
-        "Success",
-        MessageBoxButtons.OK,
-        MessageBoxIcon.Information
-    )
+            "User registered successfully.",
+            "Success",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information
+        )
         Me.Dispose()
     End Sub
 

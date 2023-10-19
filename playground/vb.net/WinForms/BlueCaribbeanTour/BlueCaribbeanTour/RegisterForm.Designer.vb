@@ -22,6 +22,7 @@ Partial Class RegisterForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(RegisterForm))
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.lblAdminAccountNotice = New System.Windows.Forms.Label()
         Me.txtFirstName = New System.Windows.Forms.TextBox()
@@ -287,6 +288,7 @@ Partial Class RegisterForm
         Me.Controls.Add(Me.lblAdminAccountNotice)
         Me.Controls.Add(Me.PictureBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "RegisterForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "RegisterForm"

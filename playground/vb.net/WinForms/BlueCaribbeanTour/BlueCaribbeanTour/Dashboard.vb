@@ -1,7 +1,16 @@
 ﻿Public Class Dashboard
+    Private user_info As User
     Private kill_parent As Boolean = True
     Private selected_tour_length As Integer?
     Private total_cost As Double = 0
+
+    Sub New(user_info As User)
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        Me.user_info = user_info
+    End Sub
 
     Public Sub resetForm()
         listTours.SelectedItems.Clear()
@@ -51,16 +60,20 @@
         )
     End Sub
 
+    Public Sub logout()
+        Me.kill_parent = False
+        Me.Dispose()
+        LoginForm.cleanUp()
+        LoginForm.Show()
+    End Sub
+
     Private Sub Dashboard_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         If Me.kill_parent Then : LoginForm.Close()
         End If
     End Sub
 
     Private Sub LogoutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogoutToolStripMenuItem.Click
-        Me.kill_parent = False
-        Me.Dispose()
-        LoginForm.cleanUp()
-        LoginForm.Show()
+        logout()
     End Sub
 
     Private Sub rbtnDays7_CheckedChanged(sender As Object, e As EventArgs) Handles rbtnDays7.CheckedChanged
@@ -105,7 +118,7 @@
 
         Dim reservation_manager = New ReservationManager()
         Dim user_manager = New UserManager()
-        If reservation_manager.addReservation(
+        Dim new_reservation = New Reservation(
             user_manager.usernameToID(lblUsername.Text),
             listTours.SelectedItem,
             numPeople.Value,
@@ -113,7 +126,8 @@
             If(Me.selected_tour_length = 1, 14, 7),
             comboModeOfPayment.SelectedItem,
             Me.total_cost
-        ) Then
+        )
+        If reservation_manager.addReservation(new_reservation) Then
             MessageBox.Show(
                 "Reservation successful!",
                 "Success",
@@ -138,5 +152,20 @@
 
     Private Sub dateDeparture_ValueChanged(sender As Object, e As EventArgs) Handles dateDeparture.ValueChanged
         Me.computeTotalCost()
+    End Sub
+
+    Private Sub ProfileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ProfileToolStripMenuItem.Click
+        Try
+            Dim user_profile = New UserProfile(user_info)
+            user_profile.ShowDialog()
+
+        Catch ex As Exception
+            ' I'm not experienced with VB.NET, so this is my solution
+            ' to require the user to login again if they have been
+            ' demoted to a customer.
+            If ex.Message = "LoginRequired" Then : logout()
+            Else : Throw ex  ' Rethrow the exception
+            End If
+        End Try
     End Sub
 End Class

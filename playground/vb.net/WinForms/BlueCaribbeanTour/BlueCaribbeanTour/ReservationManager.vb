@@ -3,15 +3,7 @@
 Public Class ReservationManager
     Private db_manager = New DatabaseManager()
 
-    Public Function addReservation(
-        user_id As Integer,
-        tour_location As String,
-        people_count As Integer,
-        departure_date As Date,
-        visit_days As Integer,
-        mode_of_payment As String,
-        total_cost As Double
-    ) As Boolean
+    Public Function addReservation(reservation As Reservation) As Boolean
         Try
             Dim db_connection = Me.db_manager.getConnection()
             Dim db_command_str_fields = "(
@@ -21,10 +13,13 @@ Public Class ReservationManager
                 [mode_of_payment], [total_cost]
                 )"
             Dim db_command_str_values = $"(
-                {user_id},
-                '{tour_location}', {people_count},
-                '{departure_date.ToShortDateString()}', {visit_days},
-                '{mode_of_payment}', {total_cost}
+                {reservation.user_id},
+                '{reservation.tour_location}',
+                {reservation.people_count},
+                '{reservation.departure_date.ToShortDateString()}',
+                {reservation.visit_days},
+                '{reservation.mode_of_payment}',
+                {reservation.total_cost}
                 )"
             Dim db_command = New OleDbCommand(
                 $"INSERT INTO reservations {db_command_str_fields} VALUES {db_command_str_values}",

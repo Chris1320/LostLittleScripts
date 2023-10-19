@@ -31,18 +31,9 @@ Public Class UserManager
     ' @param username The username of the user.
     ' @param password The password of the user.
     ' @param userlevel The userlevel of the user.
-    Public Function registerUser(
-        username As String,
-        password As String,
-        userlevel As Integer,
-        name_first As String,
-        name_middle As String,
-        name_last As String,
-        address As String,
-        phone_number As String
-    )
-        If Not Me.validateUsername(username) Then : Return False
-        ElseIf Not Me.validatePassword(password) Then : Return False
+    Public Function registerUser(user_info As User)
+        If Not Me.validateUsername(user_info.username) Then : Return False
+        ElseIf Not Me.validatePassword(user_info.password) Then : Return False
         End If
 
         ' Check if username is already taken.
@@ -53,7 +44,7 @@ Public Class UserManager
                 db_connection
             )
 
-            db_command.Parameters.AddWithValue("@username", username)
+            db_command.Parameters.AddWithValue("@username", user_info.username)
             db_connection.Open()
             Dim db_reader = db_command.ExecuteReader()
             db_reader.Read()
@@ -79,9 +70,9 @@ Public Class UserManager
                 db_connection
             )
 
-            db_command.Parameters.AddWithValue("@username", username)
-            db_command.Parameters.AddWithValue("@password", password)
-            db_command.Parameters.AddWithValue("@userlevel", userlevel)
+            db_command.Parameters.AddWithValue("@username", user_info.username)
+            db_command.Parameters.AddWithValue("@password", user_info.password)
+            db_command.Parameters.AddWithValue("@userlevel", user_info.userlevel)
 
             db_connection.Open()
             db_command.ExecuteNonQuery()
@@ -91,7 +82,7 @@ Public Class UserManager
                 "SELECT [id] FROM users WHERE [username] = @username",
                 db_connection
             )
-            db_command.Parameters.AddWithValue("@username", username)
+            db_command.Parameters.AddWithValue("@username", user_info.username)
             Dim db_reader = db_command.ExecuteReader()
             db_reader.Read()
             Dim user_id = db_reader.GetInt32(0)
@@ -105,11 +96,11 @@ Public Class UserManager
             )
 
             db_command.Parameters.AddWithValue("@id", user_id)
-            db_command.Parameters.AddWithValue("@name_first", name_first)
-            db_command.Parameters.AddWithValue("@name_middle", name_middle)
-            db_command.Parameters.AddWithValue("@name_last", name_last)
-            db_command.Parameters.AddWithValue("@address", address)
-            db_command.Parameters.AddWithValue("@phone_number", phone_number)
+            db_command.Parameters.AddWithValue("@name_first", user_info.name(0))
+            db_command.Parameters.AddWithValue("@name_middle", user_info.name(1))
+            db_command.Parameters.AddWithValue("@name_last", user_info.name(2))
+            db_command.Parameters.AddWithValue("@address", user_info.address)
+            db_command.Parameters.AddWithValue("@phone_number", user_info.phone_number)
 
             db_command.ExecuteNonQuery()
             db_connection.Close()
@@ -208,6 +199,91 @@ Public Class UserManager
                 MessageBoxIcon.Error
             )
             Return Nothing
+        End Try
+    End Function
+
+    Public Function getUserInformation(user_id As Integer) As User
+        Dim db_connection = Me.db_manager.getConnection()
+        Dim db_command_useracc = New OleDbCommand(
+            "SELECT * FROM users WHERE [id] = @user_id", db_connection
+        )
+        Dim db_command_userinfo = New OleDbCommand(
+            "SELECT * FROM user_info WHERE [id] = @user_id", db_connection
+        )
+
+        db_command_useracc.Parameters.AddWithValue("@user_id", user_id)
+        db_command_userinfo.Parameters.AddWithValue("@user_id", user_id)
+
+        db_connection.Open()
+
+        Dim db_reader_useracc = db_command_useracc.ExecuteReader()
+        Dim db_reader_userinfo = db_command_userinfo.ExecuteReader()
+        db_reader_useracc.Read()
+        db_reader_userinfo.Read()
+
+        Dim user = New User(
+            user_id,
+            db_reader_useracc.GetString(1),
+            db_reader_useracc.GetString(2),
+            db_reader_useracc.GetInt32(3),
+            New String() {
+                db_reader_userinfo.GetString(1),
+                db_reader_userinfo.GetString(2),
+                db_reader_userinfo.GetString(3)
+            },
+            db_reader_userinfo.GetString(4),
+            db_reader_userinfo.GetString(5)
+        )
+        db_connection.Close()
+        Return user
+    End Function
+
+    Public Function updateUser(user_info As User) As Boolean
+        If Not validateUsername(user_info.username) Then : Return False
+        ElseIf Not validatePassword(user_info.password) Then : Return False
+        End If
+
+        Try
+            Dim db_connection = Me.db_manager.getConnection()
+            Dim db_command = New OleDbCommand(
+                "UPDATE users SET [username] = @username, [password] = @password, [userlevel] = @userlevel WHERE [id] = @id",
+                db_connection
+            )
+
+            db_command.Parameters.AddWithValue("@username", user_info.username)
+            db_command.Parameters.AddWithValue("@password", user_info.password)
+            db_command.Parameters.AddWithValue("@userlevel", user_info.userlevel)
+            db_command.Parameters.AddWithValue("@id", user_info.user_id)
+
+            db_connection.Open()
+            db_command.ExecuteNonQuery()
+
+            ' Update user_info table.
+            Dim db_command_userinfo_str = "SET [name_first] = @name_first, [name_middle] = @name_middle, [name_last] = @name_last, [address] = @address, [phone_number] = @phone_number"
+            db_command = New OleDbCommand(
+                $"UPDATE user_info {db_command_userinfo_str} WHERE [id] = @id",
+                db_connection
+            )
+
+            db_command.Parameters.AddWithValue("@name_first", user_info.name(0))
+            db_command.Parameters.AddWithValue("@name_middle", user_info.name(1))
+            db_command.Parameters.AddWithValue("@name_last", user_info.name(2))
+            db_command.Parameters.AddWithValue("@address", user_info.address)
+            db_command.Parameters.AddWithValue("@phone_number", user_info.phone_number)
+            db_command.Parameters.AddWithValue("@id", user_info.user_id)
+
+            db_command.ExecuteNonQuery()
+            db_connection.Close()
+            Return True
+
+        Catch ex As Exception
+            MessageBox.Show(
+                ex.Message,
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            )
+            Return False
         End Try
     End Function
 End Class
