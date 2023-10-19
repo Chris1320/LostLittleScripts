@@ -1,5 +1,5 @@
 ﻿Public Class Info
-    Public Shared CATCH_EXCEPTIONS As Boolean = False
+    Public Shared CATCH_EXCEPTIONS As Boolean = True
     ' The customer must register at least
     ' 7 days before the departure date.
     Public Shared minimum_preregistration As Integer = 7

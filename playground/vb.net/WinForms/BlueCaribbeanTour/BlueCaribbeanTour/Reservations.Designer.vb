@@ -25,6 +25,15 @@ Partial Class Reservations
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Reservations))
         Me.dgvReservations = New System.Windows.Forms.DataGridView()
+        Me.id = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.client = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.tour_location = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ppl_quantity = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.departure_date = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.visit_days = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.mode_of_payment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.total_cost = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.is_cancelled = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bsrcReservations = New System.Windows.Forms.BindingSource(Me.components)
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.DashboardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -40,15 +49,7 @@ Partial Class Reservations
         Me.BindingNavigatorMoveNextItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorMoveLastItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.id = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.client = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.tour_location = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ppl_quantity = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.departure_date = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.visit_days = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.mode_of_payment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.total_cost = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.is_cancelled = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnCancelReservation = New System.Windows.Forms.Button()
         CType(Me.dgvReservations, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.bsrcReservations, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
@@ -67,8 +68,75 @@ Partial Class Reservations
         Me.dgvReservations.Location = New System.Drawing.Point(15, 69)
         Me.dgvReservations.Name = "dgvReservations"
         Me.dgvReservations.ReadOnly = True
-        Me.dgvReservations.Size = New System.Drawing.Size(694, 238)
+        Me.dgvReservations.Size = New System.Drawing.Size(694, 295)
         Me.dgvReservations.TabIndex = 0
+        '
+        'id
+        '
+        Me.id.DataPropertyName = "id"
+        Me.id.HeaderText = "id"
+        Me.id.Name = "id"
+        Me.id.ReadOnly = True
+        Me.id.Visible = False
+        '
+        'client
+        '
+        Me.client.DataPropertyName = "client"
+        Me.client.HeaderText = "client"
+        Me.client.Name = "client"
+        Me.client.ReadOnly = True
+        Me.client.Visible = False
+        '
+        'tour_location
+        '
+        Me.tour_location.DataPropertyName = "tour_location"
+        Me.tour_location.HeaderText = "Tour Location"
+        Me.tour_location.Name = "tour_location"
+        Me.tour_location.ReadOnly = True
+        '
+        'ppl_quantity
+        '
+        Me.ppl_quantity.DataPropertyName = "ppl_quantity"
+        Me.ppl_quantity.HeaderText = "Number of People"
+        Me.ppl_quantity.Name = "ppl_quantity"
+        Me.ppl_quantity.ReadOnly = True
+        '
+        'departure_date
+        '
+        Me.departure_date.DataPropertyName = "departure_date"
+        Me.departure_date.HeaderText = "Departure Date"
+        Me.departure_date.Name = "departure_date"
+        Me.departure_date.ReadOnly = True
+        Me.departure_date.Width = 150
+        '
+        'visit_days
+        '
+        Me.visit_days.DataPropertyName = "visit_days"
+        Me.visit_days.HeaderText = "Visit Days"
+        Me.visit_days.Name = "visit_days"
+        Me.visit_days.ReadOnly = True
+        '
+        'mode_of_payment
+        '
+        Me.mode_of_payment.DataPropertyName = "mode_of_payment"
+        Me.mode_of_payment.HeaderText = "Mode of Payment"
+        Me.mode_of_payment.Name = "mode_of_payment"
+        Me.mode_of_payment.ReadOnly = True
+        '
+        'total_cost
+        '
+        Me.total_cost.DataPropertyName = "total_cost"
+        Me.total_cost.HeaderText = "Total Cost"
+        Me.total_cost.Name = "total_cost"
+        Me.total_cost.ReadOnly = True
+        '
+        'is_cancelled
+        '
+        Me.is_cancelled.DataPropertyName = "is_cancelled"
+        Me.is_cancelled.HeaderText = "is_cancelled"
+        Me.is_cancelled.Name = "is_cancelled"
+        Me.is_cancelled.ReadOnly = True
+        Me.is_cancelled.Visible = False
         '
         'MenuStrip1
         '
@@ -183,78 +251,21 @@ Partial Class Reservations
         Me.BindingNavigatorSeparator2.Name = "BindingNavigatorSeparator2"
         Me.BindingNavigatorSeparator2.Size = New System.Drawing.Size(6, 25)
         '
-        'id
+        'btnCancelReservation
         '
-        Me.id.DataPropertyName = "id"
-        Me.id.HeaderText = "id"
-        Me.id.Name = "id"
-        Me.id.ReadOnly = True
-        Me.id.Visible = False
-        '
-        'client
-        '
-        Me.client.DataPropertyName = "client"
-        Me.client.HeaderText = "client"
-        Me.client.Name = "client"
-        Me.client.ReadOnly = True
-        Me.client.Visible = False
-        '
-        'tour_location
-        '
-        Me.tour_location.DataPropertyName = "tour_location"
-        Me.tour_location.HeaderText = "Tour Location"
-        Me.tour_location.Name = "tour_location"
-        Me.tour_location.ReadOnly = True
-        '
-        'ppl_quantity
-        '
-        Me.ppl_quantity.DataPropertyName = "ppl_quantity"
-        Me.ppl_quantity.HeaderText = "Number of People"
-        Me.ppl_quantity.Name = "ppl_quantity"
-        Me.ppl_quantity.ReadOnly = True
-        '
-        'departure_date
-        '
-        Me.departure_date.DataPropertyName = "departure_date"
-        Me.departure_date.HeaderText = "Departure Date"
-        Me.departure_date.Name = "departure_date"
-        Me.departure_date.ReadOnly = True
-        Me.departure_date.Width = 150
-        '
-        'visit_days
-        '
-        Me.visit_days.DataPropertyName = "visit_days"
-        Me.visit_days.HeaderText = "Visit Days"
-        Me.visit_days.Name = "visit_days"
-        Me.visit_days.ReadOnly = True
-        '
-        'mode_of_payment
-        '
-        Me.mode_of_payment.DataPropertyName = "mode_of_payment"
-        Me.mode_of_payment.HeaderText = "Mode of Payment"
-        Me.mode_of_payment.Name = "mode_of_payment"
-        Me.mode_of_payment.ReadOnly = True
-        '
-        'total_cost
-        '
-        Me.total_cost.DataPropertyName = "total_cost"
-        Me.total_cost.HeaderText = "Total Cost"
-        Me.total_cost.Name = "total_cost"
-        Me.total_cost.ReadOnly = True
-        '
-        'is_cancelled
-        '
-        Me.is_cancelled.DataPropertyName = "is_cancelled"
-        Me.is_cancelled.HeaderText = "is_cancelled"
-        Me.is_cancelled.Name = "is_cancelled"
-        Me.is_cancelled.ReadOnly = True
-        Me.is_cancelled.Visible = False
+        Me.btnCancelReservation.Location = New System.Drawing.Point(15, 389)
+        Me.btnCancelReservation.Name = "btnCancelReservation"
+        Me.btnCancelReservation.Size = New System.Drawing.Size(143, 49)
+        Me.btnCancelReservation.TabIndex = 15
+        Me.btnCancelReservation.Text = "Cancel Reservation"
+        Me.btnCancelReservation.UseVisualStyleBackColor = True
         '
         'Reservations
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(721, 450)
+        Me.Controls.Add(Me.btnCancelReservation)
         Me.Controls.Add(Me.bnavReservations)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.dgvReservations)
@@ -301,4 +312,5 @@ Partial Class Reservations
     Friend WithEvents mode_of_payment As DataGridViewTextBoxColumn
     Friend WithEvents total_cost As DataGridViewTextBoxColumn
     Friend WithEvents is_cancelled As DataGridViewTextBoxColumn
+    Friend WithEvents btnCancelReservation As Button
 End Class

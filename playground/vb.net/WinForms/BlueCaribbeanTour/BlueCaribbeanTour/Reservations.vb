@@ -11,7 +11,7 @@
         End If
     End Sub
 
-    Private Sub Reservations_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub updateReservations()
         Dim reservations_datasource = New DataTable()
         Dim reservation_manager = New ReservationManager()
         Dim reservations = reservation_manager.getReservations(user_info.user_id)
@@ -42,6 +42,13 @@
         }
         bnavReservations.BindingSource = reservations_binding_source
         dgvReservations.DataSource = reservations_binding_source
+        If dgvReservations.Rows.Count < 1 Then : btnCancelReservation.Enabled = False
+        Else : btnCancelReservation.Enabled = True
+        End If
+    End Sub
+
+    Private Sub Reservations_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        updateReservations()
     End Sub
 
     Private Sub LogoutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogoutToolStripMenuItem.Click
@@ -55,5 +62,20 @@
 
     Private Sub DashboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DashboardToolStripMenuItem.Click
         Throw New Exception("ReturnToDashboard")
+    End Sub
+
+    Private Sub btnCancelReservation_Click(sender As Object, e As EventArgs) Handles btnCancelReservation.Click
+        Dim reservation_manager = New ReservationManager()
+        Dim reservation_id = dgvReservations.CurrentRow.Cells("id").Value
+
+        If reservation_manager.cancelReservation(reservation_id) Then
+            MessageBox.Show(
+                "Reservation cancelled successfully.",
+                "Success",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            )
+            Me.Reservations_Load(sender, e)
+        End If
     End Sub
 End Class
