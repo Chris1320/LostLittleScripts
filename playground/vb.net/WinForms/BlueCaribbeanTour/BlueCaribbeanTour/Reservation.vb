@@ -7,6 +7,7 @@
     Public visit_days As Integer
     Public mode_of_payment As String
     Public total_cost As Double
+    Public is_cancelled As Boolean = False
 
     Sub New(
         id As Integer?,
@@ -16,7 +17,8 @@
         departure_date As Date,
         visit_days As Integer,
         mode_of_payment As String,
-        total_cost As Double
+        total_cost As Double,
+        Optional is_cancelled As Boolean = False,
     )
         Me.id = id
         Me.user_id = user_id
@@ -26,5 +28,6 @@
         Me.visit_days = visit_days
         Me.mode_of_payment = mode_of_payment
         Me.total_cost = total_cost
+        Me.is_cancelled = is_cancelled
     End Sub
 End Class

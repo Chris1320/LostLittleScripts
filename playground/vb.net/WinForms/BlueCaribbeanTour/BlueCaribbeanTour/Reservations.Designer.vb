@@ -25,6 +25,7 @@ Partial Class Reservations
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Reservations))
         Me.dgvReservations = New System.Windows.Forms.DataGridView()
+        Me.bsrcReservations = New System.Windows.Forms.BindingSource(Me.components)
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.DashboardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ProfileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -39,7 +40,6 @@ Partial Class Reservations
         Me.BindingNavigatorMoveNextItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorMoveLastItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.bsrcReservations = New System.Windows.Forms.BindingSource(Me.components)
         Me.id = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.client = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.tour_location = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -48,11 +48,12 @@ Partial Class Reservations
         Me.visit_days = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.mode_of_payment = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.total_cost = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.is_cancelled = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvReservations, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.bsrcReservations, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.bnavReservations, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.bnavReservations.SuspendLayout()
-        CType(Me.bsrcReservations, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'dgvReservations
@@ -61,12 +62,12 @@ Partial Class Reservations
         Me.dgvReservations.AllowUserToDeleteRows = False
         Me.dgvReservations.AutoGenerateColumns = False
         Me.dgvReservations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvReservations.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.id, Me.client, Me.tour_location, Me.ppl_quantity, Me.departure_date, Me.visit_days, Me.mode_of_payment, Me.total_cost})
+        Me.dgvReservations.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.id, Me.client, Me.tour_location, Me.ppl_quantity, Me.departure_date, Me.visit_days, Me.mode_of_payment, Me.total_cost, Me.is_cancelled})
         Me.dgvReservations.DataSource = Me.bsrcReservations
-        Me.dgvReservations.Location = New System.Drawing.Point(15, 153)
+        Me.dgvReservations.Location = New System.Drawing.Point(15, 69)
         Me.dgvReservations.Name = "dgvReservations"
         Me.dgvReservations.ReadOnly = True
-        Me.dgvReservations.Size = New System.Drawing.Size(694, 154)
+        Me.dgvReservations.Size = New System.Drawing.Size(694, 238)
         Me.dgvReservations.TabIndex = 0
         '
         'MenuStrip1
@@ -96,7 +97,7 @@ Partial Class Reservations
         Me.LogoutToolStripMenuItem.Size = New System.Drawing.Size(57, 20)
         Me.LogoutToolStripMenuItem.Text = "Logout"
         '
-        'BindingNavigator1
+        'bnavReservations
         '
         Me.bnavReservations.AddNewItem = Nothing
         Me.bnavReservations.BindingSource = Me.bsrcReservations
@@ -108,7 +109,7 @@ Partial Class Reservations
         Me.bnavReservations.MoveLastItem = Me.BindingNavigatorMoveLastItem
         Me.bnavReservations.MoveNextItem = Me.BindingNavigatorMoveNextItem
         Me.bnavReservations.MovePreviousItem = Me.BindingNavigatorMovePreviousItem
-        Me.bnavReservations.Name = "BindingNavigator1"
+        Me.bnavReservations.Name = "bnavReservations"
         Me.bnavReservations.PositionItem = Me.BindingNavigatorPositionItem
         Me.bnavReservations.Size = New System.Drawing.Size(721, 25)
         Me.bnavReservations.TabIndex = 14
@@ -241,6 +242,14 @@ Partial Class Reservations
         Me.total_cost.Name = "total_cost"
         Me.total_cost.ReadOnly = True
         '
+        'is_cancelled
+        '
+        Me.is_cancelled.DataPropertyName = "is_cancelled"
+        Me.is_cancelled.HeaderText = "is_cancelled"
+        Me.is_cancelled.Name = "is_cancelled"
+        Me.is_cancelled.ReadOnly = True
+        Me.is_cancelled.Visible = False
+        '
         'Reservations
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -256,12 +265,12 @@ Partial Class Reservations
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Reservations"
         CType(Me.dgvReservations, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.bsrcReservations, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         CType(Me.bnavReservations, System.ComponentModel.ISupportInitialize).EndInit()
         Me.bnavReservations.ResumeLayout(False)
         Me.bnavReservations.PerformLayout()
-        CType(Me.bsrcReservations, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -291,4 +300,5 @@ Partial Class Reservations
     Friend WithEvents visit_days As DataGridViewTextBoxColumn
     Friend WithEvents mode_of_payment As DataGridViewTextBoxColumn
     Friend WithEvents total_cost As DataGridViewTextBoxColumn
+    Friend WithEvents is_cancelled As DataGridViewTextBoxColumn
 End Class

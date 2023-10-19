@@ -10,7 +10,8 @@ Public Class ReservationManager
                 [client],
                 [tour_location], [ppl_quantity],
                 [departure_date], [visit_days],
-                [mode_of_payment], [total_cost]
+                [mode_of_payment], [total_cost],
+                [is_cancelled]
                 )"
             Dim db_command_str_values = $"(
                 {reservation.user_id},
@@ -19,7 +20,8 @@ Public Class ReservationManager
                 '{reservation.departure_date.ToShortDateString()}',
                 {reservation.visit_days},
                 '{reservation.mode_of_payment}',
-                {reservation.total_cost}
+                {reservation.total_cost},
+                {reservation.is_cancelled}
                 )"
             Dim db_command = New OleDbCommand(
                 $"INSERT INTO reservations {db_command_str_fields} VALUES {db_command_str_values}",
@@ -42,13 +44,24 @@ Public Class ReservationManager
         End Try
     End Function
 
-    Public Function getReservations(user_id As Integer) As List(Of Reservation)
+    Public Function getReservations(
+        user_id As Integer,
+        Optional ByVal include_cancelled As Boolean = False
+    ) As List(Of Reservation)
         Dim reservations = New List(Of Reservation)()
 
         Try
             Dim db_connection = Me.db_manager.getConnection()
             Dim db_command = New OleDbCommand(
-                "SELECT * FROM reservations WHERE [client] = @user_id",
+                String.Format(
+                    "{0}{1}",
+                    "SELECT * FROM reservations WHERE [client] = @user_id",
+                    If(
+                        include_cancelled,
+                        "",
+                        " AND [is_cancelled] = 0"
+                    )
+                ),
                 db_connection
             )
             db_command.Parameters.AddWithValue("@user_id", user_id)
@@ -64,7 +77,8 @@ Public Class ReservationManager
                     db_reader("departure_date"),
                     db_reader("visit_days"),
                     db_reader("mode_of_payment"),
-                    db_reader("total_cost")
+                    db_reader("total_cost"),
+                    db_reader("is_cancelled")
                 )
                 reservations.Add(reservation)
             End While

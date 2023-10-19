@@ -29,6 +29,7 @@
             reservations_datasource_row("visit_days") = reservation.visit_days
             reservations_datasource_row("mode_of_payment") = reservation.mode_of_payment
             reservations_datasource_row("total_cost") = reservation.total_cost.ToString("C")
+            reservations_datasource_row("is_cancelled") = reservation.is_cancelled
 
             bsrcReservations.Add(reservation)
             reservations_datasource.Rows.Add(reservations_datasource_row)
