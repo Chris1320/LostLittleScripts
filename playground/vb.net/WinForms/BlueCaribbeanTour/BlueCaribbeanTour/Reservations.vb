@@ -10,22 +10,35 @@
     End Sub
 
     Private Sub Reservations_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim reservations_datasource = New DataTable()
         Dim reservation_manager = New ReservationManager()
         Dim reservations = reservation_manager.getReservations(user_info.user_id)
 
-        For Each reservation As Reservation In reservations
-            Dim row = New String() {
-                reservation.id,
-                reservation.user_id,
-                reservation.tour_location,
-                reservation.people_count,
-                reservation.departure_date.ToShortDateString(),
-                reservation.visit_days,
-                reservation.mode_of_payment,
-                reservation.total_cost.ToString("C")
-            }
-            dgvReservations.Rows.Add(row)
+        ' copy columns of the datatable
+        For Each column As DataGridViewColumn In dgvReservations.Columns
+            reservations_datasource.Columns.Add(column.Name)
         Next
+
+        For Each reservation As Reservation In reservations
+            Dim reservations_datasource_row = reservations_datasource.NewRow()
+            reservations_datasource_row("id") = reservation.id
+            reservations_datasource_row("client") = reservation.user_id
+            reservations_datasource_row("tour_location") = reservation.tour_location
+            reservations_datasource_row("ppl_quantity") = reservation.people_count
+            reservations_datasource_row("departure_date") = reservation.departure_date.ToShortDateString()
+            reservations_datasource_row("visit_days") = reservation.visit_days
+            reservations_datasource_row("mode_of_payment") = reservation.mode_of_payment
+            reservations_datasource_row("total_cost") = reservation.total_cost.ToString("C")
+
+            bsrcReservations.Add(reservation)
+            reservations_datasource.Rows.Add(reservations_datasource_row)
+        Next
+
+        Dim reservations_binding_source As New BindingSource With {
+            .DataSource = reservations_datasource
+        }
+        bnavReservations.BindingSource = reservations_binding_source
+        dgvReservations.DataSource = reservations_binding_source
     End Sub
 
     Private Sub LogoutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogoutToolStripMenuItem.Click
