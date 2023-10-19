@@ -20,9 +20,6 @@
     Private Sub login()
         Dim user_manager = New UserManager()
         If user_manager.loginUser(txtUsername.Text, txtPassword.Text) Then
-            Dim user_info As User = user_manager.getUserInformation(
-                user_manager.usernameToID(txtUsername.Text)
-            )
             MessageBox.Show(
                 "Login successful!",
                 "Login Success",
@@ -30,8 +27,11 @@
                 MessageBoxIcon.Information
             )
             Me.Hide()
-            Dim dashboard = New Dashboard(user_info)
-            dashboard.setUsername(txtUsername.Text)
+            Dim dashboard = New Dashboard(
+                user_manager.getUserInformation(
+                    user_manager.usernameToID(txtUsername.Text)
+                )
+            )
             dashboard.ShowDialog()
         Else
             MessageBox.Show(

@@ -41,4 +41,45 @@ Public Class ReservationManager
             Return False
         End Try
     End Function
+
+    Public Function getReservations(user_id As Integer) As List(Of Reservation)
+        Dim reservations = New List(Of Reservation)()
+
+        Try
+            Dim db_connection = Me.db_manager.getConnection()
+            Dim db_command = New OleDbCommand(
+                "SELECT * FROM reservations WHERE [client] = @user_id",
+                db_connection
+            )
+            db_command.Parameters.AddWithValue("@user_id", user_id)
+
+            db_connection.Open()
+            Dim db_reader = db_command.ExecuteReader()
+            While db_reader.Read()
+                Dim reservation = New Reservation(
+                    db_reader("id"),
+                    db_reader("client"),
+                    db_reader("tour_location"),
+                    db_reader("ppl_quantity"),
+                    db_reader("departure_date"),
+                    db_reader("visit_days"),
+                    db_reader("mode_of_payment"),
+                    db_reader("total_cost")
+                )
+                reservations.Add(reservation)
+            End While
+
+            db_connection.Close()
+
+        Catch ex As Exception
+            MessageBox.Show(
+                ex.Message,
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            )
+        End Try
+
+        Return reservations
+    End Function
 End Class

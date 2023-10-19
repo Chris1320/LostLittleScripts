@@ -1,4 +1,5 @@
 ﻿Public Class Reservation
+    Public ReadOnly id As Integer?
     Public ReadOnly user_id As Integer
     Public tour_location As String
     Public people_count As Integer
@@ -8,6 +9,7 @@
     Public total_cost As Double
 
     Sub New(
+        id As Integer?,
         user_id As Integer,
         tour_location As String,
         people_count As Integer,
@@ -16,6 +18,7 @@
         mode_of_payment As String,
         total_cost As Double
     )
+        Me.id = id
         Me.user_id = user_id
         Me.tour_location = tour_location
         Me.people_count = people_count

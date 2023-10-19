@@ -33,6 +33,11 @@
 
     Private Sub Dashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim user_manager = New UserManager()
+        lblUsername.Text = If(
+            user_info.username.Length > 10,
+            $"{user_info.username.Substring(0, 10)}...",
+            user_info.username
+        )
         AdminToolStripMenuItem.Visible = user_manager.getUserLevel(
             user_manager.usernameToID(lblUsername.Text)
         ) = 0
@@ -50,14 +55,6 @@
         Next
 
         dateDeparture.MinDate = DateTime.Now.AddDays(Info.minimum_preregistration)
-    End Sub
-
-    Public Sub setUsername(username As String)
-        lblUsername.Text = If(
-            username.Length > 10,
-            $"{username.Substring(0, 10)}...",
-            username
-        )
     End Sub
 
     Public Sub logout()
@@ -119,6 +116,7 @@
         Dim reservation_manager = New ReservationManager()
         Dim user_manager = New UserManager()
         Dim new_reservation = New Reservation(
+            Nothing,
             user_manager.usernameToID(lblUsername.Text),
             listTours.SelectedItem,
             numPeople.Value,
@@ -163,6 +161,19 @@
             ' I'm not experienced with VB.NET, so this is my solution
             ' to require the user to login again if they have been
             ' demoted to a customer.
+            If ex.Message = "LoginRequired" Then : logout()
+            Else : Throw ex  ' Rethrow the exception
+            End If
+        End Try
+    End Sub
+
+    Private Sub ReservationsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReservationsToolStripMenuItem.Click
+        Try
+            Dim reservations_form = New Reservations(Me.user_info)
+            Me.Hide()
+            reservations_form.ShowDialog()
+
+        Catch ex As Exception
             If ex.Message = "LoginRequired" Then : logout()
             Else : Throw ex  ' Rethrow the exception
             End If

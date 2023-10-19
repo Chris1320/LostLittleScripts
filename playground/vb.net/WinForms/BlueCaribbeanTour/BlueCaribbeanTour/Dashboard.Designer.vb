@@ -46,6 +46,7 @@ Partial Class Dashboard
         Me.btnReset = New System.Windows.Forms.Button()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.lblTotalCost = New System.Windows.Forms.Label()
+        Me.ReservationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         CType(Me.numPeople, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -179,7 +180,7 @@ Partial Class Dashboard
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AdminToolStripMenuItem, Me.ProfileToolStripMenuItem, Me.LogoutToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ReservationsToolStripMenuItem, Me.AdminToolStripMenuItem, Me.ProfileToolStripMenuItem, Me.LogoutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(622, 24)
@@ -265,6 +266,12 @@ Partial Class Dashboard
         Me.lblTotalCost.TabIndex = 18
         Me.lblTotalCost.Text = "N/A"
         '
+        'ReservationsToolStripMenuItem
+        '
+        Me.ReservationsToolStripMenuItem.Name = "ReservationsToolStripMenuItem"
+        Me.ReservationsToolStripMenuItem.Size = New System.Drawing.Size(85, 20)
+        Me.ReservationsToolStripMenuItem.Text = "Reservations"
+        '
         'Dashboard
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -329,4 +336,5 @@ Partial Class Dashboard
     Friend WithEvents btnReset As Button
     Friend WithEvents Label7 As Label
     Friend WithEvents lblTotalCost As Label
+    Friend WithEvents ReservationsToolStripMenuItem As ToolStripMenuItem
 End Class
