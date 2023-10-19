@@ -1,12 +1,14 @@
 ﻿Public Class Reservations
     Private user_info As User
 
-    Sub New(user_info As User)
+    Sub New(user_info As User, Optional admin_use As Boolean = False)
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
         Me.user_info = user_info
+        If admin_use Then : Me.MenuStrip1.Visible = False
+        End If
     End Sub
 
     Private Sub Reservations_Load(sender As Object, e As EventArgs) Handles MyBase.Load

@@ -166,4 +166,11 @@
         user_profile.ShowDialog()
         updateUsers()
     End Sub
+
+    Private Sub btnViewUserReservations_Click(sender As Object, e As EventArgs) Handles btnViewUserReservations.Click
+        Dim user_manager = New UserManager()
+        Dim user_data = user_manager.getUserInformation(dgvUsers.CurrentRow.Cells("id").Value)
+        Dim reservations = New Reservations(user_data, True)
+        reservations.ShowDialog()
+    End Sub
 End Class
