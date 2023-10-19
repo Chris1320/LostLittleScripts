@@ -1,4 +1,6 @@
-﻿Public Class AdminPanel
+﻿Imports System.Net
+
+Public Class AdminPanel
     Private user_info As User
 
     Sub New(user_info As User)
@@ -60,6 +62,11 @@
 
     Private Sub dgvUsers_SelectionChanged(sender As Object, e As EventArgs) Handles dgvUsers.SelectionChanged
         txtSelectedUser.Text = dgvUsers.CurrentRow.Cells("username").Value
+        btnPromoteOrDemoteUser.Text = If(
+            dgvUsers.CurrentRow.Cells("userlevel").Value = "Administrator",
+            "Demote User",
+            "Promote User"
+        )
     End Sub
 
     Private Sub btnKickUser_Click(sender As Object, e As EventArgs) Handles btnKickUser.Click
@@ -91,5 +98,56 @@
             End If
             updateUsers()
         End If
+    End Sub
+
+    Private Sub btnPromoteOrDemoteUser_Click(sender As Object, e As EventArgs) Handles btnPromoteOrDemoteUser.Click
+        If dgvUsers.CurrentRow.Cells("userlevel").Value = "Administrator" Then
+            If user_info.user_id = dgvUsers.CurrentRow.Cells("id").Value Then
+                MessageBox.Show(
+                    "You cannot demote yourself here! Use the demote button in the Profile page instead.",
+                    "Demote User",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                )
+                Return
+            End If
+
+            If MessageBox.Show(
+                "Are you sure you want to demote this user?",
+                "Demote User",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            ) = DialogResult.Yes Then
+                Dim user_manager = New UserManager()
+                Dim target_user_id = dgvUsers.CurrentRow.Cells("id").Value
+                If user_manager.setUserLevel(target_user_id, 1) Then
+                    MessageBox.Show(
+                        "User has been demoted",
+                        "Demote User",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    )
+                End If
+            End If
+        Else
+            If MessageBox.Show(
+                "Are you sure you want to promote this user?",
+                "Promote User",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            ) = DialogResult.Yes Then
+                Dim user_manager = New UserManager()
+                Dim target_user_id = dgvUsers.CurrentRow.Cells("id").Value
+                If user_manager.setUserLevel(target_user_id, 0) Then
+                    MessageBox.Show(
+                    "User has been promoted",
+                    "Promote User",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                )
+                End If
+            End If
+        End If
+        updateUsers()
     End Sub
 End Class

@@ -378,4 +378,34 @@ Public Class UserManager
             End If
         End Try
     End Function
+
+    Public Function setUserLevel(user_id As Integer, new_userlevel As Integer) As Boolean
+        Try
+            Dim db_connection = Me.db_manager.getConnection()
+            Dim db_command = New OleDbCommand(
+                "UPDATE users SET [userlevel] = @new_userlevel WHERE [id] = @user_id",
+                db_connection
+            )
+
+            db_command.Parameters.AddWithValue("@new_userlevel", new_userlevel)
+            db_command.Parameters.AddWithValue("@user_id", user_id)
+
+            db_connection.Open()
+            db_command.ExecuteNonQuery()
+            db_connection.Close()
+            Return True
+
+        Catch ex As Exception
+            If Not Info.CATCH_EXCEPTIONS Then : Throw ex
+            Else
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                )
+                Return False
+            End If
+        End Try
+    End Function
 End Class
