@@ -175,6 +175,7 @@
 
         Catch ex As Exception
             If ex.Message = "LoginRequired" Then : logout()
+            ElseIf ex.Message = "ReturnToDashboard" Then : Me.Show()
             Else : Throw ex  ' Rethrow the exception
             End If
         End Try

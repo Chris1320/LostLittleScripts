@@ -31,4 +31,13 @@
     Private Sub LogoutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogoutToolStripMenuItem.Click
         Throw New Exception("LoginRequired")
     End Sub
+
+    Private Sub ProfileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ProfileToolStripMenuItem.Click
+        Dim user_profile = New UserProfile(user_info)
+        user_profile.ShowDialog()
+    End Sub
+
+    Private Sub DashboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DashboardToolStripMenuItem.Click
+        Throw New Exception("ReturnToDashboard")
+    End Sub
 End Class
