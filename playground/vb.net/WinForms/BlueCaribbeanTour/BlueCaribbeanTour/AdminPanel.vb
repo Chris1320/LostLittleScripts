@@ -1,6 +1,4 @@
-﻿Imports System.Net
-
-Public Class AdminPanel
+﻿Public Class AdminPanel
     Private user_info As User
 
     Sub New(user_info As User)
@@ -148,6 +146,24 @@ Public Class AdminPanel
                 End If
             End If
         End If
+        updateUsers()
+    End Sub
+
+    Private Sub btnEditUserInformation_Click(sender As Object, e As EventArgs) Handles btnEditUserInformation.Click
+        If user_info.user_id = dgvUsers.CurrentRow.Cells("id").Value Then
+            MessageBox.Show(
+                "You cannot edit your own information here! Use the Profile page instead.",
+                "Edit User Information",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            )
+            Return
+        End If
+
+        Dim user_manager = New UserManager()
+        Dim user_data = user_manager.getUserInformation(dgvUsers.CurrentRow.Cells("id").Value)
+        Dim user_profile = New UserProfile(user_data)
+        user_profile.ShowDialog()
         updateUsers()
     End Sub
 End Class
