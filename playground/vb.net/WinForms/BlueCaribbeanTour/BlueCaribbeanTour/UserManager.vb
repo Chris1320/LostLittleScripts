@@ -1,4 +1,5 @@
-﻿Imports System.Data.OleDb
+﻿Imports System.Configuration
+Imports System.Data.OleDb
 
 Public Class UserManager
     Private db_manager = New DatabaseManager()
@@ -285,5 +286,43 @@ Public Class UserManager
             )
             Return False
         End Try
+    End Function
+
+    Public Function getAllUsers() As List(Of User)
+        Dim db_connection = Me.db_manager.getConnection()
+        Dim db_command_acc = New OleDbCommand(
+            "SELECT * FROM users", db_connection
+        )
+        db_connection.Open()
+        Dim db_reader_acc = db_command_acc.ExecuteReader()
+        Dim users As New List(Of User)
+
+        While db_reader_acc.Read()
+            Dim db_command_info = New OleDbCommand(
+                "SELECT * FROM user_info WHERE [id] = @user_id",
+                db_connection
+            )
+            db_command_info.Parameters.AddWithValue("@user_id", db_reader_acc.GetInt32(0))
+            Dim db_reader_info = db_command_info.ExecuteReader()
+            db_reader_info.Read()
+
+            Dim user = New User(
+                db_reader_acc.GetInt32(0),
+                db_reader_acc.GetString(1),
+                db_reader_acc.GetString(2),
+                db_reader_acc.GetInt32(3),
+                New String() {
+                    db_reader_info.GetString(1),
+                    db_reader_info.GetString(2),
+                    db_reader_info.GetString(3)
+                },
+                db_reader_info.GetString(4),
+                db_reader_info.GetString(5)
+            )
+            users.Add(user)
+        End While
+
+        db_connection.Close()
+        Return users
     End Function
 End Class

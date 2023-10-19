@@ -180,4 +180,18 @@
             End If
         End Try
     End Sub
+
+    Private Sub AdminToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AdminToolStripMenuItem.Click
+        Try
+            Dim admin_form = New AdminPanel(Me.user_info)
+            Me.Hide()
+            admin_form.ShowDialog()
+
+        Catch ex As Exception
+            If ex.Message = "LoginRequired" Then : logout()
+            ElseIf ex.Message = "ReturnToDashboard" Then : Me.Show()
+            Else : Throw ex  ' Rethrow the exception
+            End If
+        End Try
+    End Sub
 End Class

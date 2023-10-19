@@ -37,6 +37,7 @@ Partial Class Dashboard
         Me.comboModeOfPayment = New System.Windows.Forms.ComboBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.ReservationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AdminToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ProfileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LogoutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -46,7 +47,6 @@ Partial Class Dashboard
         Me.btnReset = New System.Windows.Forms.Button()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.lblTotalCost = New System.Windows.Forms.Label()
-        Me.ReservationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         CType(Me.numPeople, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -187,6 +187,12 @@ Partial Class Dashboard
         Me.MenuStrip1.TabIndex = 12
         Me.MenuStrip1.Text = "MenuStrip1"
         '
+        'ReservationsToolStripMenuItem
+        '
+        Me.ReservationsToolStripMenuItem.Name = "ReservationsToolStripMenuItem"
+        Me.ReservationsToolStripMenuItem.Size = New System.Drawing.Size(85, 20)
+        Me.ReservationsToolStripMenuItem.Text = "Reservations"
+        '
         'AdminToolStripMenuItem
         '
         Me.AdminToolStripMenuItem.Name = "AdminToolStripMenuItem"
@@ -265,12 +271,6 @@ Partial Class Dashboard
         Me.lblTotalCost.Size = New System.Drawing.Size(53, 29)
         Me.lblTotalCost.TabIndex = 18
         Me.lblTotalCost.Text = "N/A"
-        '
-        'ReservationsToolStripMenuItem
-        '
-        Me.ReservationsToolStripMenuItem.Name = "ReservationsToolStripMenuItem"
-        Me.ReservationsToolStripMenuItem.Size = New System.Drawing.Size(85, 20)
-        Me.ReservationsToolStripMenuItem.Text = "Reservations"
         '
         'Dashboard
         '

@@ -18,7 +18,7 @@
         visit_days As Integer,
         mode_of_payment As String,
         total_cost As Double,
-        Optional is_cancelled As Boolean = False,
+        Optional is_cancelled As Boolean = False
     )
         Me.id = id
         Me.user_id = user_id
