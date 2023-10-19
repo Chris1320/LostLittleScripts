@@ -1,5 +1,4 @@
-﻿Imports System.Configuration
-Imports System.Data.OleDb
+﻿Imports System.Data.OleDb
 
 Public Class UserManager
     Private db_manager = New DatabaseManager()
@@ -55,19 +54,22 @@ Public Class UserManager
             If user_count > 0 Then : Return False
             End If
         Catch ex As Exception
-            MessageBox.Show(
-                ex.Message,
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            )
-            Return False
+            If Not Info.CATCH_EXCEPTIONS Then : Throw ex
+            Else
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                )
+                Return False
+            End If
         End Try
 
         Try
             Dim db_connection = Me.db_manager.getConnection()
             Dim db_command = New OleDbCommand(
-                "INSERT INTO users ([username], [password], [userlevel]) VALUES (@username, @password, @userlevel)",
+                "INSERT INTO users ([username], [password], [userlevel], [disabled]) VALUES (@username, @password, @userlevel, 0)",
                 db_connection
             )
 
@@ -108,13 +110,16 @@ Public Class UserManager
             Return True
 
         Catch ex As Exception
-            MessageBox.Show(
-                ex.Message,
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            )
-            Return False
+            If Not Info.CATCH_EXCEPTIONS Then : Throw ex
+            Else
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                )
+                Return False
+            End If
         End Try
     End Function
 
@@ -122,7 +127,7 @@ Public Class UserManager
         Try
             Dim db_connection = Me.db_manager.getConnection()
             Dim db_command = New OleDbCommand(
-                "SELECT COUNT(*) FROM users WHERE [username] = @username AND [password] = @password",
+                "SELECT COUNT(*) FROM users WHERE [username] = @username AND [password] = @password AND [disabled] = 0",
                 db_connection
             )
 
@@ -137,13 +142,16 @@ Public Class UserManager
             Return user_count = 1
 
         Catch ex As Exception
-            MessageBox.Show(
-                ex.Message,
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            )
-            Return False
+            If Not Info.CATCH_EXCEPTIONS Then : Throw ex
+            Else
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                )
+                Return False
+            End If
         End Try
     End Function
 
@@ -165,13 +173,16 @@ Public Class UserManager
             Return user_id
 
         Catch ex As Exception
-            MessageBox.Show(
-                ex.Message,
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            )
-            Return Nothing
+            If Not Info.CATCH_EXCEPTIONS Then : Throw ex
+            Else
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                )
+                Return Nothing
+            End If
         End Try
     End Function
 
@@ -193,13 +204,16 @@ Public Class UserManager
             Return userlevel
 
         Catch ex As Exception
-            MessageBox.Show(
-                ex.Message,
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            )
-            Return Nothing
+            If Not Info.CATCH_EXCEPTIONS Then : Throw ex
+            Else
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                )
+                Return Nothing
+            End If
         End Try
     End Function
 
@@ -233,7 +247,8 @@ Public Class UserManager
                 db_reader_userinfo.GetString(3)
             },
             db_reader_userinfo.GetString(4),
-            db_reader_userinfo.GetString(5)
+            db_reader_userinfo.GetString(5),
+            db_reader_useracc.GetBoolean(4)
         )
         db_connection.Close()
         Return user
@@ -278,20 +293,28 @@ Public Class UserManager
             Return True
 
         Catch ex As Exception
-            MessageBox.Show(
-                ex.Message,
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            )
-            Return False
+            If Not Info.CATCH_EXCEPTIONS Then : Throw ex
+            Else
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                )
+                Return False
+            End If
         End Try
     End Function
 
-    Public Function getAllUsers() As List(Of User)
+    Public Function getAllUsers(Optional ByVal include_disabled As Boolean = False) As List(Of User)
         Dim db_connection = Me.db_manager.getConnection()
         Dim db_command_acc = New OleDbCommand(
-            "SELECT * FROM users", db_connection
+            "SELECT * FROM users" & If(
+                include_disabled,
+                "",
+                " WHERE [disabled] = 0"
+            ),
+            db_connection
         )
         db_connection.Open()
         Dim db_reader_acc = db_command_acc.ExecuteReader()
@@ -317,12 +340,42 @@ Public Class UserManager
                     db_reader_info.GetString(3)
                 },
                 db_reader_info.GetString(4),
-                db_reader_info.GetString(5)
+                db_reader_info.GetString(5),
+                db_reader_acc.GetBoolean(4)
             )
             users.Add(user)
         End While
 
         db_connection.Close()
         Return users
+    End Function
+
+    Public Function kickUser(user_id As Integer) As Boolean
+        Try
+            Dim db_connection = Me.db_manager.getConnection()
+            Dim db_command = New OleDbCommand(
+                "UPDATE users SET [disabled] = -1 WHERE [id] = @user_id",
+                db_connection
+            )
+
+            db_command.Parameters.AddWithValue("@user_id", user_id)
+
+            db_connection.Open()
+            db_command.ExecuteNonQuery()
+            db_connection.Close()
+            Return True
+
+        Catch ex As Exception
+            If Not Info.CATCH_EXCEPTIONS Then : Throw ex
+            Else
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                )
+                Return False
+            End If
+        End Try
     End Function
 End Class

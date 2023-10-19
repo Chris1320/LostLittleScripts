@@ -9,7 +9,7 @@
         Me.user_info = user_info
     End Sub
 
-    Private Sub AdminPanel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Public Sub updateUsers()
         Dim users_datasource = New DataTable()
         Dim user_manager = New UserManager()
         Dim users = user_manager.getAllUsers()
@@ -41,6 +41,10 @@
         dgvUsers.DataSource = users_binding_source
     End Sub
 
+    Private Sub AdminPanel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        updateUsers()
+    End Sub
+
     Private Sub DashboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DashboardToolStripMenuItem.Click
         Throw New Exception("ReturnToDashboard")
     End Sub
@@ -52,5 +56,40 @@
 
     Private Sub LogoutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogoutToolStripMenuItem.Click
         Throw New Exception("LoginRequired")
+    End Sub
+
+    Private Sub dgvUsers_SelectionChanged(sender As Object, e As EventArgs) Handles dgvUsers.SelectionChanged
+        txtSelectedUser.Text = dgvUsers.CurrentRow.Cells("username").Value
+    End Sub
+
+    Private Sub btnKickUser_Click(sender As Object, e As EventArgs) Handles btnKickUser.Click
+        If user_info.user_id = dgvUsers.CurrentRow.Cells("id").Value Then
+            MessageBox.Show(
+                "You cannot kick yourself!",
+                "Kick User",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            )
+            Return
+        End If
+
+        If MessageBox.Show(
+            "Are you sure you want to kick this user?",
+            "Kick User",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question
+        ) = DialogResult.Yes Then
+            Dim user_manager = New UserManager()
+            Dim user_id = dgvUsers.CurrentRow.Cells("id").Value
+            If user_manager.kickUser(user_id) Then
+                MessageBox.Show(
+                    "User has been kicked",
+                    "Kick User",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                )
+            End If
+            updateUsers()
+        End If
     End Sub
 End Class

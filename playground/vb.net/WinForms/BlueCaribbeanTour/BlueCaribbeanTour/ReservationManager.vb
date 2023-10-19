@@ -34,13 +34,16 @@ Public Class ReservationManager
             Return True
 
         Catch ex As Exception
-            MessageBox.Show(
+            If Not Info.CATCH_EXCEPTIONS Then : Throw ex
+            Else
+                MessageBox.Show(
                 ex.Message,
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
             )
-            Return False
+                Return False
+            End If
         End Try
     End Function
 
@@ -86,12 +89,15 @@ Public Class ReservationManager
             db_connection.Close()
 
         Catch ex As Exception
-            MessageBox.Show(
-                ex.Message,
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            )
+            If Not Info.CATCH_EXCEPTIONS Then : Throw ex
+            Else
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                )
+            End If
         End Try
 
         Return reservations

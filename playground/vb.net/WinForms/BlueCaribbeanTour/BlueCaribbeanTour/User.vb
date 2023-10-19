@@ -7,6 +7,7 @@ Public Class User
     Public name(3) As String
     Public address As String
     Public phone_number As String
+    Public disabled As Boolean
 
     Sub New(
         user_id As Integer?,  ' Allow optional for non-registered users
@@ -15,7 +16,8 @@ Public Class User
         userlevel As Integer,
         name() As String,
         address As String,
-        phone_number As String
+        phone_number As String,
+        Optional disabled As Boolean = False
     )
         Me.user_id = user_id
         Me.username = username
@@ -24,5 +26,6 @@ Public Class User
         Me.name = name
         Me.address = address
         Me.phone_number = phone_number
+        Me.disabled = disabled
     End Sub
 End Class
