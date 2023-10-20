@@ -1,4 +1,5 @@
-﻿Imports System
+﻿Imports System.Resources
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -8,10 +9,10 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("BlueCaribbeanTour")>
-<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyTitle("Blue Caribbean Tour")>
+<Assembly: AssemblyDescription("Object Oriented Programming (ITP3) Final Project")>
 <Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("BlueCaribbeanTour")>
+<Assembly: AssemblyProduct("Blue Caribbean Tour")>
 <Assembly: AssemblyCopyright("Copyright ©  2023")>
 <Assembly: AssemblyTrademark("")>
 
@@ -33,3 +34,4 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyVersion("1.0.0.0")>
 <Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: NeutralResourcesLanguage("en")>
