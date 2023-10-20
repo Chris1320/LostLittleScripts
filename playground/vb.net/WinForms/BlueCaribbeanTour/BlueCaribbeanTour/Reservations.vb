@@ -1,4 +1,5 @@
 ﻿Public Class Reservations
+    Private signal_to_parent As String
     Private user_info As User
 
     Sub New(user_info As User, Optional admin_use As Boolean = False)
@@ -10,6 +11,11 @@
         If admin_use Then : Me.MenuStrip1.Visible = False
         End If
     End Sub
+
+    Public Function start() As String
+        Me.ShowDialog()
+        Return Me.signal_to_parent
+    End Function
 
     Private Sub updateReservations()
         Dim reservations_datasource = New DataTable()
@@ -52,7 +58,8 @@
     End Sub
 
     Private Sub LogoutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LogoutToolStripMenuItem.Click
-        Throw New Exception("LoginRequired")
+        Me.signal_to_parent = "LoginRequired"
+        Me.Close()
     End Sub
 
     Private Sub ProfileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ProfileToolStripMenuItem.Click
@@ -61,7 +68,8 @@
     End Sub
 
     Private Sub DashboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DashboardToolStripMenuItem.Click
-        Throw New Exception("ReturnToDashboard")
+        Me.signal_to_parent = "ReturnToDashboard"
+        Me.Close()
     End Sub
 
     Private Sub btnCancelReservation_Click(sender As Object, e As EventArgs) Handles btnCancelReservation.Click

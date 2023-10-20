@@ -153,45 +153,44 @@
     End Sub
 
     Private Sub ProfileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ProfileToolStripMenuItem.Click
-        Try
-            Dim user_profile = New UserProfile(user_info)
-            user_profile.ShowDialog()
+        Dim user_profile = New UserProfile(user_info)
+        Dim signal_from_child = user_profile.start()
 
-        Catch ex As Exception
-            ' I'm not experienced with VB.NET, so this is my solution
-            ' to require the user to login again if they have been
-            ' demoted to a customer.
-            If ex.Message = "LoginRequired" Then : logout()
-            Else : Throw ex  ' Rethrow the exception
-            End If
-        End Try
+        ' I'm not experienced with VB.NET, so this is my solution
+        ' to require the user to login again if they have been
+        ' demoted to a customer.
+        '
+        ' The previous solution was to wait for an exception
+        ' thrown by the child form, but that does not work
+        ' outside of Visual Studio. I wasn't able to figure it
+        ' out why, so I have to devise a new solution, which is
+        ' this:
+        '
+        ' Create a `start()` method in the child form that
+        ' returns a "signal" in a form of a string. If the signal
+        ' is "LoginRequired", then the child form must want to
+        ' signal the parent form that the user must login again.
+        If signal_from_child = "LoginRequired" Then : logout()
+        End If
     End Sub
 
     Private Sub ReservationsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReservationsToolStripMenuItem.Click
-        Try
-            Dim reservations_form = New Reservations(Me.user_info)
-            Me.Hide()
-            reservations_form.ShowDialog()
+        Dim reservations_form = New Reservations(Me.user_info)
+        Me.Hide()
+        Dim signal_from_child = reservations_form.start()
 
-        Catch ex As Exception
-            If ex.Message = "LoginRequired" Then : logout()
-            ElseIf ex.Message = "ReturnToDashboard" Then : Me.Show()
-            Else : Throw ex  ' Rethrow the exception
-            End If
-        End Try
+        If signal_from_child = "LoginRequired" Then : logout()
+        ElseIf signal_from_child = "ReturnToDashboard" Then : Me.Show()
+        End If
     End Sub
 
     Private Sub AdminToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AdminToolStripMenuItem.Click
-        Try
-            Dim admin_form = New AdminPanel(Me.user_info)
-            Me.Hide()
-            admin_form.ShowDialog()
+        Dim admin_form = New AdminPanel(Me.user_info)
+        Me.Hide()
+        Dim signal_from_child = admin_form.start()
 
-        Catch ex As Exception
-            If ex.Message = "LoginRequired" Then : logout()
-            ElseIf ex.Message = "ReturnToDashboard" Then : Me.Show()
-            Else : Throw ex  ' Rethrow the exception
-            End If
-        End Try
+        If signal_from_child = "LoginRequired" Then : logout()
+        ElseIf signal_from_child = "ReturnToDashboard" Then : Me.Show()
+        End If
     End Sub
 End Class

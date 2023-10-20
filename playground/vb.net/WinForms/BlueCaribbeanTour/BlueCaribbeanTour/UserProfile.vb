@@ -1,4 +1,5 @@
 ﻿Public Class UserProfile
+    Private signal_to_parent As String
     Private user_info As User
     Private edit_mode As Boolean = False
     Private new_userlevel As Integer
@@ -11,6 +12,11 @@
         Me.user_info = user_info
         Me.new_userlevel = user_info.userlevel
     End Sub
+
+    Public Function start() As String
+        Me.ShowDialog()
+        Return Me.signal_to_parent
+    End Function
 
     Private Sub loadFromUserInformation()
         txtUserID.Text = user_info.user_id
@@ -62,7 +68,8 @@
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information
                     )
-                    Throw New Exception("LoginRequired")
+                    Me.signal_to_parent = "LoginRequired"
+                    Me.Close()
                 End If
             Else
                 MessageBox.Show(
