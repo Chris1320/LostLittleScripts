@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+MIN_GUESS=1
+MAX_GUESS=100
+
+startGame() {
+    # Generate a random number between MIN_GUESS and MAX_GUESS.
+    # answer=$((RANDOM % 100 + 1))  # old method
+    answer=$(shuf -i $MIN_GUESS-$MAX_GUESS -n 1)
+
+    # Ask the user for their guesses.
+    while true; do
+        printf "Player 1, enter your guess: "
+        read -r player1_guess
+        if [[ player1_guess -ge MIN_GUESS ]] && [[ player1_guess -le MAX_GUESS ]]; then
+            break
+        else
+            echo "Invalid input. Try again."
+        fi
+    done
+
+    while true; do
+        printf "Player 2, enter your guess: "
+        read -r player2_guess
+        if [[ player2_guess -ge MIN_GUESS ]] && [[ player2_guess -le MAX_GUESS ]]; then
+            break
+        else
+            echo "Invalid input. Try again."
+        fi
+    done
+
+    # Calculate the distances of the players' guesses and the actual answer.
+    player1_distance=$((player1_guess - answer))
+    player2_distance=$((player2_guess - answer))
+
+    # Make the distance values absolute.
+    if [[ player1_distance -lt 0 ]]; then
+        player1_distance=$((player1_distance * -1))
+    fi
+
+    if [[ player2_distance -lt 0 ]]; then
+        player2_distance=$((player2_distance * -1))
+    fi
+
+    echo
+    echo "The number was $answer."
+    echo "The distance of Player 1's guess from the number is $player1_distance."
+    echo "The distance of Player 2's guess from the number is $player2_distance."
+    if [[ player1_distance -lt player2_distance ]]; then
+        echo "Player 1 wins!"
+    elif [[ player2_distance -lt player1_distance ]]; then
+        echo "Player 2 wins!"
+    else
+        echo "It's a tie!"
+    fi
+}
+
+echo "Objective: Try to guess the number ($MIN_GUESS-$MAX_GUESS)"
+echo "           The player who is closest to the number wins."
+echo
+
+while true; do
+    startGame
+
+    printf "Do you want to play again? (y/n): "
+    read -r play_again
+    if [[ $play_again == "n" ]]; then
+        break
+    fi
+    echo
+    echo "=================================================="
+done
