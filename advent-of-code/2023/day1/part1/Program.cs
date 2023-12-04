@@ -18,7 +18,6 @@
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-                    uint result = 0;
 
                     Console.WriteLine($"Processing line #{++lines}: {line}");
                     if (String.IsNullOrWhiteSpace(line))
@@ -28,17 +27,15 @@
                     foreach (var c in row_chars)
                         if (Char.IsNumber(c))
                         {
-                            result += (uint)Char.GetNumericValue(c) * 10;
+                            sum += (uint)Char.GetNumericValue(c) * 10;
                             break;
                         }
                     for (int i = row_chars.Length - 1; i >= 0; i--)
                         if (Char.IsNumber(row_chars[i]))
                         {
-                            result += (uint)Char.GetNumericValue(row_chars[i]);
+                            sum += (uint)Char.GetNumericValue(row_chars[i]);
                             break;
                         }
-
-                    sum += result;
                 }
             }
 
