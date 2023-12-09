@@ -1,1 +1,1 @@
-python -m nuitka --onefile --enable-plugin=pyside6 --disable-console .\pptx_media_extract.py
+.\env\Scripts\python.exe -m nuitka --onefile --enable-plugin=pyside6 --disable-console --deployment .\pptx_media_extract.py
