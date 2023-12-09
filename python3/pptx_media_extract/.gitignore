@@ -1,0 +1,5 @@
+env/
+pptx_media_extract.exe
+pptx_media_extract.build/
+pptx_media_extract.dist/
+pptx_media_extract.onefile-build/
