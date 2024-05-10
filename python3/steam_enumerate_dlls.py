@@ -36,7 +36,9 @@ def main(dir_to_scan: str, args: list[str]) -> int:
 
     print("=" * 20, "STEAM LAUNCH OPTIONS", "=" * 20)
     print()
-    launch_options = f"WINEDLLOVERRIDES=\"{','.join(dll_list)}=n,b\" gamemoderun %command%"
+    launch_options = (
+        f"WINEDLLOVERRIDES=\"{','.join(dll_list)}=n,b\" mangohud gamemoderun %command%"
+    )
     print(launch_options)
     print()
     if platform.system() == "Linux":
