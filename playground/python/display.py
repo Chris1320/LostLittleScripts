@@ -82,11 +82,14 @@ def activity_12_3(c: str, s: str, simulate: bool) -> None:
     y = 11
     for i in range(y):
         for j in range(y):
+            print(
+                # fill the inner part of the diamond with `c` as well.
+                c if abs(i - (y // 2)) + abs(j - (y // 2)) <= (y // 2) else s,
+                end="",
+                flush=True,
+            )
             if simulate:
                 sleep(DELAY)
-            print(
-                c if i + j in {5, 15} or 5 in {j - i, i - j} else s, end="", flush=True
-            )
 
         print()
 
