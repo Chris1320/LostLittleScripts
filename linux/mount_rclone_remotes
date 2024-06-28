@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+RCLONE_PATH="rclone"
+CONFIG_PATH="${HOME}/.config/rclone/rclone.conf"
+LOG_PATH="${HOME}/.cache/rclone.log"
+RCLONE_MOUNTS_PATH="${HOME}/.rclone"
+ADDITIONAL_CMD_OPTS=(
+    "--config" "${CONFIG_PATH}"
+    "--log-file" "${LOG_PATH}"
+    "--log-level" "INFO"
+
+    # VFS switches
+    "--vfs-cache-mode" "full"
+    "--vfs-read-chunk-size" "32M"
+    "--vfs-read-chunk-size-limit" "off"
+
+    # Remote switches
+    "--dir-cache-time" "5m0s"
+
+    # Google Drive switches
+    "--drive-chunk-size" "64M"
+
+    "--daemon"
+)
+
+# Start rclone processes.
+mount_rclone_remote() {
+    local_mountpoint="${RCLONE_MOUNTS_PATH}/$2"
+
+    echo "    + Mounting $1"
+    if [[ ! -f "${RCLONE_MOUNTS_PATH}" ]]; then
+        mkdir -p "${local_mountpoint}"
+    fi
+
+    "${RCLONE_PATH}" mount "$1:" "${local_mountpoint}" "${ADDITIONAL_CMD_OPTS[@]}"
+}
+
+unmount_rclone_remote() {
+    echo "    + Unmounting $1"
+    fusermount -u "${RCLONE_MOUNTS_PATH}/$1"
+}
+
+start_mounts() {
+    echo "[i] Mounting rclone remotes..."
+    mount_rclone_remote "gdrive-personal" "Personal (GDrive)" &
+    mount_rclone_remote "onedrive-personal" "Personal (OneDrive)" &
+    mount_rclone_remote "mega-personal" "Personal (MEGA)" &
+
+    mount_rclone_remote "gdrive-education" "Education (GDrive)" &
+
+    mount_rclone_remote "gdrive-work" "Work (GDrive)" &
+    mount_rclone_remote "onedrive-work" "Work (OneDrive)" &
+    # sleep 1
+    wait
+    echo "[i] Mounting rclone remotes... Done!"
+}
+
+stop_mounts() {
+    echo "[i] Unmounting rclone remotes..."
+    unmount_rclone_remote "Personal (GDrive)"
+    unmount_rclone_remote "Personal (OneDrive)"
+    unmount_rclone_remote "Personal (MEGA)"
+
+    unmount_rclone_remote "Education (GDrive)"
+
+    unmount_rclone_remote "Work (GDrive)"
+    unmount_rclone_remote "Work (OneDrive)"
+    echo "[i] Unmounting rclone remotes... Done!"
+}
+
+case "$1" in
+"mount")
+    start_mounts
+    ;;
+"unmount")
+    stop_mounts
+    ;;
+*)
+    echo "USAGE: $0 mount|unmount"
+    ;;
+esac
