@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Initialize a shared counter file
+counter_file="counter.txt"
+
+# Check if counter file exists, if not, create it with initial value 0
+if [ ! -f "$counter_file" ]; then
+    echo "0" >"$counter_file"
+fi
+
+# Function to increment the counter
+increment_counter() {
+    sleep "$(shuf -i0-3 -n1)"
+    echo "Starting process ${1}..."
+    counter=$(cat "$counter_file")       # Read current value of the counter
+    new_counter=$((counter + 1))         # Increment the counter value
+    sleep "$(shuf -i0-3 -n1)"            # Simulate a delay to magnify the race condition
+    echo "$new_counter" >"$counter_file" # Write the new counter value back to the file
+    echo "Process ${1} done!"
+}
+
+# Run 3 instances of the function concurrently
+for ((i = 1; i <= 3; i++)); do
+    increment_counter ${i} &
+done
+
+# Wait for all background processes to finish
+wait
+
+# Read the final value of the counter
+final_counter=$(cat "$counter_file")
+echo "Final counter value: $final_counter"
