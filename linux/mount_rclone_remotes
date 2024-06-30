@@ -2,37 +2,49 @@
 
 RCLONE_PATH="rclone"
 CONFIG_PATH="${HOME}/.config/rclone/rclone.conf"
-LOG_PATH="${HOME}/.cache/rclone.log"
-RCLONE_MOUNTS_PATH="${HOME}/.rclone"
-ADDITIONAL_CMD_OPTS=(
-    "--config" "${CONFIG_PATH}"
-    "--log-file" "${LOG_PATH}"
-    "--log-level" "INFO"
+LOG_PATH="${HOME}/.cache/rclone/logs"
+RCLONE_MOUNTS_PATH="${HOME}/Rclone Remotes"
 
-    # VFS switches
-    "--vfs-cache-mode" "full"
-    "--vfs-read-chunk-size" "32M"
-    "--vfs-read-chunk-size-limit" "off"
+# Generate command options for rclone.
+generate_cmd_opts() {
+    local -a additional_cmd_opts
+    additional_cmd_opts=(
+        "--config" "${CONFIG_PATH}"
+        "--log-file" "${LOG_PATH}/${1}.log"
+        "--log-level" "INFO"
 
-    # Remote switches
-    "--dir-cache-time" "5m0s"
+        # VFS switches
+        "--vfs-cache-mode" "full"
+        "--vfs-read-chunk-size" "32M"
+        "--vfs-read-chunk-size-limit" "off"
 
-    # Google Drive switches
-    "--drive-chunk-size" "64M"
+        # Remote switches
+        "--dir-cache-time" "5m0s"
 
-    "--daemon"
-)
+        # Google Drive switches
+        "--drive-chunk-size" "64M"
+
+        "--daemon"
+    )
+    echo "${additional_cmd_opts[@]}"
+}
 
 # Start rclone processes.
 mount_rclone_remote() {
     local_mountpoint="${RCLONE_MOUNTS_PATH}/$2"
 
+    if [[ ! -d "${LOG_PATH}" ]]; then
+        mkdir -p "${LOG_PATH}"
+    fi
+
     echo "    + Mounting $1"
-    if [[ ! -f "${RCLONE_MOUNTS_PATH}" ]]; then
+    if [[ ! -d "${local_mountpoint}" ]]; then
         mkdir -p "${local_mountpoint}"
     fi
 
-    "${RCLONE_PATH}" mount "$1:" "${local_mountpoint}" "${ADDITIONAL_CMD_OPTS[@]}"
+    # additional_cmd_opts=($(generate_cmd_opts "$1"))
+    read -r -a additional_cmd_opts < <(generate_cmd_opts "$1")
+    "${RCLONE_PATH}" mount "$1:" "${local_mountpoint}" "${additional_cmd_opts[@]}"
 }
 
 unmount_rclone_remote() {
