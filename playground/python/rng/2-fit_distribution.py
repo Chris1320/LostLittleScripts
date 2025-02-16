@@ -95,7 +95,7 @@ def plot_fit(
 
     print("Plotting...")
     # Eyy I just looked this up
-    plt.xlabel("Arrival Time (minutes since midnight)")
+    plt.xlabel("Arrival Time (minutes since 00:00)")
     plt.ylabel("Density")
     plt.title("Empirical Data vs Fitted Distribution PDFs")
     plt.legend()
@@ -165,8 +165,8 @@ def main() -> int:
     for name, dist in candidate_distributions.items():
         params, ks_stat = fit_distribution(arrival_minutes, dist)
         print(f"Distribution: {name}")
-        print(f"  Fitted parameters: {params}")
-        print(f"  KS statistic: {ks_stat:.4f}\n")
+        print(f"- Fitted parameters: {params}")
+        print(f"- KS statistic: {ks_stat:.4f}\n")
         fit_results[name] = {"params": params, "ks_stat": ks_stat}
 
     best_dist = min(fit_results.items(), key=lambda kv: kv[1]["ks_stat"])
