@@ -62,8 +62,8 @@ def main() -> int:
         alpha=0.5,
     )
 
-    plt.title("Average Waiting Time in Queueing System")
-    plt.xlabel("Number of Customers Served")
+    plt.title("Queueing System Average Waiting Time")
+    plt.xlabel("Served Customers")
     plt.ylabel("Average Waiting Time")
     plt.legend()
     plt.grid()
