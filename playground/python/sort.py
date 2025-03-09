@@ -1,26 +1,25 @@
-def rearrange_negative_positive(arr: list[int]):
-    l = 0
-    r = len(arr) - 1
+def sort_it(a: list[int]):
+    l, r = 0, len(a) - 1
 
     while l <= r:
-        if arr[l] < 0: l += 1  # negative
-        elif arr[r] >= 0: r -= 1  # positive
+        if a[l] < 0: l += 1
+        elif a[r] >= 0: r -= 1
         else:
-            arr[l], arr[r] = arr[r], arr[l]
+            a[l], a[r] = a[r], a[l]
             l += 1
             r -= 1
 
+    return a
+
 
 def main():
-    tests = [
-        [1, 2, 3, 4, 5, 6],           # Output: [1, 2, 3, 4, 5, 6]
+    for test in [
+        [1, 2, 3, 4, 5, 6],           # Output: [ 1,  2,  3,  4,  5,  6]
         [-1, -2, -3, -4, -5, -6],     # Output: [-1, -2, -3, -4, -5, -6]
-        [-1, 2, -3, 4, -5, 6],        # Output: [-1, -5, -3, 4, 2, 6]
-        [1, -2, 3, -4, 5, -6, 7, -8], # Output: [-8, -2, -6, -4, 5, 3, 7, 1]
-    ]
-    for test in tests:
-        rearrange_negative_positive(test)
-        print(test)
+        [-1, 2, -3, 4, -5, 6],        # Output: [-1, -5, -3,  4,  2,  6]
+        [1, -2, 3, -4, 5, -6, 7, -8], # Output: [-8, -2, -6, -4,  5,  3, 7, 1]
+    ]:
+        print(sort_it(test))
 
 
 if __name__ == "__main__":
