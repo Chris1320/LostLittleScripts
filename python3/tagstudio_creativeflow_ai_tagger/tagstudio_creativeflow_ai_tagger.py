@@ -386,26 +386,30 @@ def downscale_image(
     """
 
     output_path = Path(TEMP_DIR) / (image_path.stem + ".downscaled" + image_path.suffix)
-    # use pillow to downscale the image while explicitly preserving aspect ratio
-    with Image.open(image_path) as img:
-        width, height = img.size
-        if width > max_dimension or height > max_dimension:
-            if width > height:
-                new_width = max_dimension
-                new_height = int(max_dimension * (height / width))
-            else:
-                new_height = max_dimension
-                new_width = int(max_dimension * (width / height))
+    if not output_path.exists():
+        # use pillow to downscale the image while explicitly preserving aspect ratio
+        with Image.open(image_path) as img:
+            width, height = img.size
+            if width > max_dimension or height > max_dimension:
+                if width > height:
+                    new_width = max_dimension
+                    new_height = int(max_dimension * (height / width))
+                else:
+                    new_height = max_dimension
+                    new_width = int(max_dimension * (width / height))
 
-            tqdm.write(f"Downscaling image to {new_width}x{new_height} ({output_path})")
-            # Image.ANTIALIAS was removed in Pillow 10+, so we use Image.Resampling.LANCZOS
-            img = img.resize(  # pyright: ignore[reportUnknownMemberType]
-                (new_width, new_height), Image.Resampling.LANCZOS
-            )
+                tqdm.write(
+                    f"Downscaling image to {new_width}x{new_height} ({output_path})"
+                )
+                # Image.ANTIALIAS was removed in Pillow 10+, so we use Image.Resampling.LANCZOS
+                img = img.resize(  # pyright: ignore[reportUnknownMemberType]
+                    (new_width, new_height), Image.Resampling.LANCZOS
+                )
 
-        with open(output_path, "wb") as output:
-            img.save(output, format=img.format or "JPEG")
-            return output_path
+            with open(output_path, "wb") as output:
+                img.save(output, format=img.format or "JPEG")
+
+    return output_path
 
 
 def downscale_video(
@@ -424,19 +428,21 @@ def downscale_video(
 
     # use ffmpeg via subprocess to downscale the video while preserving aspect ratio
     output_path = Path(TEMP_DIR) / (video_path.stem + ".downscaled" + video_path.suffix)
-    command = [
-        "ffmpeg",
-        "-y",
-        "-i",
-        str(video_path),
-        "-vf",
-        f"scale=-2:{max_height}",
-        "-c:a",
-        "copy",  # copy audio without re-encoding
-        str(output_path),
-    ]
-    tqdm.write(f"Downscaling video to max height {max_height} ({output_path})")
-    subprocess.run(command, check=True)
+    if not output_path.exists():
+        command = [
+            "ffmpeg",
+            "-y",
+            "-i",
+            str(video_path),
+            "-vf",
+            f"scale=-2:{max_height}",
+            "-c:a",
+            "copy",  # copy audio without re-encoding
+            str(output_path),
+        ]
+        tqdm.write(f"Downscaling video to max height {max_height} ({output_path})")
+        subprocess.run(command, check=True)
+
     return output_path
 
 
@@ -455,17 +461,21 @@ def downscale_audio(
     """
 
     output_path = Path(TEMP_DIR) / (audio_path.stem + ".downscaled" + ".mp3")
-    command = [
-        "ffmpeg",
-        "-y",
-        "-i",
-        str(audio_path),
-        "-b:a",
-        f"{max_bitrate}k",
-        str(output_path),
-    ]
-    tqdm.write(f"Downscaling audio to max bitrate {max_bitrate} kbps ({output_path})")
-    subprocess.run(command, check=True)
+    if not output_path.exists():
+        command = [
+            "ffmpeg",
+            "-y",
+            "-i",
+            str(audio_path),
+            "-b:a",
+            f"{max_bitrate}k",
+            str(output_path),
+        ]
+        tqdm.write(
+            f"Downscaling audio to max bitrate {max_bitrate} kbps ({output_path})"
+        )
+        subprocess.run(command, check=True)
+
     return output_path
 
 
