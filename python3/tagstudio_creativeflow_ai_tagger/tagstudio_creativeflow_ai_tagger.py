@@ -441,7 +441,9 @@ def downscale_video(
             str(output_path),
         ]
         tqdm.write(f"Downscaling video to max height {max_height} ({output_path})")
-        subprocess.run(command, check=True)
+        subprocess.run(
+            command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True
+        )
 
     return output_path
 
@@ -474,7 +476,9 @@ def downscale_audio(
         tqdm.write(
             f"Downscaling audio to max bitrate {max_bitrate} kbps ({output_path})"
         )
-        subprocess.run(command, check=True)
+        subprocess.run(
+            command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True
+        )
 
     return output_path
 
