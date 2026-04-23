@@ -88,7 +88,7 @@ DEFAULT_ALLOW_CATEGORY_TAGS: Final[bool] = (
 
 DEFAULT_GEMINI_MODEL: Final[str] = "gemini-3.1-flash-lite-preview"
 DEFAULT_MAX_FILE_READ_SIZE: Final[int] = (
-    50000  # Max number of characters to read from text files
+    5000  # Max number of characters to read from text files
 )
 DEFAULT_LIMIT: Final[int] = 0  # Limit the number of entries to process (0 for no limit)
 DEFAULT_MIN_CONFIDENCE_SCORE: Final[float] = (
@@ -99,6 +99,9 @@ DEFAULT_CLASSIFIER_MAX_RETRIES: Final[int] = (
 )
 DEFAULT_CLASSIFIER_RETRY_DELAY: Final[int] = (
     5  # Delay in seconds between classification retries
+)
+DEFAULT_CLASSIFIER_DELAY: Final[float] = (
+    4.0  # Delay in seconds between classification requests to avoid rate limits (set to 0 for no delay)
 )
 DEFAULT_FAIL_ON_MAX_RETRIES: Final[bool] = (
     False  # Whether to fail the entire process if max retries is exceeded for any entry
@@ -502,6 +505,7 @@ def main(
     api_key: str,
     max_retries: int,
     retry_delay: int,
+    delay: float,
     max_file_read_size: int,
     fail_on_max_retries: bool,
     filetype_include: set[str],
@@ -522,6 +526,7 @@ def main(
         api_key: The Google API key for authentication.
         max_retries: The maximum number of retries for classification requests in case of failure.
         retry_delay: The delay in seconds between classification retries.
+        delay: The delay in seconds between classification requests to avoid rate limits.
         max_file_read_size: The maximum number of characters to read from text files.
         fail_on_max_retries: Whether to fail the entire process if max retries is exceeded for any entry.
         filetype_include: A set of file suffixes to include (e.g., 'mp4', 'jpg'). Only entries with these suffixes will be processed. This overrides `filetype_exclude` if both are provided.
@@ -736,6 +741,10 @@ def main(
                 allow_category_tags=allow_category_tags,
             )
 
+            if delay > 0:
+                tqdm.write(f"Waiting for {delay} seconds to avoid rate limits...")
+                time.sleep(delay)
+
             tqdm.write("=" * os.get_terminal_size().columns)
             total_filetypes_processed[entry_info.filesuffix] = (
                 total_filetypes_processed.get(entry_info.filesuffix, 0) + 1
@@ -825,6 +834,12 @@ if __name__ == "__main__":
         help="Delay in seconds between classification retries (default: %(default)s)",
     )
     parser.add_argument(
+        "--delay",
+        type=float,
+        default=DEFAULT_CLASSIFIER_DELAY,
+        help="Delay in seconds between classification requests to avoid rate limits (default: %(default)s)",
+    )
+    parser.add_argument(
         "--max-file-read-size",
         type=int,
         default=DEFAULT_MAX_FILE_READ_SIZE,
@@ -873,6 +888,7 @@ if __name__ == "__main__":
             api_key=args.api_key,
             max_retries=args.max_retries,
             retry_delay=args.retry_delay,
+            delay=args.delay,
             max_file_read_size=args.max_file_read_size,
             fail_on_max_retries=args.fail_on_max_retries,
             filetype_include=set(args.filetype_include),
