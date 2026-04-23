@@ -174,10 +174,10 @@ Taxonomy:
 {TAXONOMY_JSON}
 
 Final Validation Checklist:
-- Is there a tag from `01 - Kind`? (Required)
-- Is there a tag from `02 - Style`? (Required)
-- Is there a tag from `03 - Theme`? (Required)
-- Is there a tag from `04 - Utility`? (Required)
+- Is there a tag from `01 - Kind`? (Required; Exception for Document/Legal and Pack Tutorial assets as noted above)
+- Is there a tag from `02 - Style`? (Required; Exception for Document/Legal and Pack Tutorial assets as noted above)
+- Is there a tag from `03 - Theme`? (Required; Exception for Document/Legal and Pack Tutorial assets as noted above)
+- Is there a tag from `04 - Utility`? (Required; Exception for Document/Legal and Pack Tutorial assets as noted above)
 
 If any are missing, re-analyze the asset and select the best fit.
 
