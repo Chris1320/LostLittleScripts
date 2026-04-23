@@ -39,6 +39,16 @@ from tqdm import tqdm
 
 
 @dataclass
+class Tag:
+    id: int
+    name: str
+    is_category: bool
+    paths: list[str] = field(  # pyright: ignore[reportUnknownVariableType]
+        default_factory=list
+    )
+
+
+@dataclass
 class TagNode:
     id: int
     name: str
@@ -589,6 +599,7 @@ def classify_entry(
     model: str,
     max_file_read_size: int,
     entry_info: EntryInfo,
+    remove_current_tags: bool,
     show_prompts: bool,
 ) -> ClassifierResponse:
     """
@@ -600,6 +611,7 @@ def classify_entry(
         model: The Google Gemini model to use for classification.
         max_file_read_size: The maximum number of characters to read from text files for classification.
         entry_info: An EntryInfo object containing the entry's information.
+        remove_current_tags: Whether to remove all current tags from the entry before applying new tags.
         show_prompts: Whether to print the prompts used for classification to stdout for debugging purposes.
 
     Returns:
@@ -628,6 +640,7 @@ def classify_entry(
         except (UnicodeDecodeError, OSError):
             mime_type = None
 
+    tags = [t.name for t in entry_info.tags] if not remove_current_tags else []
     contents: list[Any] = [
         # pylint: disable=consider-using-f-string
         """\
@@ -638,7 +651,7 @@ Asset Properties:
                 {
                     "filename": entry_info.filename,
                     "filesuffix": entry_info.filesuffix,
-                    "tags": [t.name for t in entry_info.tags],
+                    "tags": tags,
                 },
                 indent=4,
             )
@@ -738,7 +751,12 @@ Asset Properties:
         time_waited = 0
         while True:
             # check if file is ACTIVE
-            if gemini_client.files.get(name=entry_file.name).state == "ACTIVE":
+            if (
+                gemini_client.files.get(
+                    name=entry_file.name  # pyright: ignore[reportArgumentType]
+                ).state
+                == "ACTIVE"
+            ):
                 tqdm.write("File is ACTIVE. Proceeding with classification.")
                 break
 
@@ -780,6 +798,7 @@ def main(
     tags_to_add: set[int],
     tags_to_remove: set[int],
     allow_category_tags: bool,
+    remove_current_tags: bool,
     min_confidence_score: float,
     limit: int,
     model: str,
@@ -802,6 +821,7 @@ def main(
         tags_to_add: A set of tag names to add to processed entries (if they exist in the taxonomy).
         tags_to_remove: A set of tag names to remove from processed entries (if they exist in the taxonomy).
         allow_category_tags: Whether to allow suggesting category tags (tags with `is_category=True`) instead of only leaf tags.
+        remove_current_tags: Whether to remove all current tags from the entry before applying new tags. If False, new tags will be added on top of existing tags (except for tags in `tags_to_remove`).
         min_confidence_score: Minimum confidence score required to apply suggested tags (0.0 to 1.0).
         limit: The maximum number of entries to process (0 for no limit).
         model: The Google Gemini model to use for classification.
@@ -867,6 +887,7 @@ def main(
                 )
             )
         )
+        print(f"Remove Current Tags:   {remove_current_tags}")
         print(f"Google Gemini Model:   {model}")
         print(f"Minimum Confidence:    {min_confidence_score}")
         print(f"Temp Directory:        {TEMP_DIR}")
@@ -929,6 +950,7 @@ def main(
                         model=model,
                         max_file_read_size=max_file_read_size,
                         entry_info=entry_info,
+                        remove_current_tags=remove_current_tags,
                         show_prompts=show_prompts,
                     )
 
@@ -1161,6 +1183,11 @@ if __name__ == "__main__":
         help="Allow suggesting category tags (tags with `is_category=True`)",
     )
     parser.add_argument(
+        "--remove-current-tags",
+        action="store_true",
+        help="Remove all current tags from processed entries before applying new tags (overrides `--tags-to-remove`)",
+    )
+    parser.add_argument(
         "--min-confidence-score",
         type=float,
         default=DEFAULT_MIN_CONFIDENCE_SCORE,
@@ -1191,6 +1218,7 @@ if __name__ == "__main__":
             tags_to_add=set(args.tags_to_add),
             tags_to_remove=set(args.tags_to_remove),
             allow_category_tags=args.allow_category_tags,
+            remove_current_tags=args.remove_current_tags,
             min_confidence_score=args.min_confidence_score,
             limit=args.limit,
             model=args.model,
