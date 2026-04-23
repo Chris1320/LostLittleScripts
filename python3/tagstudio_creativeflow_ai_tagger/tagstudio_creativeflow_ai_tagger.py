@@ -2,6 +2,7 @@
 # requires-python = ">=3.14"
 # dependencies = [
 #     "google-genai>=1.73.1",
+#     "pillow>=12.2.0",
 #     "tqdm>=4.67.3",
 # ]
 # ///
@@ -21,7 +22,9 @@ import json
 import mimetypes
 import os
 import sqlite3
+import subprocess
 import sys
+import tempfile
 import time
 
 from dataclasses import asdict, dataclass, field
@@ -30,6 +33,8 @@ from typing import Any, Final
 
 from google import genai
 from google.genai import errors, types
+from PIL import Image
+from PIL.ExifTags import TAGS as ExifTags
 from tqdm import tqdm
 
 
@@ -109,6 +114,23 @@ DEFAULT_FAIL_ON_MAX_RETRIES: Final[bool] = (
 
 UNKNOWN_TAG = TagNode(id=-1, name="Unknown", is_category=False)
 
+DOWNSCALE_IMAGE_MAX_DIMENSION: Final[int] = (
+    768  # Max width or height for downscaled images
+)
+DOWNSCALE_VIDEO_MAX_HEIGHT: Final[int] = (
+    480  # Max resolution height for downscaled videos (e.g., 480 for 480p)
+)
+DOWNSCALE_AUDIO_MAX_BITRATE: Final[int] = (
+    128  # Max bitrate in kbps for downscaled audio (e.g., 128 for 128kbps)
+)
+FILE_UPLOAD_POLL_INTERVAL: Final[int] = (
+    2  # Seconds to wait between checks for uploaded file status
+)
+FILE_UPLOAD_MAX_TIMEOUT: Final[int] = (
+    60  # Seconds to wait for uploaded file to become ACTIVE before proceeding anyway
+)
+
+TEMP_DIR = tempfile.mkdtemp(prefix="tagstudio_ai_tagger_")
 AI_SYSTEM_PROMPT: Final[
     str
 ] = """\
@@ -120,6 +142,9 @@ Core Rules:
 - For every tag you select, you must include its corresponding id from the taxonomy.
 - If applicable, use the visual content of the image or video, audio features, and the provided technical properties (dimensions, suffix, etc.) to determine the tags.
 - Do not return any ID where `is_category` is true. Only leaf tags should be suggested.
+- An asset must have at least one tag from each of the following categories if applicable: Kind, Style, Theme, Utility. For example, an image could be tagged as "Overlay" (Kind), "Vintage" (Style), "Nature" (Theme), and "4K Resolution" (Utility).
+  - An exception to the above rule is if the asset is a Document/Legal file, or a "Pack Tutorial" video/infographic/document. In that case, only tags from the "05 - Meta Tags" of the taxonomy should be applied, and tags from other categories (Kind, Style, Theme, Utility) should not be applied.
+  - For example, a `License.pdf` file should be tagged with "Document" (Meta Tag) and should not be tagged with any Kind, Style, Theme, or Utility tags. Similarly, a "How to use.mp4" video should be tagged with "Pack Tutorial" (Meta Tag) and should not be tagged with any Kind, Style, Theme, or Utility tags.
 
 Tagging Logic:
 - 01 - Kind: Identify what the file actually is (e.g., is it an Overlay, a Background, or an Illustration?).
@@ -346,6 +371,177 @@ def update_entry_tags(
     conn.close()
 
 
+def downscale_image(
+    image_path: Path, max_dimension: int = DOWNSCALE_IMAGE_MAX_DIMENSION
+) -> Path:
+    """
+    Downscale an image to the specified maximum dimension while maintaining aspect ratio.
+
+    Args:
+        image_path: The path to the image file.
+        max_dimension: The maximum width or height of the downscaled image.
+
+    Returns:
+        The filepath of the downscaled image.
+    """
+
+    output_path = Path(TEMP_DIR) / (image_path.stem + ".downscaled" + image_path.suffix)
+    # use pillow to downscale the image while explicitly preserving aspect ratio
+    with Image.open(image_path) as img:
+        width, height = img.size
+        if width > max_dimension or height > max_dimension:
+            if width > height:
+                new_width = max_dimension
+                new_height = int(max_dimension * (height / width))
+            else:
+                new_height = max_dimension
+                new_width = int(max_dimension * (width / height))
+
+            tqdm.write(f"Downscaling image to {new_width}x{new_height} ({output_path})")
+            # Image.ANTIALIAS was removed in Pillow 10+, so we use Image.Resampling.LANCZOS
+            img = img.resize(  # pyright: ignore[reportUnknownMemberType]
+                (new_width, new_height), Image.Resampling.LANCZOS
+            )
+
+        with open(output_path, "wb") as output:
+            img.save(output, format=img.format or "JPEG")
+            return output_path
+
+
+def downscale_video(
+    video_path: Path, max_height: int = DOWNSCALE_VIDEO_MAX_HEIGHT
+) -> Path:
+    """
+    Downscale a video to the specified maximum height while maintaining aspect ratio.
+
+    Args:
+        video_path: The path to the video file.
+        max_height: The maximum height of the downscaled video.
+
+    Returns:
+        The filepath of the downscaled video.
+    """
+
+    # use ffmpeg via subprocess to downscale the video while preserving aspect ratio
+    output_path = Path(TEMP_DIR) / (video_path.stem + ".downscaled" + video_path.suffix)
+    command = [
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(video_path),
+        "-vf",
+        f"scale=-2:{max_height}",
+        "-c:a",
+        "copy",  # copy audio without re-encoding
+        str(output_path),
+    ]
+    tqdm.write(f"Downscaling video to max height {max_height} ({output_path})")
+    subprocess.run(command, check=True)
+    return output_path
+
+
+def downscale_audio(
+    audio_path: Path, max_bitrate: int = DOWNSCALE_AUDIO_MAX_BITRATE
+) -> Path:
+    """
+    Downscale an audio file to the specified maximum bitrate while maintaining quality.
+
+    Args:
+        audio_path: The path to the audio file.
+        max_bitrate: The maximum bitrate of the downscaled audio in kbps.
+
+    Returns:
+        The filepath of the downscaled audio.
+    """
+
+    output_path = Path(TEMP_DIR) / (audio_path.stem + ".downscaled" + ".mp3")
+    command = [
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(audio_path),
+        "-b:a",
+        f"{max_bitrate}k",
+        str(output_path),
+    ]
+    tqdm.write(f"Downscaling audio to max bitrate {max_bitrate} kbps ({output_path})")
+    subprocess.run(command, check=True)
+    return output_path
+
+
+def get_image_properties(image_path: Path) -> dict[str, Any]:
+    """
+    Get the properties of an image file, such as dimensions and file size.
+
+    Args:
+        image_path: The path to the image file.
+
+    Returns:
+        A dictionary containing the image properties.
+    """
+
+    # return all possible EXIF data as well as dimensions and file size, which can be useful for classification
+    with Image.open(image_path) as img:
+        width, height = img.size
+        file_size_kb = image_path.stat().st_size / 1024
+        exif_data = img.getexif()
+        readable_exif = {
+            ExifTags.get(tag_id, tag_id): value for tag_id, value in exif_data.items()
+        }
+
+    return {
+        "width": width,
+        "height": height,
+        "file_size_kb": file_size_kb,
+        "exif": readable_exif,
+    }
+
+
+def get_video_properties(video_path: Path) -> dict[str, Any] | None:
+    """
+    Get the properties of a video file, such as resolution, duration, and file size.
+
+    Args:
+        video_path: The path to the video file.
+
+    Returns:
+        A dictionary containing the video properties, or None if ffprobe fails to retrieve the information.
+    """
+
+    cmd: list[str] = [
+        "ffprobe",
+        "-v",
+        "quiet",
+        "-print_format",
+        "json",
+        "-show_format",
+        "-show_streams",
+        str(video_path),
+    ]
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        return json.loads(result.stdout)
+
+    except Exception:  # pylint: disable=broad-exception-caught
+        return None
+
+
+def get_audio_properties(audio_path: Path) -> dict[str, Any] | None:
+    """
+    Get the properties of an audio file, such as duration, bitrate, and file size.
+
+    Args:
+        audio_path: The path to the audio file.
+
+    Returns:
+        A dictionary containing the audio properties, or None if ffprobe fails to retrieve the information.
+    """
+
+    # we use the same command anyway. Although we're keeping this for future adjustments.
+    return get_video_properties(audio_path)
+
+
 def parse_classifier_response(response_text: str) -> ClassifierResponse:
     """
     Parse the classifier response text into a ClassifierResponse object.
@@ -379,6 +575,7 @@ def classify_entry(
     model: str,
     max_file_read_size: int,
     entry_info: EntryInfo,
+    show_prompts: bool,
 ) -> ClassifierResponse:
     """
     Classify an entry and suggest tags based on its information and the provided taxonomy.
@@ -389,6 +586,7 @@ def classify_entry(
         model: The Google Gemini model to use for classification.
         max_file_read_size: The maximum number of characters to read from text files for classification.
         entry_info: An EntryInfo object containing the entry's information.
+        show_prompts: Whether to print the prompts used for classification to stdout for debugging purposes.
 
     Returns:
         A ClassifierResponse object containing the suggested tags and reasoning.
@@ -434,6 +632,8 @@ Asset Properties:
     ]
 
     tqdm.write(f"Determined MIME type:  {mime_type} (is_text={is_text})")
+    entry_file: types.File | None = None
+    downscaled_entry_info_filepath: Path | None = None
     if is_text:
         # Truncate text files and send them inline to avoid token limits
         try:
@@ -451,8 +651,32 @@ Asset Properties:
 
     elif mime_type:
         try:
+            # Downscale images and videos before uploading to save tokens and improve
+            # classification accuracy, while keeping the original file extension for
+            # Gemini to recognize the file type.
+            if mime_type.startswith("image/"):
+                # Downscale image
+                downscaled_entry_info_filepath = downscale_image(entry_info.filepath)
+                img_props = get_image_properties(entry_info.filepath)
+                if img_props:
+                    contents.append(json.dumps(img_props, default=str))
+
+            elif mime_type.startswith("video/"):
+                # Downscale video
+                downscaled_entry_info_filepath = downscale_video(entry_info.filepath)
+                vid_props = get_video_properties(entry_info.filepath)
+                if vid_props:
+                    contents.append(json.dumps(vid_props, default=str))
+
+            elif mime_type.startswith("audio/"):
+                # Downscale audio
+                downscaled_entry_info_filepath = downscale_audio(entry_info.filepath)
+                aud_props = get_audio_properties(entry_info.filepath)
+                if aud_props:
+                    contents.append(json.dumps(aud_props, default=str))
+
             entry_file = gemini_client.files.upload(
-                file=entry_info.filepath,
+                file=downscaled_entry_info_filepath or entry_info.filepath,
                 config=types.UploadFileConfig(mime_type=mime_type),
             )
             contents.append(entry_file)
@@ -471,24 +695,67 @@ Asset Properties:
         )
         tqdm.write("[WARN] Unknown binary file. Classifying from metadata only.")
 
+    system_prompt = AI_SYSTEM_PROMPT.replace(
+        r"{TAXONOMY_JSON}",
+        json.dumps(
+            [asdict(node) for node in get_all_tags(library_path)],
+        ),
+    )
+
+    if show_prompts:
+        tqdm.write("System Prompt:")
+        tqdm.write(system_prompt)
+
+        tqdm.write("Contents:")
+        # Convert non-serializable objects to text descriptions
+        text_contents: list[Any] = []
+        for item in contents:
+            if isinstance(item, (str, dict, list, int, float, bool, type(None))):
+                text_contents.append(item)
+
+            else:
+                # Convert binary objects to descriptive text
+                text_contents.append(f"[{type(item).__name__} object]")
+
+        tqdm.write(json.dumps(text_contents, indent=4))
+
+    if entry_file:
+        tqdm.write("Waiting for uploaded file to be processed and become ACTIVE...")
+        time_waited = 0
+        while True:
+            # check if file is ACTIVE
+            if gemini_client.files.get(name=entry_file.name).state == "ACTIVE":
+                tqdm.write("File is ACTIVE. Proceeding with classification.")
+                break
+
+            time.sleep(FILE_UPLOAD_POLL_INTERVAL)
+            time_waited += FILE_UPLOAD_POLL_INTERVAL
+            if time_waited >= FILE_UPLOAD_MAX_TIMEOUT:
+                tqdm.write(
+                    f"[WARN] Waited {time_waited} seconds for file to become ACTIVE. Proceeding with classification anyway."
+                )
+                break
+
     response = gemini_client.models.generate_content(  # pyright: ignore[reportUnknownMemberType]
         model=model,
         config=types.GenerateContentConfig(
             # We use `.replace` here to ensure that the JSON string is properly
             # escaped when inserted into the system prompt.
-            system_instruction=AI_SYSTEM_PROMPT.replace(
-                r"{TAXONOMY_JSON}",
-                json.dumps(
-                    [asdict(node) for node in get_all_tags(library_path)],
-                    indent=4,
-                ),
-            )
+            system_instruction=system_prompt
         ),
         contents=contents,
     )
 
     if not response.text:
         raise ValueError("Empty response from classifier")
+
+    # Clean up downscaled file if it was created
+    if downscaled_entry_info_filepath and downscaled_entry_info_filepath.exists():
+        try:
+            downscaled_entry_info_filepath.unlink()
+
+        except OSError as e:
+            tqdm.write(f"[WARN] Failed to delete temporary downscaled file. ({e})")
 
     return parse_classifier_response(response.text)
 
@@ -510,6 +777,7 @@ def main(
     fail_on_max_retries: bool,
     filetype_include: set[str],
     filetype_exclude: set[str],
+    show_prompts: bool,
 ) -> int:
     """
     Main function for the TagStudio AI Tagger.
@@ -531,6 +799,7 @@ def main(
         fail_on_max_retries: Whether to fail the entire process if max retries is exceeded for any entry.
         filetype_include: A set of file suffixes to include (e.g., 'mp4', 'jpg'). Only entries with these suffixes will be processed. This overrides `filetype_exclude` if both are provided.
         filetype_exclude: A set of file suffixes to exclude (e.g., 'mp4', 'jpg'). Entries with these suffixes will be skipped.
+        show_prompts: Whether to print the prompts used for classification to stdout for debugging purposes.
 
     Returns:
         An integer exit code (0 for success).
@@ -586,6 +855,7 @@ def main(
         )
         print(f"Google Gemini Model:   {model}")
         print(f"Minimum Confidence:    {min_confidence_score}")
+        print(f"Temp Directory:        {TEMP_DIR}")
         print()
 
         entries_to_process = get_entries_to_process(library_path, tags_to_process)
@@ -645,6 +915,7 @@ def main(
                         model=model,
                         max_file_read_size=max_file_read_size,
                         entry_info=entry_info,
+                        show_prompts=show_prompts,
                     )
 
                     if response.confidence_score < min_confidence_score:
@@ -781,6 +1052,25 @@ def main(
         print("\nProcess interrupted by user. Exiting.")
         return 1
 
+    finally:
+        # Clean up any temporary downscaled files in the temp directory
+        for temp_file in Path(TEMP_DIR).iterdir():
+            if not temp_file.is_file():
+                continue
+
+            try:
+                temp_file.unlink()
+
+            except OSError as e:
+                print(f"[WARN] Failed to delete temporary file {temp_file}: {e}")
+
+        try:
+            # Attempt to remove the temp directory if it's empty
+            Path(TEMP_DIR).rmdir()
+
+        except OSError:
+            pass  # It's fine if the temp directory is not empty or cannot be removed
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="TagStudio AI Tagger")
@@ -874,6 +1164,11 @@ if __name__ == "__main__":
         default=[],
         help="Exclude entries with the following file suffixes (e.g., 'mp4', 'jpg')",
     )
+    parser.add_argument(
+        "--show-prompts",
+        action="store_true",
+        help="Print the prompts used for classification to stdout for debugging purposes",
+    )
     args = parser.parse_args()
     sys.exit(
         main(
@@ -893,5 +1188,6 @@ if __name__ == "__main__":
             fail_on_max_retries=args.fail_on_max_retries,
             filetype_include=set(args.filetype_include),
             filetype_exclude=set(args.filetype_exclude),
+            show_prompts=args.show_prompts,
         )
     )
