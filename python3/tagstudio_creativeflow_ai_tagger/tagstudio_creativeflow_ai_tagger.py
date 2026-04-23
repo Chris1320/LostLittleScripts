@@ -43,6 +43,10 @@ class Tag:
     id: int
     name: str
     is_category: bool
+    shorthand: str | None = None
+    aliases: list[str] = field(  # pyright: ignore[reportUnknownVariableType]
+        default_factory=list
+    )
     paths: list[str] = field(  # pyright: ignore[reportUnknownVariableType]
         default_factory=list
     )
@@ -53,6 +57,10 @@ class TagNode:
     id: int
     name: str
     is_category: bool
+    shorthand: str | None = None
+    aliases: list[str] = field(  # pyright: ignore[reportUnknownVariableType]
+        default_factory=list
+    )
     children: list[TagNode] = field(  # pyright: ignore[reportUnknownVariableType]
         default_factory=list
     )
@@ -103,7 +111,7 @@ DEFAULT_ALLOW_CATEGORY_TAGS: Final[bool] = (
 
 DEFAULT_GEMINI_MODEL: Final[str] = "gemini-3.1-flash-lite-preview"
 DEFAULT_MAX_FILE_READ_SIZE: Final[int] = (
-    5000  # Max number of characters to read from text files
+    2500  # Max number of characters to read from text files
 )
 DEFAULT_LIMIT: Final[int] = 0  # Limit the number of entries to process (0 for no limit)
 DEFAULT_MIN_CONFIDENCE_SCORE: Final[float] = (
@@ -164,6 +172,14 @@ Tagging Logic:
 
 Taxonomy:
 {TAXONOMY_JSON}
+
+Final Validation Checklist:
+- Is there a tag from `01 - Kind`? (Required)
+- Is there a tag from `02 - Style`? (Required)
+- Is there a tag from `03 - Theme`? (Required)
+- Is there a tag from `04 - Utility`? (Required)
+
+If any are missing, re-analyze the asset and select the best fit.
 
 Sample Output Format:
 
@@ -226,7 +242,7 @@ def get_entry_info(library_path: str, entry_id: int) -> EntryInfo:
     if row:
         cursor.execute(
             """
-            SELECT tags.id, tags.name, tags.is_category
+            SELECT tags.id, tags.name, tags.is_category, tags.shorthand
             FROM tags
             JOIN tag_entries ON tags.id = tag_entries.tag_id
             WHERE tag_entries.entry_id = ?
@@ -234,7 +250,7 @@ def get_entry_info(library_path: str, entry_id: int) -> EntryInfo:
             (entry_id,),
         )
         tags = [
-            TagNode(id=t[0], name=t[1], is_category=bool(t[2]))
+            TagNode(id=t[0], name=t[1], is_category=bool(t[2]), shorthand=t[3])
             for t in cursor.fetchall()
         ]
 
@@ -247,6 +263,29 @@ def get_entry_info(library_path: str, entry_id: int) -> EntryInfo:
         )
 
     raise ValueError(f"Entry with ID {entry_id} not found.")
+
+
+def _flatten_tags(
+    node: TagNode, parent_path: list[str], flat_tags: dict[int, Tag]
+) -> None:
+    current_path = parent_path + [node.name]
+    path_text = " > ".join(current_path)
+
+    tag = flat_tags.get(node.id)
+    if tag is None:
+        flat_tags[node.id] = Tag(
+            id=node.id,
+            name=node.name,
+            is_category=node.is_category,
+            shorthand=node.shorthand,
+            aliases=list(node.aliases),
+            paths=[path_text],
+        )
+    elif path_text not in tag.paths:
+        tag.paths.append(path_text)
+
+    for child in node.children:
+        _flatten_tags(child, current_path, flat_tags)
 
 
 def get_all_tags(library_path: str) -> list[TagNode]:
@@ -264,11 +303,19 @@ def get_all_tags(library_path: str) -> list[TagNode]:
     cursor = conn.cursor()
 
     # Get all tags
-    cursor.execute("SELECT id, name, is_category FROM tags")
+    cursor.execute("SELECT id, name, is_category, shorthand FROM tags")
     tags = {
-        row[0]: TagNode(id=row[0], name=row[1], is_category=bool(row[2]))
+        row[0]: TagNode(
+            id=row[0], name=row[1], is_category=bool(row[2]), shorthand=row[3]
+        )
         for row in cursor.fetchall()
     }
+
+    # Get all aliases
+    cursor.execute("SELECT tag_id, name FROM tag_aliases")
+    for tag_id, alias_name in cursor.fetchall():
+        if tag_id in tags:
+            tags[tag_id].aliases.append(alias_name)
 
     # Get all parent-child relationships
     cursor.execute("SELECT parent_id, child_id FROM tag_parents")
@@ -286,7 +333,7 @@ def get_all_tags(library_path: str) -> list[TagNode]:
     return hierarchy
 
 
-def get_all_tags_flat(library_path: str) -> dict[int, TagNode]:
+def get_all_tags_flat(library_path: str) -> dict[int, Tag]:
     """
     Get a flat dictionary of all tags by their ID.
 
@@ -297,14 +344,11 @@ def get_all_tags_flat(library_path: str) -> dict[int, TagNode]:
         A dictionary mapping tag IDs to TagNode objects.
     """
 
-    conn = sqlite3.connect(Path(library_path) / TAGSTUDIO_DB_FILENAME)
-    cursor = conn.cursor()
+    flattened_tags: dict[int, Tag] = {}
+    for root_tag in get_all_tags(library_path):
+        _flatten_tags(root_tag, [], flattened_tags)
 
-    cursor.execute("SELECT id, name, is_category FROM tags")
-    return {
-        row[0]: TagNode(id=row[0], name=row[1], is_category=bool(row[2]))
-        for row in cursor.fetchall()
-    }
+    return flattened_tags
 
 
 def get_tag_by_id(library_path: str, tag_id: int) -> TagNode | None:
@@ -321,10 +365,14 @@ def get_tag_by_id(library_path: str, tag_id: int) -> TagNode | None:
 
     conn = sqlite3.connect(Path(library_path) / TAGSTUDIO_DB_FILENAME)
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, is_category FROM tags WHERE id = ?", (tag_id,))
+    cursor.execute(
+        "SELECT id, name, is_category, shorthand FROM tags WHERE id = ?", (tag_id,)
+    )
     row = cursor.fetchone()
     if row:
-        return TagNode(id=row[0], name=row[1], is_category=bool(row[2]))
+        return TagNode(
+            id=row[0], name=row[1], is_category=bool(row[2]), shorthand=row[3]
+        )
 
     return None
 
@@ -334,8 +382,9 @@ def update_entry_tags(
     entry_id: int,
     tags_to_add: set[int],
     tags_to_remove: set[int],
-    flat_tags_cache: dict[int, TagNode],
+    flat_tags_cache: dict[int, Tag],
     allow_category_tags: bool = True,
+    remove_current_tags: bool = False,
 ) -> None:
     """
     Update the tags of an entry by adding and removing specified tags.
@@ -345,12 +394,16 @@ def update_entry_tags(
         entry_id: The ID of the entry to update.
         tags_to_add: A set of tag IDs to add to the entry.
         tags_to_remove: A set of tag IDs to remove from the entry.
-        flat_tags_cache: A dictionary mapping tag IDs to TagNode objects for quick lookup.
+        flat_tags_cache: A dictionary mapping tag IDs to Tag objects for quick lookup.
         allow_category_tags: Whether to allow adding category tags (tags with `is_category=True`). If False, category tags in `tags_to_add` will be ignored.
+        remove_current_tags: Whether to remove all current tags from the entry before applying new tags. If True, `tags_to_remove` will be ignored and all existing tags will be removed.
     """
 
     conn = sqlite3.connect(Path(library_path) / TAGSTUDIO_DB_FILENAME)
     cursor = conn.cursor()
+
+    if remove_current_tags:
+        cursor.execute("DELETE FROM tag_entries WHERE entry_id = ?", (entry_id,))
 
     # Add new tags
     for tag_id in tags_to_add:
@@ -601,6 +654,7 @@ def classify_entry(
     entry_info: EntryInfo,
     remove_current_tags: bool,
     show_prompts: bool,
+    verbose: bool,
 ) -> ClassifierResponse:
     """
     Classify an entry and suggest tags based on its information and the provided taxonomy.
@@ -613,6 +667,7 @@ def classify_entry(
         entry_info: An EntryInfo object containing the entry's information.
         remove_current_tags: Whether to remove all current tags from the entry before applying new tags.
         show_prompts: Whether to print the prompts used for classification to stdout for debugging purposes.
+        verbose: Whether to print the full system prompt with taxonomy for debugging purposes (only if `show_prompts` is True).
 
     Returns:
         A ClassifierResponse object containing the suggested tags and reasoning.
@@ -653,7 +708,7 @@ Asset Properties:
                     "filesuffix": entry_info.filesuffix,
                     "tags": tags,
                 },
-                indent=4,
+                indent=2,
             )
         )
     ]
@@ -686,21 +741,21 @@ Asset Properties:
                 downscaled_entry_info_filepath = downscale_image(entry_info.filepath)
                 img_props = get_image_properties(entry_info.filepath)
                 if img_props:
-                    contents.append(json.dumps(img_props, default=str))
+                    contents.append(json.dumps(img_props, default=str, indent=2))
 
             elif mime_type.startswith("video/"):
                 # Downscale video
                 downscaled_entry_info_filepath = downscale_video(entry_info.filepath)
                 vid_props = get_video_properties(entry_info.filepath)
                 if vid_props:
-                    contents.append(json.dumps(vid_props, default=str))
+                    contents.append(json.dumps(vid_props, default=str, indent=2))
 
             elif mime_type.startswith("audio/"):
                 # Downscale audio
                 downscaled_entry_info_filepath = downscale_audio(entry_info.filepath)
                 aud_props = get_audio_properties(entry_info.filepath)
                 if aud_props:
-                    contents.append(json.dumps(aud_props, default=str))
+                    contents.append(json.dumps(aud_props, default=str, indent=2))
 
             entry_file = gemini_client.files.upload(
                 file=downscaled_entry_info_filepath or entry_info.filepath,
@@ -724,14 +779,16 @@ Asset Properties:
 
     system_prompt = AI_SYSTEM_PROMPT.replace(
         r"{TAXONOMY_JSON}",
-        json.dumps(
-            [asdict(node) for node in get_all_tags(library_path)],
-        ),
+        json.dumps(get_all_tags_flat(library_path), default=asdict, indent=2),
     )
 
     if show_prompts:
         tqdm.write("System Prompt:")
-        tqdm.write(system_prompt)
+        tqdm.write(
+            system_prompt
+            if verbose
+            else AI_SYSTEM_PROMPT.replace(r"{TAXONOMY_JSON}", "[Taxonomy JSON Omitted]")
+        )
 
         tqdm.write("Contents:")
         # Convert non-serializable objects to text descriptions
@@ -811,6 +868,7 @@ def main(
     filetype_include: set[str],
     filetype_exclude: set[str],
     show_prompts: bool,
+    verbose: bool,
 ) -> int:
     """
     Main function for the TagStudio AI Tagger.
@@ -834,6 +892,7 @@ def main(
         filetype_include: A set of file suffixes to include (e.g., 'mp4', 'jpg'). Only entries with these suffixes will be processed. This overrides `filetype_exclude` if both are provided.
         filetype_exclude: A set of file suffixes to exclude (e.g., 'mp4', 'jpg'). Entries with these suffixes will be skipped.
         show_prompts: Whether to print the prompts used for classification to stdout for debugging purposes.
+        verbose: Whether to print the full system prompt with taxonomy for debugging purposes (only if `show_prompts` is True).
 
     Returns:
         An integer exit code (0 for success).
@@ -952,6 +1011,7 @@ def main(
                         entry_info=entry_info,
                         remove_current_tags=remove_current_tags,
                         show_prompts=show_prompts,
+                        verbose=verbose,
                     )
 
                     if response.confidence_score < min_confidence_score:
@@ -1046,6 +1106,7 @@ def main(
                 tags_to_remove=tags_to_remove,
                 flat_tags_cache=available_tags,
                 allow_category_tags=allow_category_tags,
+                remove_current_tags=remove_current_tags,
             )
 
             if delay > 0:
@@ -1210,6 +1271,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Print the prompts used for classification to stdout for debugging purposes",
     )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Print the full system prompt with taxonomy for debugging purposes (only if `--show-prompts` is True)",
+    )
     args = parser.parse_args()
     sys.exit(
         main(
@@ -1231,5 +1297,6 @@ if __name__ == "__main__":
             filetype_include=set(args.filetype_include),
             filetype_exclude=set(args.filetype_exclude),
             show_prompts=args.show_prompts,
+            verbose=args.verbose,
         )
     )
