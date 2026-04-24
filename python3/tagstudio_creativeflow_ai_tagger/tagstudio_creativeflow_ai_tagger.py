@@ -91,7 +91,7 @@ class ClassifierResponse:
 
     suggested_tags: list[int]  # List of suggested tag IDs
     confidence_score: float  # Confidence score for the suggestions (0.0 to 1.0)
-    reasoning: str  # Brief explanation of why these tags were chosen
+    reasoning: str  # Explanation of why these tags were chosen
 
 
 TAGSTUDIO_DB_FILENAME: Final[str] = ".TagStudio/ts_library.sqlite"
@@ -186,11 +186,15 @@ If any are missing, re-analyze the asset and select the best fit.
 
 Sample Output Format:
 
+- `suggested_tags`: A list of tag IDs that you suggest applying to this asset based on your analysis.
+- `confidence_score`: A number between 0.0 and 1.0 indicating how confident you are in your suggested tags (1.0 being very confident, 0.0 being not confident at all).
+- `reasoning`: An explanation of why you chose these tags based on the asset's content and properties.
+
 ```json
 {
   "suggested_tags": [1002, 1004],
   "confidence_score": 0.95,
-  "reasoning": "Brief explanation of why these tags were chosen."
+  "reasoning": "Explanation of why these tags were chosen."
 }
 ```
 """
