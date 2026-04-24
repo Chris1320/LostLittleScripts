@@ -732,10 +732,9 @@ Asset Properties:
                 {
                     "filename": entry_info.filename,
                     "filesuffix": entry_info.filesuffix,
-                    "relative_path": str(
+                    "parent_library_path": str(
                         entry_info.filepath.parent.relative_to(library_path)
                     ),
-                    "parent_directory": entry_info.filepath.parent.name,
                     "sibling_filenames": get_sibling_context(entry_info.filepath),
                     "tags": tags,
                 },
