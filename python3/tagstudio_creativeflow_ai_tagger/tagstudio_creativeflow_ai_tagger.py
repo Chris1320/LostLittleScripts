@@ -129,6 +129,9 @@ DEFAULT_CLASSIFIER_DELAY: Final[float] = (
 DEFAULT_FAIL_ON_MAX_RETRIES: Final[bool] = (
     False  # Whether to fail the entire process if max retries is exceeded for any entry
 )
+DEFAULT_SIBLING_CONTEXT_SIZE: Final[int] = (
+    10  # Number of sibling filepaths to include on each side for additional context
+)
 
 UNKNOWN_TAG = TagNode(id=-1, name="Unknown", is_category=False)
 
@@ -434,6 +437,25 @@ def update_entry_tags(
     conn.close()
 
 
+def get_sibling_context(
+    full_filepath: Path, context_size: int = DEFAULT_SIBLING_CONTEXT_SIZE
+) -> list[str]:
+    """
+    Get the filepaths of sibling entries in the same directory for additional context.
+
+    Args:
+        full_filepath: The full filepath of the entry.
+        context_size: The number of sibling filepaths to return on each side (before and after).
+    """
+
+    directory = full_filepath.parent
+    siblings = sorted(directory.glob("*"))
+    current_index = siblings.index(full_filepath)
+    start_index = max(0, current_index - context_size)
+    end_index = min(len(siblings), current_index + context_size + 1)
+    return list(map(lambda f: f.name, siblings[start_index:end_index]))
+
+
 def downscale_image(
     image_path: Path, max_dimension: int = DOWNSCALE_IMAGE_MAX_DIMENSION
 ) -> Path:
@@ -706,6 +728,11 @@ Asset Properties:
                 {
                     "filename": entry_info.filename,
                     "filesuffix": entry_info.filesuffix,
+                    "relative_path": str(
+                        entry_info.filepath.parent.relative_to(library_path)
+                    ),
+                    "parent_directory": entry_info.filepath.parent.name,
+                    "sibling_filenames": get_sibling_context(entry_info.filepath),
                     "tags": tags,
                 },
                 indent=2,
