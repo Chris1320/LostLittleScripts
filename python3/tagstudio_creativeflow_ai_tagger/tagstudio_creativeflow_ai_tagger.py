@@ -158,9 +158,9 @@ Core Rules:
 - You may only suggest tags that exist in the provided JSON name fields. Do not invent new tags.
 - Return your response strictly as a JSON object. No conversational text.
 - For every tag you select, you must include its corresponding id from the taxonomy.
-- If applicable, use the visual content of the image or video, audio features, and the provided technical properties (dimensions, suffix, etc.) to determine the tags.
-- Do not return any ID where `is_category` is true. Only leaf tags should be suggested.
-- An asset must have at least one tag from each of the following categories if applicable: Kind, Style, Theme, Utility. For example, an image could be tagged as "Overlay" (Kind), "Vintage" (Style), "Nature" (Theme), and "4K Resolution" (Utility).
+- If the asset is a text file, you will be given the first portion of its contents (up to a specified character limit) for analysis. Use this content to inform your tagging decisions.
+- If the asset is a video, image, or audio, you will be given a downscaled version of the file for analysis, as well as its technical properties (dimensions, file size, EXIF data for images; resolution, duration, file size for videos; duration, bitrate, file size for audio). Use this information to inform your tagging decisions.
+- An asset must have at least one tag from each of the following categories: Kind, Style, Theme, Utility. For example, an image could be tagged as "Overlay" (Kind), "Vintage" (Style), "Nature" (Theme), and "4K Resolution" (Utility).
   - An exception to the above rule is if the asset is a Document/Legal file, or a "Pack Tutorial" video/infographic/document. In that case, only tags from the "05 - Meta Tags" of the taxonomy should be applied, and tags from other categories (Kind, Style, Theme, Utility) should not be applied.
   - For example, a `License.pdf` file should be tagged with "Document" (Meta Tag) and should not be tagged with any Kind, Style, Theme, or Utility tags. Similarly, a "How to use.mp4" video should be tagged with "Pack Tutorial" (Meta Tag) and should not be tagged with any Kind, Style, Theme, or Utility tags.
 
