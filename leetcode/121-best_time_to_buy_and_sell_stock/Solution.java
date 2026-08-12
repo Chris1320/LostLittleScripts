@@ -14,12 +14,8 @@ class TestCase {
 
 class Solution {
     public static int maxProfit(int[] prices) {
-        int lowest = 0, highest = 0;
-
-        for (int day = 0; day < prices.length; day++) {
-            // TODO: Solve this...
-        }
-        return prices[highest] - prices[lowest];
+        // TODO: Solve this...
+        return 0;
     }
 
     public static void main(String[] args) {
