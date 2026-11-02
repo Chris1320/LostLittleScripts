@@ -8,7 +8,9 @@
  * sleepIn(false, true) → true
  */
 
-class sleepIn {
+package org.lostlittlescripts.codingbat.java.warmup1;
+
+class sleepInSolution {
     public static boolean sleepIn(boolean weekday, boolean vacation) {
         return !weekday || vacation;
     }

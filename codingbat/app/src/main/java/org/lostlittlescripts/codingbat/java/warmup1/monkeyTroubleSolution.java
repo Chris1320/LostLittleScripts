@@ -8,7 +8,9 @@
  * monkeyTrouble(true, false) → false
  */
 
-class monkeyTrouble {
+package org.lostlittlescripts.codingbat.java.warmup1;
+
+class monkeyTroubleSolution {
     public static boolean monkeyTrouble(boolean aSmile, boolean bSmile) {
         return aSmile == bSmile;
     }

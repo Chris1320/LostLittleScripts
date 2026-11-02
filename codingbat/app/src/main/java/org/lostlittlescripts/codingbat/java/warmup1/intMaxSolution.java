@@ -6,7 +6,9 @@
  * intMax(3, 2, 1) → 3
  */
 
-class intMax {
+package org.lostlittlescripts.codingbat.java.warmup1;
+
+class intMaxSolution {
     public static int intMax(int a, int b, int c) {
         return Math.max(a, Math.max(b, c));
     }

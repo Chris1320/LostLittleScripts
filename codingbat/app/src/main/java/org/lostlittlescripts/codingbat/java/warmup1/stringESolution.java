@@ -6,6 +6,8 @@
  * stringE("Heelele") → false
  */
 
+package org.lostlittlescripts.codingbat.java.warmup1;
+
 class Expected {
     String input;
     boolean expected;
@@ -16,7 +18,7 @@ class Expected {
     }
 }
 
-class stringE {
+class stringESolution {
     public static boolean stringE(String str) {
         int eq = 0;
         for (int i = 0; i < str.length(); i++) {

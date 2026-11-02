@@ -8,38 +8,40 @@
  * parrotTrouble(false, 6) → false
  */
 
-class TestCase {
+package org.lostlittlescripts.codingbat.java.warmup1;
+
+class parrotTroubleTestCase {
     boolean talking;
     int hour;
     boolean expected;
 
-    public TestCase(boolean talking, int hour, boolean expected) {
+    public parrotTroubleTestCase(boolean talking, int hour, boolean expected) {
         this.talking = talking;
         this.hour = hour;
         this.expected = expected;
     }
 }
 
-class parrotTrouble {
+class parrotTroubleSolution {
     public static boolean parrotTrouble(boolean talking, int hour) {
         return (hour < 7 || hour > 20) && talking;
     }
 
     public static void main(String[] args) {
-        TestCase[] testCases = {
-                new TestCase(true, 6, true),
-                new TestCase(true, 7, false),
-                new TestCase(false, 6, false),
-                new TestCase(true, 21, true),
-                new TestCase(false, 21, false),
-                new TestCase(false, 20, false),
-                new TestCase(true, 23, true),
-                new TestCase(false, 23, false),
-                new TestCase(true, 20, false),
-                new TestCase(false, 12, false)
+        parrotTroubleTestCase[] testCases = {
+                new parrotTroubleTestCase(true, 6, true),
+                new parrotTroubleTestCase(true, 7, false),
+                new parrotTroubleTestCase(false, 6, false),
+                new parrotTroubleTestCase(true, 21, true),
+                new parrotTroubleTestCase(false, 21, false),
+                new parrotTroubleTestCase(false, 20, false),
+                new parrotTroubleTestCase(true, 23, true),
+                new parrotTroubleTestCase(false, 23, false),
+                new parrotTroubleTestCase(true, 20, false),
+                new parrotTroubleTestCase(false, 12, false)
         };
 
-        for (TestCase testCase : testCases) {
+        for (parrotTroubleTestCase testCase : testCases) {
             boolean result = parrotTrouble(testCase.talking, testCase.hour);
             System.out.printf("parrotTrouble(%b, %d) = %b | Expected: %b | %s%n",
                     testCase.talking, testCase.hour, result, testCase.expected,

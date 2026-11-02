@@ -7,31 +7,33 @@
  * startHi("hello hi") → false
  */
 
-class TestCase {
+package org.lostlittlescripts.codingbat.java.warmup1;
+
+class startHiTestCase {
     String input;
     boolean expected;
 
-    public TestCase(String input, boolean expected) {
+    public startHiTestCase(String input, boolean expected) {
         this.input = input;
         this.expected = expected;
     }
 }
 
-class startHi {
+class startHiSolution {
     public static boolean startHi(String str) {
         return str.startsWith("hi");
     }
 
     public static void main(String[] args) {
-        TestCase[] testCases = {
-                new TestCase("hi there", true),
-                new TestCase("hi", true),
-                new TestCase("hello hi", false),
-                new TestCase("he", false),
-                new TestCase("h", false),
-                new TestCase("", false),
-                new TestCase("ho hi", false),
-                new TestCase("hi ho", true)
+        startHiTestCase[] testCases = {
+                new startHiTestCase("hi there", true),
+                new startHiTestCase("hi", true),
+                new startHiTestCase("hello hi", false),
+                new startHiTestCase("he", false),
+                new startHiTestCase("h", false),
+                new startHiTestCase("", false),
+                new startHiTestCase("ho hi", false),
+                new startHiTestCase("hi ho", true)
         };
 
         for (var input : testCases) {
