@@ -7,10 +7,6 @@
  * diff21(21) → 0
  */
 
-class TestCase {
-    int num, expected;
-}
-
 class diff21 {
     public static int diff21(int n) {
         int result = Math.abs(n - 21);
