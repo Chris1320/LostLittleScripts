@@ -9,7 +9,7 @@ public class PosNegSolutionTest {
 
     @Test
     public void testPosNegSolution() {
-        var classUnderTest = new posNegSolution();
+        var classUnderTest = new PosNegSolution();
 
         assertTrue(classUnderTest.posNeg(1, -1, false));
         assertTrue(classUnderTest.posNeg(-1, 1, false));

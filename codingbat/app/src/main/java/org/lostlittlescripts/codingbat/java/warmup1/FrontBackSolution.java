@@ -8,7 +8,7 @@
 
 package org.lostlittlescripts.codingbat.java.warmup1;
 
-class frontBackSolution {
+class FrontBackSolution {
     public String frontBack(String str) {
         if (str.length() <= 1) {
             return str;

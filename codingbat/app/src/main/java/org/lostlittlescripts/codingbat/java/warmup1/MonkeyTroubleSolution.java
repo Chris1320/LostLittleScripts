@@ -10,7 +10,7 @@
 
 package org.lostlittlescripts.codingbat.java.warmup1;
 
-class monkeyTroubleSolution {
+class MonkeyTroubleSolution {
     public static boolean monkeyTrouble(boolean aSmile, boolean bSmile) {
         return aSmile == bSmile;
     }

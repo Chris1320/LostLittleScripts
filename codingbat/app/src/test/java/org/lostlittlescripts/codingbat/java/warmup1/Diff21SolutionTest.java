@@ -7,7 +7,7 @@ import org.junit.Test;
 public class Diff21SolutionTest {
     @Test
     public void testDiff21Solution() {
-        diff21Solution classUnderTest = new diff21Solution();
+        Diff21Solution classUnderTest = new Diff21Solution();
         int[][] testcases = {
                 { 19, 2 },
                 { 10, 11 },

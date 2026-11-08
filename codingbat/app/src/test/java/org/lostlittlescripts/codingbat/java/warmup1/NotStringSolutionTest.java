@@ -7,7 +7,7 @@ import org.junit.Test;
 public class NotStringSolutionTest {
     @Test
     public void testNotStringSolution() {
-        var classUnderTest = new notStringSolution();
+        var classUnderTest = new NotStringSolution();
 
         assertEquals("not candy", classUnderTest.notString("candy"));
         assertEquals("not x", classUnderTest.notString("x"));

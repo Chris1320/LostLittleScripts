@@ -9,7 +9,7 @@
 
 package org.lostlittlescripts.codingbat.java.warmup1;
 
-class notStringSolution {
+class NotStringSolution {
     public String notString(String str) {
         if (str.startsWith("not")) {
             return str;

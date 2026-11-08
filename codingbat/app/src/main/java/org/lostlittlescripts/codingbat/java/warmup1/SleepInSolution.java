@@ -10,7 +10,7 @@
 
 package org.lostlittlescripts.codingbat.java.warmup1;
 
-class sleepInSolution {
+class SleepInSolution {
     public static boolean sleepIn(boolean weekday, boolean vacation) {
         return !weekday || vacation;
     }

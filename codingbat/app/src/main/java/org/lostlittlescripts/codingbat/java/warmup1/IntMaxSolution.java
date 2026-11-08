@@ -8,7 +8,7 @@
 
 package org.lostlittlescripts.codingbat.java.warmup1;
 
-class intMaxSolution {
+class IntMaxSolution {
     public static int intMax(int a, int b, int c) {
         return Math.max(a, Math.max(b, c));
     }

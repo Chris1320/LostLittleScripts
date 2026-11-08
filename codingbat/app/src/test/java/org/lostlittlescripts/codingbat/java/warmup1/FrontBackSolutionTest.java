@@ -7,7 +7,7 @@ import org.junit.Test;
 public class FrontBackSolutionTest {
     @Test
     public void testFrontBackSolution() {
-        frontBackSolution solution = new frontBackSolution();
+        FrontBackSolution solution = new FrontBackSolution();
 
         assertEquals("eodc", solution.frontBack("code"));
         assertEquals("a", solution.frontBack("a"));

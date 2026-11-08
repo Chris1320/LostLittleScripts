@@ -11,7 +11,7 @@
 
 package org.lostlittlescripts.codingbat.java.warmup1;
 
-class missingCharSolution {
+class MissingCharSolution {
     public String missingChar(String str, int n) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {

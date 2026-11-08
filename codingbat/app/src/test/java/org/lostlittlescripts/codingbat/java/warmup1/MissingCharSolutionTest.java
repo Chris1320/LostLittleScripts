@@ -8,7 +8,7 @@ public class MissingCharSolutionTest {
 
     @Test
     public void testMissingChar() {
-        missingCharSolution solution = new missingCharSolution();
+        MissingCharSolution solution = new MissingCharSolution();
 
         assertEquals("ktten", solution.missingChar("kitten", 1));
         assertEquals("itten", solution.missingChar("kitten", 0));

@@ -9,7 +9,7 @@
 
 package org.lostlittlescripts.codingbat.java.warmup1;
 
-class diff21Solution {
+class Diff21Solution {
     public int diff21(int n) {
         int result = Math.abs(n - 21);
         return n > 21 ? result * 2 : result;

@@ -9,7 +9,7 @@
 
 package org.lostlittlescripts.codingbat.java.warmup1;
 
-class sumDoubleSolution {
+class SumDoubleSolution {
     public static int sumDouble(int a, int b) {
         return a == b
                 ? (a + b) * 2
