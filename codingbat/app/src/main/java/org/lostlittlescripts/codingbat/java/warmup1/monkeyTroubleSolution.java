@@ -23,8 +23,7 @@ class monkeyTroubleSolution {
                 { false, true, false }
         };
 
-        for (int i = 0; i < testcases.length; i++) {
-            var tc = testcases[i];
+        for (boolean[] tc : testcases) {
             System.out.printf("a = %b | b = %b | result = %b | expected = %b%n",
                     tc[0], tc[1], monkeyTrouble(tc[0], tc[1]), tc[2]);
         }

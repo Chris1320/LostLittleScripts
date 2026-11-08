@@ -28,8 +28,7 @@ class sumDoubleSolution {
                 { 3, 4, 7 }
         };
 
-        for (int i = 0; i < testcases.length; i++) {
-            var tc = testcases[i];
+        for (int[] tc : testcases) {
             System.out.printf("%d, %d == %d (%d)%n",
                     tc[0], tc[1], sumDouble(tc[0], tc[1]), tc[2]);
         }

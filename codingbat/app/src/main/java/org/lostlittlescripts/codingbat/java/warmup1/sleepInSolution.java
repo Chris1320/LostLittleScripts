@@ -23,8 +23,7 @@ class sleepInSolution {
                 { false, true, true },
                 { true, true, true },
         };
-        for (int i = 0; i < testcases.length; i++) {
-            boolean[] tc = testcases[i];
+        for (boolean[] tc : testcases) {
             boolean result = sleepIn(tc[0], tc[1]);
             System.out.printf("%b, %b => %b (%b)%n", tc[0], tc[1], result, tc[2]);
         }

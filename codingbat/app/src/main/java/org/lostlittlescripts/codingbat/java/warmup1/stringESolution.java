@@ -22,7 +22,7 @@ class stringESolution {
     public static boolean stringE(String str) {
         int eq = 0;
         for (int i = 0; i < str.length(); i++) {
-            if (str.substring(i, i + 1).equals("e"))
+            if (str.charAt(i) == 'e')
                 eq++;
         }
 

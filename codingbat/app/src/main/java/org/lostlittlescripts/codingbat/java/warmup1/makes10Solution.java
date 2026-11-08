@@ -22,7 +22,7 @@ class makes10TestCase {
 
 class makes10Solution {
     public static boolean makes10(int a, int b) {
-        return a == 10 || b == 10 ? true : a + b == 10;
+        return a == 10 || b == 10 || a + b == 10;
     }
 
     public static void main(String[] args) {
