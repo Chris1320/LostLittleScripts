@@ -13,5 +13,6 @@ package org.lostlittlescripts.codingbat.java.array3;
 
 public class MaxSpanSolution {
     public int maxSpan(int[] nums) {
+        return 0;
     }
 }
